@@ -1,4 +1,4 @@
-# NextKS Starter
+# NextJS Starter
 Starter NextJS application providing login and registration system, OAuth with GitHub and account management.
 
 ## Features
