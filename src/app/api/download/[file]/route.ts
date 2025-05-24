@@ -15,8 +15,9 @@ export const GET = async (_: NextRequest, props: Props): Promise<Response> => {
         return new NextResponse(fileBuffer, {
             headers: {
                 "Content-Type": "application/octet-stream",
-                "Content-Disposition": `attachment; filename=${file}`
-            },
+                "Content-Disposition": `attachment; filename=${file}`,
+                "Cache-Control": "public, max-age=31536000, immutable"
+            }
         });
     }
     catch(error) {

@@ -10,7 +10,7 @@ export default function Navbar({showUser=false}: NavbarProps) {
     return(
         <header className="w-full px-4 py-2 z-10 flex justify-between items-center border-b sticky top-0 backdrop-blur bg-background/90">
             <Link href="/">
-                <h1 className="text-3xl hover:underline">
+                <h1 className="text-2xl hover:underline">
                     NextJS App
                 </h1>
             </Link>

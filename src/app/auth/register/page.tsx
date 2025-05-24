@@ -1,7 +1,7 @@
-import AuthFormNavigate from "@/components/auth-form-navigate";
-import RegisterForm from "@/components/forms/register-form";
+import AuthFormNavigate from "@/app/auth/_components/auth-form-navigate";
 import { Separator } from "@/components/ui/separator";
 import { Metadata } from "next";
+import RegisterForm from "../_components/register-form";
 
 export const metadata: Metadata = {
     title: "Register to NextJS App",

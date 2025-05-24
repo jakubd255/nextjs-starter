@@ -9,13 +9,14 @@ interface FormSubmitButtonProps {
     disabled?: boolean | undefined;
     pending: boolean;
     form?: string | undefined;
+    className?: string | undefined;
 }
 
-export default function FormSubmitButton({children, variant, disabled, pending, form}: FormSubmitButtonProps) {
+export default function FormSubmitButton({children, variant, disabled, pending, form, className}: FormSubmitButtonProps) {
     const isDisabled = disabled || pending;
 
     return(
-        <Button type="submit" variant={variant} disabled={isDisabled} form={form}>
+        <Button type="submit" variant={variant} disabled={isDisabled} form={form} className={className}>
             {(pending && !["link"].includes(variant!)) ? 
                 (<LoaderCircle className="animate-spin"/>) 
             : children}

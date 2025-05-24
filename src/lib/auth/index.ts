@@ -1,8 +1,8 @@
 import { Lucia } from "lucia";
-import { adapter } from "../db";
 import { cache } from "react";
 import { cookies } from "next/headers";
-import { User } from "../types";
+import { User } from "../../types";
+import { adapter } from "@/db";
 
 declare module "lucia" {
 	interface Register {
