@@ -6,6 +6,8 @@ type Size = "xs" | "sm" | "md" | "lg";
 interface UserAvatarProps {
     user: User;
     size?: Size;
+    url?: string | null;
+    deleteImage?: boolean;
 }
 
 const getSize = (size: Size) => {
@@ -25,15 +27,15 @@ const getTextSize = (size: Size) => {
     }
 }
 
-export default function UserAvatar({user, size="sm"}: UserAvatarProps) {
-    const source = !user.profileImage?.includes("http") ? "/api/download/"+user.profileImage : user.profileImage;
-
+export default function UserAvatar({user, size="sm", url, deleteImage}: UserAvatarProps) {
+    const source = url ? url : !user.profileImage?.includes("http") ? "/api/download/"+user.profileImage : user.profileImage;
+    
     return(
         <Avatar className={getSize(size)}>
             <AvatarFallback className={getTextSize(size)}>
                 {user.name.charAt(0).toUpperCase()}
             </AvatarFallback>
-            <AvatarImage src={source} draggable={false}/>
+            <AvatarImage src={!deleteImage ? source : undefined} draggable={false}/>
         </Avatar>
     );
 }

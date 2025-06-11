@@ -3,7 +3,7 @@ import { Separator } from "@/components/ui/separator";
 import { validateRequest } from "@/lib/auth";
 import { findEmailsByUserId } from "@/db/queries/emails";
 import { Metadata } from "next";
-import UpdateProfileSection from "./_components/update-profile-section";
+import ProfileSection from "./_components/profile-section";
 import EmailSection from "./_components/email-section";
 import PasswordSection from "./_components/password-section";
 import DeleteAccountSection from "./_components/delete-account-section";
@@ -21,7 +21,7 @@ export default async function AccountSettingsPage() {
                 <h1 className="text-center">
                     Account settings
                 </h1>
-                <UpdateProfileSection/>
+                <ProfileSection/>
                 <Separator/>
                 <EmailSection/>
                 <Separator/>

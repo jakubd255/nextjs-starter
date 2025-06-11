@@ -1,14 +1,12 @@
 "use client";
 
-import FormSubmitButton from "@/components/form-submit-button";
 import FormSubmitError from "@/components/form-submit-error";
-import { Button } from "@/components/ui/button";
-import { DialogClose, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import useActionStateSuccess from "@/hooks/use-action-state-success";
 import useButtonRef from "@/hooks/use-button-ref";
 import updatePasswordAction from "@/actions/auth/update-password";
+import DialogContentProvider from "@/components/dialog-content-provider";
 
 export default function UpdatePasswordDialogContentForm() {
     const {ref, click} = useButtonRef();
@@ -18,12 +16,13 @@ export default function UpdatePasswordDialogContentForm() {
     });
     
     return(
-        <>
-            <DialogHeader>
-                <DialogTitle>
-                    Add password
-                </DialogTitle>
-            </DialogHeader>
+        <DialogContentProvider 
+            title="Update password"
+            confirm="Update password"
+            pending={pending}
+            ref={ref}
+            form="addPasswordForm"
+        >
             <form className="flex flex-col gap-2" id="addPasswordForm" action={action}>
                 <div>
                     <Label htmlFor="currentPassword">
@@ -40,16 +39,6 @@ export default function UpdatePasswordDialogContentForm() {
                     <FormSubmitError errors={state?.errors?.newPassword}/>
                 </div>
             </form>
-            <DialogFooter>
-                <DialogClose asChild>
-                    <Button variant="outline" ref={ref}>
-                        Cancel
-                    </Button>
-                </DialogClose>
-                <FormSubmitButton form="addPasswordForm" pending={pending}>
-                    Update password
-                </FormSubmitButton>
-            </DialogFooter>
-        </>
+        </DialogContentProvider>
     );
 }

@@ -3,7 +3,7 @@
 import DialogProvider from "@/components/dialog-provider";
 import { useAccountSettings } from "./account-settins-provider";
 import UserEmail from "./user-email";
-import AddEmailDialogContentForm from "./forms/add-email-dialog-content-form";
+import AddEmailDialogContentForm from "./add-email-dialog-content-form";
 
 export default function EmailSection() {
     const {emails} = useAccountSettings();

@@ -1,5 +1,5 @@
 import DialogProvider from "@/components/dialog-provider";
-import DeleteAccountDialogContentForm from "./forms/delete-account-dialog-content-form";
+import DeleteAccountDialogContentForm from "./delete-account-dialog-content-form";
 
 export default function DeleteAccountSection() {
     return(

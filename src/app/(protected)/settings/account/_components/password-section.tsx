@@ -1,7 +1,7 @@
 "use client";
 
 import DialogProvider from "@/components/dialog-provider";
-import UpdatePasswordDialogContentForm from "./forms/update-password-dialog-content-form";
+import UpdatePasswordDialogContentForm from "./update-password-dialog-content-form";
 
 export default function PasswordSection() {
     return(

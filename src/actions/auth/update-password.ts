@@ -33,7 +33,7 @@ export default async function updatePasswordAction(_: unknown, data: FormData) {
 
 
     if(!validatePassword(currentPassword, user.password)) {
-        return {errors: {currentPassword: ["Invalid password"]}};
+        return  actionFailure({currentPassword: ["Invalid password"]});
     }
 
     await updateUser(request.user.id, {password: newPassword});
