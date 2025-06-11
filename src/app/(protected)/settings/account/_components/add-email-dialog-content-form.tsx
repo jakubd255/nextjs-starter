@@ -34,7 +34,13 @@ export default function AddEmailDialogContentForm() {
                 <Label htmlFor="email">
                     Email
                 </Label>
-                <Input type="email" name="email" id="email" value={email} onChange={e => setEmail(e.target.value)}/>
+                <Input 
+                    type="email" 
+                    name="email" 
+                    id="email" 
+                    value={email} 
+                    onChange={e => setEmail(e.target.value)}
+                />
                 <FormSubmitError errors={state?.errors?.email}/>
             </form>
         </DialogContentProvider>

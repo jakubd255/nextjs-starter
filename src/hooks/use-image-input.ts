@@ -32,5 +32,11 @@ export default function useImageInput(initialImageUrl?: string | null) {
         setImage(null);
     };
 
-    return {image, deleteImage, previewUrl, inputRef, handleSelect, handleDelete};
+    const handleReset = () => {
+        setImage(null);
+        setDeleteImage(false);
+        setPreviewUrl(undefined);
+    }
+
+    return {image, deleteImage, previewUrl, inputRef, handleSelect, handleDelete, handleReset};
 }

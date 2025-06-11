@@ -7,9 +7,14 @@ import useActionStateSuccess from "@/hooks/use-action-state-success";
 import useButtonRef from "@/hooks/use-button-ref";
 import updatePasswordAction from "@/actions/auth/update-password";
 import DialogContentProvider from "@/components/dialog-content-provider";
+import useShowPassword from "@/hooks/use-show-password";
+import ShowPasswordToggle from "@/components/show-password-toggle";
 
 export default function UpdatePasswordDialogContentForm() {
     const {ref, click} = useButtonRef();
+
+    const [showCurrentPassword, toggleShowCurrentPassword] = useShowPassword();
+    const [showNewPassword, toggleShowNewPassword] = useShowPassword();
 
     const [state, action, pending] = useActionStateSuccess(updatePasswordAction, () => {
         click();
@@ -23,19 +28,43 @@ export default function UpdatePasswordDialogContentForm() {
             ref={ref}
             form="addPasswordForm"
         >
-            <form className="flex flex-col gap-2" id="addPasswordForm" action={action}>
+            <form 
+                action={action}
+                className="flex flex-col gap-2" 
+                id="addPasswordForm" 
+            >
                 <div>
                     <Label htmlFor="currentPassword">
                         Current password
                     </Label>
-                    <Input type="password" name="currentPassword" id="currentPassword"/>
+                    <div className="flex gap-1">
+                        <Input 
+                            type={showCurrentPassword ? "text" : "password"} 
+                            name="currentPassword" 
+                            id="currentPassword"
+                        />
+                        <ShowPasswordToggle 
+                            showPassword={showCurrentPassword} 
+                            toggleShowPassword={toggleShowCurrentPassword}
+                        />
+                    </div>
                     <FormSubmitError errors={state?.errors?.currentPassword}/>
                 </div>
                 <div>
                     <Label htmlFor="newPassword">
                         New password
                     </Label>
-                    <Input type="password" name="newPassword" id="newPassword"/>
+                    <div className="flex gap-1">
+                        <Input 
+                            type={showNewPassword ? "text" : "password"} 
+                            name="newPassword" 
+                            id="newPassword"
+                        />
+                        <ShowPasswordToggle 
+                            showPassword={showNewPassword} 
+                            toggleShowPassword={toggleShowNewPassword}
+                        />
+                    </div>
                     <FormSubmitError errors={state?.errors?.newPassword}/>
                 </div>
             </form>

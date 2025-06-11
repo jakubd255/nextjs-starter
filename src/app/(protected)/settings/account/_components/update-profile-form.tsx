@@ -18,11 +18,14 @@ export default function UpdateProfileForm() {
     const {user, updateUser} = useSession();
     const [name, setName] = useState<string>(user.name);
     const [bio, setBio] = useState<string>(user.bio ?? "");
-    const {deleteImage, previewUrl, inputRef, handleSelect, handleDelete} = useImageInput()
+    const {deleteImage, previewUrl, inputRef, handleSelect, handleDelete, handleReset} = useImageInput()
 
     const [state, action, pending] = useActionStateSuccess(updateProfileAction, (state) => {
         updateUser(state as Partial<User>);
+        handleReset();
     });
+
+    const disabled = name === user.name && bio === user.bio && !(previewUrl || deleteImage);
 
     return(
         <form action={action} className="flex flex-col gap-1">
@@ -36,7 +39,7 @@ export default function UpdateProfileForm() {
                 <label htmlFor="image">
                     <Button variant="outline" type="button" asChild>
                         <span className="cursor-pointer">
-                            {user.profileImage ? "Update image" : "Set image"}
+                            {(user.profileImage || previewUrl) ? "Update image" : "Set image"}
                         </span>
                     </Button>
                 </label>
@@ -49,7 +52,7 @@ export default function UpdateProfileForm() {
                     ref={inputRef}
                     onChange={handleSelect}
                 />
-                {user.profileImage ? (
+                {(user.profileImage && !deleteImage) ? (
                     <Button 
                         variant="outline" 
                         type="button" 
@@ -58,9 +61,19 @@ export default function UpdateProfileForm() {
                         Delete image
                     </Button>
                 ): null}
-                {deleteImage && (
+                {(deleteImage || previewUrl) ? (
+                    <Button
+                        variant="outline" 
+                        type="button"
+                        onClick={handleReset}
+                    >
+                        Cancel
+                    </Button>
+                ): null}
+
+                {deleteImage ? (
                     <input type="hidden" name="deleteImage" value="true"/>
-                )}
+                ) : null}
             </div>
             <div>
                 <Label htmlFor="name">
@@ -88,7 +101,7 @@ export default function UpdateProfileForm() {
                 <FormSubmitError errors={state?.errors?.bio}/>
             </div>
             <div>
-                <FormSubmitButton pending={pending} variant="outline">
+                <FormSubmitButton pending={pending} variant="outline" disabled={disabled}>
                     Update
                 </FormSubmitButton>
             </div>

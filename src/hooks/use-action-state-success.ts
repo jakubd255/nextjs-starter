@@ -21,7 +21,6 @@ export default function useActionStateSuccess(
     }, undefined);
 
     const action = originalAction as (payload: FormData) => void;
-    //((formData: FormData) => ActionResult) | undefined;
 
     return [state, action, pending];
 }
