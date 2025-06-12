@@ -1,9 +1,9 @@
-import { PropsWithChildren } from "react";
+import { PropsWithChildren, ReactNode } from "react";
 import { Dialog, DialogContent, DialogTrigger } from "./ui/dialog";
 import { Button } from "./ui/button";
 
 interface DialogProviderProps {
-    text: string;
+    text: string | ReactNode;
     destructive?: boolean;
 }
 

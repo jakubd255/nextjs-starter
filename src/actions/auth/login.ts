@@ -9,7 +9,9 @@ import { z } from "zod";
 
 const schema = z.object({
     email: z.string().email(), 
-    password: z.string().min(8)
+    password: z.string().min(8),
+    os: z.string(),
+    browser: z.string().optional().nullable()
 });
 
 export default async function logInAction(_: unknown, data: FormData) {
@@ -20,7 +22,7 @@ export default async function logInAction(_: unknown, data: FormData) {
         return actionFailure(validationResult.error?.flatten().fieldErrors, formData);
     }
 
-    const {email, password} = validationResult.data;
+    const {email, password, os, browser} = validationResult.data;
 
     const existingEmail = await findEmail(email);
     if(!existingEmail) {
@@ -32,7 +34,7 @@ export default async function logInAction(_: unknown, data: FormData) {
     }
 
     if(existingEmail.verified && existingEmail.user.verifiedEmail) {
-        await createSessionCookie(existingEmail.user.id);
+        await createSessionCookie(existingEmail.user.id, os, browser);
         redirect("/");
     }
     else {

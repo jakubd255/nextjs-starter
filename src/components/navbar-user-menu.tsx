@@ -5,7 +5,7 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem,
 import { LogOut, UserCog } from "lucide-react";
 import Link from "next/link";
 import { useSession } from "./providers/session-provider";
-import logOut from "@/actions/auth/logout";
+import logOut from "@/actions/session/logout";
 
 export default function NavbarUserMenu() {
     const {user} = useSession();

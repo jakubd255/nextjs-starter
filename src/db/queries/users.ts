@@ -42,18 +42,3 @@ export const deleteUserById = async (id: string) => {
 
     return !!res.length;
 }
-
-/*export const initAdmin = async () => {
-    const admin = await db.query.users.findFirst({
-        where: eq(users.role, "admin")
-    });
-
-    if(!admin) {
-        const id = generateIdFromEntropySize(10);
-        const password = hashPassword(process.env.ADMIN_PASSWORD!);
-
-        await db
-            .insert(users)
-            .values({id, password, name: "admin"});
-    }
-}*/

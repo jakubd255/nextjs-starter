@@ -54,8 +54,8 @@ export const validateRequest = cache(async () => {
 	return result;
 });
 
-export const createSessionCookie = async (userId: string) => {
-	const session = await lucia.createSession(userId, {});
+export const createSessionCookie = async (userId: string, os: string, browser?: string | null) => {
+	const session = await lucia.createSession(userId, {os, browser});
     const sessionCookie = lucia.createSessionCookie(session.id);
     (await cookies()).set(sessionCookie.name, sessionCookie.value, sessionCookie.attributes);
 }

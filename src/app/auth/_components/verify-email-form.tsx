@@ -8,11 +8,11 @@ import FormSubmitError from "@/components/form-submit-error";
 import FormSubmitButton from "@/components/form-submit-button";
 import { useActionState } from "react";
 import verifyEmailAction from "@/actions/auth/verify-email";
+import DeviceInfoCollector from "./device-info-collector";
 
 export default function VerifyEmailForm() {
     const searchParams = useSearchParams();
     const emailId = searchParams.get("emailId") ?? "";
-
     const [state, action, pending] = useActionState(verifyEmailAction, undefined);
 
     return(
@@ -24,8 +24,19 @@ export default function VerifyEmailForm() {
                 <Label htmlFor="code">
                     Verification code
                 </Label>
-                <Input type="text" name="code" id="code" maxLength={6} minLength={6}/>
-                <Input type="hidden" name="emailId" value={emailId}/>
+                <Input 
+                    type="text" 
+                    name="code" 
+                    id="code" 
+                    maxLength={6} 
+                    minLength={6}
+                />
+                <Input 
+                    type="hidden" 
+                    name="emailId" 
+                    value={emailId}
+                />
+                <DeviceInfoCollector/>
                 <FormSubmitError errors={state?.errors?.code}/>
             </div>
             <FormSubmitButton pending={pending}>

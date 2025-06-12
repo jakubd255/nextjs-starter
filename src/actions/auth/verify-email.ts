@@ -9,7 +9,9 @@ import { z } from "zod";
 
 const schema = z.object({
     emailId: z.string(),
-    code: z.string().length(6)
+    code: z.string().length(6),
+    os: z.string(),
+    browser: z.string().optional().nullable()
 });
 
 export default async function verifyEmailAction(_: unknown, data: FormData) {
@@ -21,7 +23,7 @@ export default async function verifyEmailAction(_: unknown, data: FormData) {
     }
 
     try {
-        const {emailId, code} = validationResult.data;
+        const {emailId, code, os, browser} = validationResult.data;
 
         const email = await findEmailById(emailId);
         if(!email) {
@@ -34,7 +36,7 @@ export default async function verifyEmailAction(_: unknown, data: FormData) {
         }
 
         await verifyUserEmail(emailId, email.userId);
-        await createSessionCookie(email.user.id);
+        await createSessionCookie(email.user.id, os, browser);
     }
     catch(error) {
         console.error(error);

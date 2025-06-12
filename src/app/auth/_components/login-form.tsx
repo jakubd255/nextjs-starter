@@ -10,6 +10,7 @@ import FormSubmitButton from "@/components/form-submit-button";
 import Link from "next/link";
 import useShowPassword from "@/hooks/use-show-password";
 import ShowPasswordToggle from "@/components/show-password-toggle";
+import DeviceInfoCollector from "./device-info-collector";
 
 export default function LoginForm() {
     const [state, action, pending] = useActionState(logInAction, undefined);
@@ -48,6 +49,7 @@ export default function LoginForm() {
                     <FormSubmitError errors={state?.errors?.password}/>
                 </div>
             </div>
+            <DeviceInfoCollector/>
             <div className="flex flex-col gap-1 text-sm">
                 <FormSubmitButton pending={pending}>
                     <LogIn className="mr-2"/>
