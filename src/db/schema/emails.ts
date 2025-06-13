@@ -8,7 +8,7 @@ export const emails = pgTable("emails", {
     email: text().notNull().unique(),
     verified: boolean().notNull().default(false),
     primary: boolean().notNull().default(false),
-    userId: text().notNull().references(() => users.id)
+    userId: text().notNull().references(() => users.id, {onDelete: "cascade"})
 });
 
 export const emailsRelations = relations(emails, ({one, many}) => ({

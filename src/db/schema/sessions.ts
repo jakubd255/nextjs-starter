@@ -4,7 +4,7 @@ import { relations } from "drizzle-orm";
 
 export const sessions = pgTable("sessions", {
     id: text().notNull().primaryKey(),
-    userId: text().notNull().references(() => users.id),
+    userId: text().notNull().references(() => users.id, {onDelete: "cascade"}),
     os: text().notNull(),
     browser: text(),
     createdAt: timestamp().defaultNow(),

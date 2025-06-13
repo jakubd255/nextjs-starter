@@ -6,3 +6,5 @@ export interface User {
     password?: string;
     verifiedEmail: boolean;
 }
+
+export type Role = "USER" | "ADMIN" | "MODERATOR";
