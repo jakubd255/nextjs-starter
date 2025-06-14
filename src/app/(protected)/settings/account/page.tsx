@@ -7,6 +7,7 @@ import ProfileSection from "./_components/profile-section";
 import EmailSection from "./_components/email-section";
 import PasswordSection from "./_components/password-section";
 import DeleteAccountSection from "./_components/delete-account-section";
+import { forbidden } from "next/navigation";
 
 export const metadata: Metadata = {
     title: "Account settings | NextJS App",
@@ -36,7 +37,7 @@ export default async function AccountSettingsPage() {
 const getData = async () => {
     const {user} = await validateRequest();
     if(!user) {
-        throw Error("Forbidden");
+        forbidden();
     }
     const emails = await findEmailsByUserId(user.id);
 

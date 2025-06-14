@@ -1,3 +1,5 @@
+import { Email } from "./email";
+
 export interface User {
 	id: string;
 	name: string;
@@ -5,6 +7,8 @@ export interface User {
 	bio?: string | null;
     password?: string;
     verifiedEmail: boolean;
+	role: Role;
+	emails: Email[];
 }
 
 export type Role = "USER" | "ADMIN" | "MODERATOR";

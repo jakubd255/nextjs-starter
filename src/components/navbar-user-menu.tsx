@@ -2,7 +2,7 @@
 
 import UserAvatar from "./user-avatar";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem, DropdownMenuLabel, DropdownMenuTrigger } from "./ui/dropdown-menu";
-import { LogOut, UserCog } from "lucide-react";
+import { LogOut, ShieldAlert, UserCog } from "lucide-react";
 import Link from "next/link";
 import { useSession } from "./providers/session-provider";
 import logOut from "@/actions/session/logout";
@@ -26,6 +26,14 @@ export default function NavbarUserMenu() {
                             Account settings
                         </Link>
                     </DropdownMenuItem>
+                    {user.role === "ADMIN" ? (
+                        <DropdownMenuItem className="cursor-pointer" asChild>
+                            <Link href="/admin/users">
+                                <ShieldAlert className="mr-2 w-4 h-4"/>
+                                Admin
+                            </Link>
+                        </DropdownMenuItem>
+                    ) : null}
                     <DropdownMenuItem onClick={logOut} className="cursor-pointer">
                         <LogOut className="mr-2 w-4 h-4"/>
                         Log out

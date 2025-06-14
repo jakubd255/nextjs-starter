@@ -4,13 +4,13 @@ import { validateRequest } from "@/lib/auth";
 import { redirect } from "next/navigation";
 
 export default async function ProtectedLayout({children}: Readonly<{children: React.ReactNode}>) {
-    const session = await validateRequest();
-    if(!session.user || !session.session) {
+    const {user, session} = await validateRequest();
+    if(!user || !session) {
         redirect("/auth/log-in");
     }
 
     return(
-        <SessionProvider value={session}>
+        <SessionProvider value={{user, session}}>
             <Navbar showUser/>
             <main className="flex flex-col items-center px-2 sm:px-4 mt-10">
                 {children}

@@ -1,4 +1,4 @@
-import Navigation from "./_components/Navigation";
+import Navigation from "./_components/navigation";
 
 export default function SettingsLayout({children}: Readonly<{children: React.ReactNode}>) {
     return(

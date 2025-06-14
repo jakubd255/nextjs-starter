@@ -25,6 +25,7 @@ const lucia = new Lucia(adapter, {
             verifiedEmail: databaseUserAttributes.verifiedEmail,
 			profileImage: databaseUserAttributes.profileImage,
 			bio: databaseUserAttributes.bio,
+			role: databaseUserAttributes.role
 		}
 	},
 });

@@ -1,11 +1,12 @@
 import { getSessionsByUserId } from "@/db/queries/sessions";
 import { validateRequest } from "@/lib/auth";
 import SessionsList from "./_components/sessions-list";
+import { forbidden } from "next/navigation";
 
 export default async function SessionsPage() {
     const {user, session} = await validateRequest();
     if(!user || !session) {
-        throw Error("Forbidden");
+        forbidden();
     }
 
     const userSessionId = session.id;
