@@ -1,5 +1,5 @@
 import { relations } from "drizzle-orm";
-import { boolean, pgTable, text, timestamp } from "drizzle-orm/pg-core";
+import { pgTable, text, timestamp } from "drizzle-orm/pg-core";
 import { emails } from "./emails";
 import { sessions } from "./sessions";
 
@@ -9,7 +9,6 @@ export const users = pgTable("users", {
     password: text().notNull(),
     profileImage: text(),
     bio: text(),
-    verifiedEmail: boolean().notNull().default(false),
     role: text({enum: ["USER", "ADMIN", "MODERATOR"]}).notNull().default("USER"),
     createdAt: timestamp().defaultNow()
 });

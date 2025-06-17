@@ -8,13 +8,11 @@ import { useActionState } from "react";
 import FormSubmitError from "@/components/form-submit-error";
 import FormSubmitButton from "@/components/form-submit-button";
 import Link from "next/link";
-import useShowPassword from "@/hooks/use-show-password";
-import ShowPasswordToggle from "@/components/show-password-toggle";
 import DeviceInfoCollector from "./device-info-collector";
+import PasswordInput from "@/components/password-input";
 
 export default function LoginForm() {
     const [state, action, pending] = useActionState(logInAction, undefined);
-    const [showPassword, toggleShowPassword] = useShowPassword();
     
     return(
         <form className="flex flex-col gap-4" action={action}>
@@ -35,17 +33,7 @@ export default function LoginForm() {
                     <Label htmlFor="password">
                         Password
                     </Label>
-                    <div className="flex gap-1">
-                        <Input 
-                            type={showPassword ? "text" : "password"} 
-                            name="password" 
-                            id="password"
-                        />
-                        <ShowPasswordToggle 
-                            showPassword={showPassword} 
-                            toggleShowPassword={toggleShowPassword}
-                        />
-                    </div>
+                    <PasswordInput id="password" name="password"/>
                     <FormSubmitError errors={state?.errors?.password}/>
                 </div>
             </div>

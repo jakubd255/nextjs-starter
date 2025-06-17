@@ -5,7 +5,7 @@ import EmailStatus from "@/components/email-status";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import UserAvatar from "@/components/user-avatar";
-import { User } from "@/types";
+import { User } from "@/lib/types";
 import { ColumnDef } from "@tanstack/react-table"
 import { Trash2 } from "lucide-react";
 
@@ -51,10 +51,6 @@ export const columns: ColumnDef<User>[] = [
                 {row.original.bio}
             </div>
         )
-    },
-    {
-        accessorKey: "verifiedEmail",
-        header: "Verified email"
     },
     {
         accessorKey: "role",

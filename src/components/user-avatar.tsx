@@ -1,4 +1,4 @@
-import { User } from "@/types";
+import { User } from "@/lib/types";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 
 type Size = "xs" | "sm" | "md" | "lg";

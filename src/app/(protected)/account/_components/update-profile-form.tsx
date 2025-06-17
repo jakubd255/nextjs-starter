@@ -5,14 +5,14 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { useState } from "react";
 import updateProfileAction from "@/actions/user/update-profile";
-import useActionStateSuccess from "@/hooks/use-action-state-success";
+import useActionStateSuccess from "@/lib/hooks/use-action-state-success";
 import { useSession } from "@/components/providers/session-provider";
 import FormSubmitError from "@/components/form-submit-error";
 import FormSubmitButton from "@/components/form-submit-button";
 import UserAvatar from "@/components/user-avatar";
 import { Button } from "@/components/ui/button";
-import { User } from "@/types";
-import useImageInput from "@/hooks/use-image-input";
+import { User } from "@/lib/types";
+import useImageInput from "@/lib/hooks/use-image-input";
 
 export default function UpdateProfileForm() {
     const {user, updateUser} = useSession();

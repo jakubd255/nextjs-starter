@@ -58,11 +58,6 @@ export const verifyUserEmail = async (emailId: string, userId: string) => {
             eq(emails.id, emailId),
             eq(emails.userId, userId)
         ));
-
-    await db
-        .update(users)
-        .set({verifiedEmail: true})
-        .where(eq(users.id, userId));
 }
 
 export const setEmailPrimary = async (emailId: string, userId: string) => {

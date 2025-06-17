@@ -1,8 +1,8 @@
 "use client";
 
 import { createContext, useContext } from "react";
-import useEmails from "@/hooks/use-emails";
-import { Email } from "@/types";
+import useEmails from "@/lib/hooks/use-emails";
+import { Email } from "@/lib/types";
 
 interface ContextValueType {
     emails: Email[];

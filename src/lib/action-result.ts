@@ -1,4 +1,8 @@
-import { ActionResult } from "@/types";
+export interface ActionResult {
+    success: boolean;
+    errors?: Record<string, string[]>;
+    [key: string]: any;
+}
 
 export const actionSuccess = (value?: any): ActionResult => ({
     success: true, ...value

@@ -1,8 +1,8 @@
-import { SessionFull } from "@/types/session";
+import { SessionFull } from "@/lib/types/session";
 import { format } from "date-fns";
 import { Dispatch, SetStateAction } from "react";
 import deleteSessionAction from "@/actions/session/delete-session";
-import DeleteSession from "./delete-session";
+import DeleteSessionDialog from "./delete-session-dialog";
 
 interface SessionsProps {
     session: SessionFull;
@@ -34,7 +34,7 @@ export default function Session({session, userSessionId, setSessions}: SessionsP
             <small className="text-muted-foreground">
                 {createdAt}
             </small>
-            <DeleteSession 
+            <DeleteSessionDialog 
                 isThisDevice={isThisDevice} 
                 deleteSession={handleDeleteSession}
             />

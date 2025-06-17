@@ -1,6 +1,6 @@
 "use client";
 
-import { ActionResult } from "@/types";
+import { ActionResult } from "@/lib/action-result";
 import { useActionState } from "react";
 
 type ReturnType = [ActionResult | undefined, (payload: FormData) => void, boolean]

@@ -21,7 +21,7 @@ export default function NavbarUserMenu() {
                         {user.name}
                     </DropdownMenuLabel>
                     <DropdownMenuItem className="cursor-pointer" asChild>
-                        <Link href="/settings/account">
+                        <Link href="/account">
                             <UserCog className="mr-2 w-4 h-4"/>
                             Account settings
                         </Link>

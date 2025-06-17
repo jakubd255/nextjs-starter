@@ -1,20 +1,25 @@
-import { AccountSettingsProvider } from "@/app/(protected)/settings/account/_components/account-settins-provider";
 import { Separator } from "@/components/ui/separator";
 import { validateRequest } from "@/lib/auth";
 import { findEmailsByUserId } from "@/db/queries/emails";
 import { Metadata } from "next";
 import ProfileSection from "./_components/profile-section";
 import EmailSection from "./_components/email-section";
-import PasswordSection from "./_components/password-section";
+import UpdatePasswordSection from "./_components/update-password-section";
 import DeleteAccountSection from "./_components/delete-account-section";
 import { forbidden } from "next/navigation";
+import { AccountSettingsProvider } from "./_components/account-settins-provider";
 
 export const metadata: Metadata = {
     title: "Account settings | NextJS App",
 };
 
 export default async function AccountSettingsPage() {
-    const {emails} = await getData();
+    const {user} = await validateRequest();
+    if(!user) {
+        forbidden();
+    }
+    
+    const emails = await findEmailsByUserId(user.id);
 
     return(
         <AccountSettingsProvider value={{emails}}>
@@ -26,20 +31,10 @@ export default async function AccountSettingsPage() {
                 <Separator/>
                 <EmailSection/>
                 <Separator/>
-                <PasswordSection/>
+                <UpdatePasswordSection/>
                 <Separator/>
                 <DeleteAccountSection/>
             </div>
         </AccountSettingsProvider>
     );
-}
-
-const getData = async () => {
-    const {user} = await validateRequest();
-    if(!user) {
-        forbidden();
-    }
-    const emails = await findEmailsByUserId(user.id);
-
-    return {user, emails};
 }

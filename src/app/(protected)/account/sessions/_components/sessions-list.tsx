@@ -1,6 +1,6 @@
 "use client";
 
-import { SessionFull } from "@/types/session";
+import { SessionFull } from "@/lib/types/session";
 import Session from "./session";
 import { useState } from "react";
 

@@ -7,7 +7,7 @@ interface FormSubmitButtonProps {
     children: React.ReactNode;
     variant?: "default" | "destructive" | "outline" | "secondary" | "ghost" | "link" | null | undefined;
     disabled?: boolean | undefined;
-    pending: boolean;
+    pending?: boolean;
     form?: string | undefined;
     className?: string | undefined;
 }

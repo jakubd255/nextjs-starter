@@ -1,4 +1,4 @@
-import { Email } from "@/types"
+import { Email } from "@/lib/types"
 
 interface EmailStatusProps {
     email: Email;

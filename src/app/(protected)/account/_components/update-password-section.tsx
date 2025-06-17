@@ -1,9 +1,9 @@
 "use client";
 
 import DialogProvider from "@/components/dialog-provider";
-import UpdatePasswordDialogContentForm from "./update-password-dialog-content-form";
+import UpdatePasswordForm from "./update-password-form";
 
-export default function PasswordSection() {
+export default function UpdatePasswordSection() {
     return(
         <section className="flex flex-col gap-2">
             <h2>
@@ -11,7 +11,7 @@ export default function PasswordSection() {
             </h2>
             <div>
                 <DialogProvider text="Update password">
-                    <UpdatePasswordDialogContentForm/>
+                    <UpdatePasswordForm/>
                 </DialogProvider>
             </div>
         </section>

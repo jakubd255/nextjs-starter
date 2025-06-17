@@ -1,7 +1,7 @@
 import { and, eq, count, or, ilike, exists } from "drizzle-orm";
 import db from "..";
 import { generateIdFromEntropySize } from "lucia";
-import { Role, User } from "@/types";
+import { Role, User } from "@/lib/types";
 import { users } from "../schema/users";
 import { hashPassword } from "@/lib/auth/password";
 import { emails } from "../schema";

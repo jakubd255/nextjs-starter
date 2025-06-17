@@ -1,5 +1,5 @@
 import DialogProvider from "@/components/dialog-provider";
-import DeleteAccountDialogContentForm from "./delete-account-dialog-content-form";
+import DeleteAccountForm from "./delete-account-form";
 
 export default function DeleteAccountSection() {
     return(
@@ -9,7 +9,7 @@ export default function DeleteAccountSection() {
             </h2>
             <div>
                 <DialogProvider text="Delete account" destructive>
-                    <DeleteAccountDialogContentForm/>
+                    <DeleteAccountForm/>
                 </DialogProvider>
             </div>
         </section>

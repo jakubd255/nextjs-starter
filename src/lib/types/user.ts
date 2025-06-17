@@ -6,9 +6,8 @@ export interface User {
 	profileImage?: string | null;
 	bio?: string | null;
     password?: string;
-    verifiedEmail: boolean;
 	role: Role;
-	emails: Email[];
+	emails?: Email[];
 }
 
 export type Role = "USER" | "ADMIN" | "MODERATOR";

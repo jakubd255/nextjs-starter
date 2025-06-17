@@ -1,7 +1,7 @@
 import { Lucia } from "lucia";
 import { cache } from "react";
 import { cookies } from "next/headers";
-import { User } from "../../types";
+import { User } from "../types";
 import { adapter } from "@/db";
 
 declare module "lucia" {
@@ -22,7 +22,6 @@ const lucia = new Lucia(adapter, {
 		return {
 			id: databaseUserAttributes.id,
 			name: databaseUserAttributes.name,
-            verifiedEmail: databaseUserAttributes.verifiedEmail,
 			profileImage: databaseUserAttributes.profileImage,
 			bio: databaseUserAttributes.bio,
 			role: databaseUserAttributes.role
