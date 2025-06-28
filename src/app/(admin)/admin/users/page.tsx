@@ -13,12 +13,8 @@ interface AdminUsersPageProps {
 }
 
 export default async function AdminUsersPage({searchParams}: AdminUsersPageProps) {
-    const params = await searchParams;
-    const search = params.search ?? "";
-    const page = Number(params.page ?? 1);
-
-    const users = await getUsers(search, page);
-    const count = await countUsers(search);
+    const {search, page} = await searchParams;
+    const [users, count] = await Promise.all([getUsers(search, page), countUsers(search)]);
 
     return(
         <div className="flex flex-col gap-2">

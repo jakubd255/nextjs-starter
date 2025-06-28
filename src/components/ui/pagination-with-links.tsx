@@ -13,6 +13,7 @@ import {
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "./select";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { cn } from "@/lib/utils";
+import { PAGE_SIZE } from "@/lib/constants";
 
 export interface PaginationWithLinksProps {
   pageSizeSelectOptions?: {
@@ -20,8 +21,8 @@ export interface PaginationWithLinksProps {
     pageSizeOptions: number[];
   };
   totalCount: number;
-  pageSize: number;
-  page: number;
+  pageSize?: number;
+  page?: number;
   pageSearchParam?: string;
   disableOnePage?: boolean;
 }
@@ -40,9 +41,9 @@ export interface PaginationWithLinksProps {
  */
 export function PaginationWithLinks({
   pageSizeSelectOptions,
-  pageSize,
+  pageSize=PAGE_SIZE,
   totalCount,
-  page,
+  page=1,
   pageSearchParam,
   disableOnePage=false
 }: PaginationWithLinksProps) {
@@ -51,7 +52,7 @@ export function PaginationWithLinks({
   const searchParams = useSearchParams();
 
   const totalPageCount = Math.ceil(totalCount / pageSize);
-
+  page = Number(page);
   
 
   const buildLink = useCallback(
@@ -86,7 +87,7 @@ export function PaginationWithLinks({
       for (let i = 1; i <= totalPageCount; i++) {
         items.push(
           <PaginationItem key={i}>
-            <PaginationLink href={buildLink(i)} isActive={page === i}>
+            <PaginationLink href={buildLink(i)} isActive={page == i}>
               {i}
             </PaginationLink>
           </PaginationItem>,
@@ -95,7 +96,7 @@ export function PaginationWithLinks({
     } else {
       items.push(
         <PaginationItem key={1}>
-          <PaginationLink href={buildLink(1)} isActive={page === 1}>
+          <PaginationLink href={buildLink(1)} isActive={page == 1}>
             1
           </PaginationLink>
         </PaginationItem>,
@@ -115,7 +116,7 @@ export function PaginationWithLinks({
       for (let i = start; i <= end; i++) {
         items.push(
           <PaginationItem key={i}>
-            <PaginationLink href={buildLink(i)} isActive={page === i}>
+            <PaginationLink href={buildLink(i)} isActive={page == i}>
               {i}
             </PaginationLink>
           </PaginationItem>,
@@ -132,7 +133,7 @@ export function PaginationWithLinks({
 
       items.push(
         <PaginationItem key={totalPageCount}>
-          <PaginationLink href={buildLink(totalPageCount)} isActive={page === totalPageCount}>
+          <PaginationLink href={buildLink(totalPageCount)} isActive={page == totalPageCount}>
             {totalPageCount}
           </PaginationLink>
         </PaginationItem>,
@@ -158,18 +159,18 @@ export function PaginationWithLinks({
           <PaginationItem>
             <PaginationPrevious
               href={buildLink(Math.max(page - 1, 1))}
-              aria-disabled={page === 1}
-              tabIndex={page === 1 ? -1 : undefined}
-              className={page === 1 ? "pointer-events-none opacity-50" : undefined}
+              aria-disabled={page == 1}
+              tabIndex={page == 1 ? -1 : undefined}
+              className={page == 1 ? "pointer-events-none opacity-50" : undefined}
             />
           </PaginationItem>
           {renderPageNumbers()}
           <PaginationItem>
             <PaginationNext
               href={buildLink(Math.min(page + 1, totalPageCount))}
-              aria-disabled={page === totalPageCount}
-              tabIndex={page === totalPageCount ? -1 : undefined}
-              className={page === totalPageCount ? "pointer-events-none opacity-50" : undefined}
+              aria-disabled={page == totalPageCount}
+              tabIndex={page == totalPageCount ? -1 : undefined}
+              className={page == totalPageCount ? "pointer-events-none opacity-50" : undefined}
             />
           </PaginationItem>
         </PaginationContent>

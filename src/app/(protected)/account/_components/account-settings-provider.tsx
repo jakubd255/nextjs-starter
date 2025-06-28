@@ -1,8 +1,10 @@
 "use client";
 
-import { createContext, useContext } from "react";
+import { createContext, useContext, useState } from "react";
 import useEmails from "@/lib/hooks/use-emails";
 import { Email } from "@/lib/types";
+import deleteEmailAction from "@/actions/user/delete-email";
+import setEmailPrimaryAction from "@/actions/user/set-email-primary";
 
 interface ContextValueType {
     emails: Email[];

@@ -2,6 +2,12 @@ import { getSessionsByUserId } from "@/db/queries/sessions";
 import { validateRequest } from "@/lib/auth";
 import SessionsList from "./_components/sessions-list";
 import { forbidden } from "next/navigation";
+import { Metadata } from "next";
+import { SessionsSettingsProvider } from "./_components/sessions-settings-provider";
+
+export const metadata: Metadata = {
+    title: "Sessions | NextJS App",
+};
 
 export default async function SessionsPage() {
     const {user, session} = await validateRequest();
@@ -17,10 +23,9 @@ export default async function SessionsPage() {
             <h1 className="text-center">
                 Sessions
             </h1>
-            <SessionsList 
-                initSessions={sessions} 
-                userSessionId={userSessionId}
-            />
+            <SessionsSettingsProvider value={{sessions, userSessionId: session.id}}>
+                <SessionsList/>
+            </SessionsSettingsProvider>
         </div>
     );
 }

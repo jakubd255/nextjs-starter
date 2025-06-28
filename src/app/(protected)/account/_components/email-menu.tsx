@@ -1,7 +1,7 @@
 import { Ellipsis } from "lucide-react";
 import { Email } from "@prisma/client";
 import Link from "next/link";
-import { useAccountSettings } from "./account-settins-provider";
+import { useAccountSettings } from "./account-settings-provider";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
 
@@ -11,9 +11,6 @@ interface EmailMenuProps {
 
 export default function EmailMenu({email}: EmailMenuProps) {
     const {deleteEmail, setPrimary} = useAccountSettings();
-    
-    const handleDeleteEmail = () => deleteEmail(email.id);
-    const handleSetPrimary = () => setPrimary(email.id);
 
     return(
         <DropdownMenu>
@@ -23,7 +20,10 @@ export default function EmailMenu({email}: EmailMenuProps) {
                 </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent>
-                <DropdownMenuItem onClick={handleSetPrimary} disabled={email.primary || !email.verified}>
+                <DropdownMenuItem 
+                    onClick={setPrimary.bind(null, email.id)} 
+                    disabled={email.primary || !email.verified}
+                >
                     Set primary 
                 </DropdownMenuItem>
                 <DropdownMenuItem disabled={email.verified} asChild>
@@ -31,7 +31,10 @@ export default function EmailMenu({email}: EmailMenuProps) {
                         Verify
                     </Link>
                 </DropdownMenuItem>
-                <DropdownMenuItem onClick={handleDeleteEmail} disabled={email.primary}>
+                <DropdownMenuItem 
+                    onClick={deleteEmail.bind(null, email.id)} 
+                    disabled={email.primary}
+                >
                     Delete
                 </DropdownMenuItem>
             </DropdownMenuContent>

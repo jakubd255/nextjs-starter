@@ -1,7 +1,7 @@
 "use client";
 
 import DialogProvider from "@/components/dialog-provider";
-import { useAccountSettings } from "./account-settins-provider";
+import { useAccountSettings } from "./account-settings-provider";
 import UserEmail from "./user-email";
 import AddEmailForm from "./add-email-form";
 

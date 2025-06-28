@@ -6,7 +6,7 @@ import { useState } from "react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 
 interface SearchProps {
-    search: string;
+    search?: string;
 }
 
 export default function DataSearch({search}: SearchProps) {

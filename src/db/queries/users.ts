@@ -47,7 +47,7 @@ const buildUserSearchWhere = (search?: string) => {
     );
 }
 
-export const getUsers = async (search: string, page: number = 1) => {
+export const getUsers = async (search: string = "", page: number = 1) => {
     const where = buildUserSearchWhere(search);
 
     return await db.query.users.findMany({
@@ -58,7 +58,7 @@ export const getUsers = async (search: string, page: number = 1) => {
     });
 }
 
-export const countUsers = async (search: string) => {
+export const countUsers = async (search: string = "") => {
     const where = buildUserSearchWhere(search);
 
     const result = await db

@@ -11,7 +11,8 @@ const schema = z.object({
     email: z.string().email(), 
     password: z.string().min(8),
     os: z.string(),
-    browser: z.string().optional().nullable()
+    browser: z.string().optional().nullable(),
+    redirectTo: z.string().optional().nullable()
 });
 
 export default async function logInAction(_: unknown, data: FormData) {
@@ -22,7 +23,7 @@ export default async function logInAction(_: unknown, data: FormData) {
         return actionFailure(validationResult.error?.flatten().fieldErrors, formData);
     }
 
-    const {email, password, os, browser} = validationResult.data;
+    const {email, password, os, browser, redirectTo} = validationResult.data;
 
     const existingEmail = await findEmail(email);
     if(!existingEmail) {
@@ -33,9 +34,9 @@ export default async function logInAction(_: unknown, data: FormData) {
         return actionFailure({password: ["Invalid password"]}, {email});
     }
 
-    if(existingEmail.verified && existingEmail.user.verifiedEmail) {
+    if(existingEmail.verified) {
         await createSessionCookie(existingEmail.user.id, os, browser);
-        redirect("/");
+        redirect(redirectTo ?? "/");
     }
     else {
         redirect(`/auth/verify-email?emailId=${existingEmail.id}`);

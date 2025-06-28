@@ -3,30 +3,21 @@
 import { Input } from "@/components/ui/input";
 import { UAParser } from "ua-parser-js";
 
-const getDeviceInfo = () => {
+export default function DeviceInfoCollector() {
     const parser = new UAParser();
     const result = parser.getResult();
-    
-    return {
-        browser: result.browser.name,
-        os: result.os.name,
-    };
-}
-
-export default function DeviceInfoCollector() {
-    const {os, browser} = getDeviceInfo();
     
     return(
         <>
             <Input 
                 type="hidden" 
                 name="os" 
-                value={os}
+                value={result.os.name}
             />
             <Input 
                 type="hidden" 
                 name="browser" 
-                value={browser}
+                value={result.browser.name}
             />
         </>
     );

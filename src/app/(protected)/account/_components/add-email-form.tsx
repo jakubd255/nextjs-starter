@@ -9,7 +9,7 @@ import useActionStateSuccess from "@/lib/hooks/use-action-state-success";
 import { DialogClose, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import FormSubmitButton from "@/components/form-submit-button";
-import { useAccountSettings } from "./account-settins-provider";
+import { useAccountSettings } from "./account-settings-provider";
 
 export default function AddEmailForm() {
     const [email, setEmail] = useState<string>("");

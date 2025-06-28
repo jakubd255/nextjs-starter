@@ -18,7 +18,7 @@ export default function DeleteSessionDialog({isThisDevice, deleteSession}: Delet
             </DialogTitle>
             <DialogDescription>
                 This is the session for the device you are using now.
-                    Once deleted you will be logged out.
+                Once deleted you will be logged out.
             </DialogDescription>
             <DialogFooter>
                 <DialogClose asChild>

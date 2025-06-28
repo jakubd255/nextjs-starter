@@ -7,7 +7,7 @@ import EmailSection from "./_components/email-section";
 import UpdatePasswordSection from "./_components/update-password-section";
 import DeleteAccountSection from "./_components/delete-account-section";
 import { forbidden } from "next/navigation";
-import { AccountSettingsProvider } from "./_components/account-settins-provider";
+import { AccountSettingsProvider } from "./_components/account-settings-provider";
 
 export const metadata: Metadata = {
     title: "Account settings | NextJS App",

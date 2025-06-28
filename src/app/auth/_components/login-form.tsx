@@ -4,12 +4,13 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { LogIn } from "lucide-react";
 import logInAction from "@/actions/auth/login";
-import { useActionState } from "react";
+import { useActionState, useEffect } from "react";
 import FormSubmitError from "@/components/form-submit-error";
 import FormSubmitButton from "@/components/form-submit-button";
 import Link from "next/link";
 import DeviceInfoCollector from "./device-info-collector";
 import PasswordInput from "@/components/password-input";
+import RedirectToCollector from "./redirect-to-collector";
 
 export default function LoginForm() {
     const [state, action, pending] = useActionState(logInAction, undefined);
@@ -38,6 +39,7 @@ export default function LoginForm() {
                 </div>
             </div>
             <DeviceInfoCollector/>
+            <RedirectToCollector/>
             <div className="flex flex-col gap-1 text-sm">
                 <FormSubmitButton pending={pending}>
                     <LogIn className="mr-2"/>

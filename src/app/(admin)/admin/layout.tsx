@@ -1,12 +1,13 @@
 import Navbar from "@/components/navbar";
 import { SessionProvider } from "@/components/providers/session-provider";
 import { validateRequest } from "@/lib/auth";
-import { forbidden, redirect } from "next/navigation";
+import redirectToAuth from "@/lib/auth/redirect";
+import { forbidden } from "next/navigation";
 
 export default async function AdminLayout({children}: Readonly<{children: React.ReactNode}>) {
     const {user, session} = await validateRequest();
     if(!user || !session) {
-        redirect("/auth/log-in");
+        return await redirectToAuth();
     }
 
     if(user.role !== "ADMIN") {
