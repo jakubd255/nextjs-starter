@@ -25,7 +25,7 @@ export const ROLE_PERMISSIONS: Record<Role, Permission[]> = {
     ]
 };
 
-export const hasPermission = (user: User | null, permission: Permission): boolean => {
+export const hasPermission = (user: User | null | undefined, permission: Permission): boolean => {
     if(!user) return false;
     if (user.blocked) return false;
 
