@@ -1,5 +1,6 @@
 import { User } from "@/lib/types";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
+import { cn } from "@/lib/utils";
 
 type Size = "xs" | "sm" | "md" | "lg" | "xl";
 
@@ -7,6 +8,7 @@ interface UserAvatarProps {
     user: User;
     size?: Size;
     url?: string | null;
+    hideBorder?: boolean;
 }
 
 const getSize = (size: Size) => {
@@ -28,11 +30,11 @@ const getTextSize = (size: Size) => {
     }
 }
 
-export default function UserAvatar({user, size="sm", url}: UserAvatarProps) {
+export default function UserAvatar({user, size="sm", url, hideBorder}: UserAvatarProps) {
     const source = url ? url : user.profileImage ?? undefined;
     
     return(
-        <Avatar className={getSize(size)}>
+        <Avatar className={cn(getSize(size), !hideBorder ? "border" : null)}>
             <AvatarFallback className={getTextSize(size)}>
                 {user.name.charAt(0).toUpperCase()}
             </AvatarFallback>

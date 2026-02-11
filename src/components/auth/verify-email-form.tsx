@@ -4,7 +4,7 @@ import { useActionState } from "react";
 import { Input } from "../ui/input";
 import { Label } from "../ui/label";
 import DeviceInfoCollector from "./device-info-collector";
-import verifyEmailAction from "@/actions/auth/verify-account";
+import verifyEmailAction from "@/actions/auth/verify-email";
 import FormSubmitError from "../form-submit-error";
 import FormSubmitButton from "../form-submit-button";
 
@@ -21,7 +21,7 @@ export default function VerifyEmailForm({userId}: VerifyEmailFormProps) {
                 <Label htmlFor="code">
                     Verification code
                 </Label>
-                <Input type="text" name="code" id="ecodel"/>
+                <Input type="text" name="code" id="code"/>
                 <FormSubmitError errors={state?.errors?.code}/>
             </div>
             <input type="hidden" name="userId" defaultValue={userId} hidden/>

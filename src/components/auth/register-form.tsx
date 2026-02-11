@@ -44,7 +44,7 @@ export default function RegisterForm() {
                 </div>
             </div>
             <FormSubmitButton pending={pending}>
-                Log in
+                Register in
             </FormSubmitButton>
         </form>
     );

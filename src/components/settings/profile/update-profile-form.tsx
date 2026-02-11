@@ -27,7 +27,7 @@ export default function UpdateProfileForm({user, onUpdate}: UpdateProfileFormPro
     const disabled = name === user.name && bio === user.bio;
 
     return(
-        <form className="flex flex-col gap-3" action={action}>
+        <form className="flex flex-col gap-3 w-full" action={action}>
             <div className="flex flex-col gap-3">
                 <div>
                     <Label htmlFor="name">

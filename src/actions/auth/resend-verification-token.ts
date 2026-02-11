@@ -1,6 +1,6 @@
 "use server";
 
-import { createEmailVerificationToken, createToken } from "@/db/queries/tokens";
+import { createEmailVerificationToken } from "@/db/queries/tokens";
 import { getUserById } from "@/db/queries/users";
 import { actionFailure, actionSuccess } from "@/lib/action-result";
 import { sendVerificationToken } from "@/lib/email";
@@ -14,7 +14,13 @@ export default async function resendVerificationTokenAction(_: unknown, data: Fo
     }
 
     const token = await createEmailVerificationToken(userId);
-    await sendVerificationToken(user.email, token.code);
+
+    if(!user.verified) {
+        await sendVerificationToken(user.email, token.code);
+    }
+    else if(user.pendingEmail) {
+        await sendVerificationToken(user.pendingEmail, token.code);
+    }
 
     return actionSuccess();
 }

@@ -29,7 +29,7 @@ export default function LogInForm() {
                         <Label htmlFor="password">
                             Password
                         </Label>
-                        <Link href="/auth/forgot-password" className="font-bold text-sm text-primary hover:underline">
+                        <Link className="font-bold text-sm text-primary hover:underline" href="/auth/forgot-password" >
                             Forgot password?
                         </Link>
                     </div>

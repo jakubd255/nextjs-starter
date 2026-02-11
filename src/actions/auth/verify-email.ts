@@ -34,8 +34,13 @@ export default async function verifyEmailAction(_: unknown, data: FormData) {
         return actionFailure({code: ["Invalid verification code"]});
     }
 
-    await updateUser(userId, {verified: true});
-    await createSessionCookie(userId, os, browser);
+    if(!user.verified) {
+        await updateUser(userId, {verified: true});
+        await createSessionCookie(userId, os, browser);
+    }
+    else if(user.pendingEmail) {
+        await updateUser(user.id, {email: user.pendingEmail, pendingEmail: null});
+    }
 
     redirect("/");
 }

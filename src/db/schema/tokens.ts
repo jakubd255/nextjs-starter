@@ -5,7 +5,7 @@ import { users } from "./users";
 export const tokens = pgTable("tokens", {
     id: text().primaryKey().notNull(),
     code: text().notNull(),
-    userId: text().references(() => users.id),
+    userId: text().references(() => users.id, {onDelete: "cascade"}).notNull(),
     type: text({enum: ["RESET_PASSWORD", "EMAIL_VERIFICATION"]}).notNull(),
     expiresAt: timestamp({withTimezone: true}).notNull()
 });

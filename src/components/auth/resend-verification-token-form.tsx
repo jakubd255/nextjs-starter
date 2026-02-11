@@ -12,9 +12,9 @@ export default function ResendVerificationTokenForm({userId}: ResendVerification
     const [_, action] = useActionState(resendVerificationTokenAction, undefined);
 
     return(
-        <form action={action}>
+        <form className="w-full" action={action}>
             <input type="hidden" name="userId" defaultValue={userId} hidden/>
-            <Button variant="link" className="px-0">
+            <Button className="w-full" variant="outline">
                 Resend code
             </Button>
         </form>

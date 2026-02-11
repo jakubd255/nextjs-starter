@@ -16,7 +16,7 @@ export default function NavbarUserMenu() {
         <DropdownMenu>
             <DropdownMenuTrigger asChild>
                 <Button className="rounded-full" variant="outline" size="icon">
-                    <UserAvatar user={user}/>
+                    <UserAvatar user={user} hideBorder/>
                 </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent>
