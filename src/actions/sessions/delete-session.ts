@@ -2,7 +2,7 @@
 
 import { getSessionById } from "@/db/queries/sessions";
 import { actionFailure, actionSuccess } from "@/lib/action-result";
-import lucia, { validateRequest } from "@/lib/auth";
+import lucia, { terminateSession, validateRequest } from "@/lib/auth";
 import { hasPermission } from "@/lib/auth/permissions";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
@@ -22,13 +22,11 @@ export default async function deleteSessionAction(id: string) {
         return actionFailure();
     }
 
-    lucia.invalidateSession(session.id);
-
     if(session.id === currentSession.id) {
-        const sessionCookie = lucia.createBlankSessionCookie();
-	    (await cookies()).set(sessionCookie.name, sessionCookie.value, sessionCookie.attributes);
+        terminateSession(session.id);
         redirect("/auth/log-in");
     }
 
+    lucia.invalidateSession(session.id);
     return actionSuccess();
 }

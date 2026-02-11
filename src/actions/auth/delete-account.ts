@@ -2,9 +2,8 @@
 
 import { deleteUserById, getUserById } from "@/db/queries/users";
 import { actionFailure } from "@/lib/action-result";
-import lucia, { validateRequest } from "@/lib/auth";
+import { terminateSession, validateRequest } from "@/lib/auth";
 import { validatePassword } from "@/lib/auth/password";
-import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import z from "zod";
 
@@ -49,9 +48,7 @@ export default async function deleteAccountAction(_: unknown, data: FormData) {
 
     deleteUserById(user.id);
 
-    lucia.invalidateSession(session.session.id);
-	const sessionCookie = lucia.createBlankSessionCookie();
-	(await cookies()).set(sessionCookie.name, sessionCookie.value, sessionCookie.attributes);
+    terminateSession(session.session.id);
 
 	redirect("/auth/log-in");
 }

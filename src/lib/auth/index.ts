@@ -67,3 +67,9 @@ export const createSessionCookie = async (userId: string, os: string, browser?: 
     const sessionCookie = lucia.createSessionCookie(session.id);
     (await cookies()).set(sessionCookie.name, sessionCookie.value, sessionCookie.attributes);
 }
+
+export const terminateSession = async (id: string) => {
+	lucia.invalidateSession(id);
+	const sessionCookie = lucia.createBlankSessionCookie();
+	(await cookies()).set(sessionCookie.name, sessionCookie.value, sessionCookie.attributes);
+}
