@@ -25,14 +25,14 @@ export default function NavbarUserMenu() {
                         {user.name}
                     </DropdownMenuLabel>
                     <DropdownMenuItem className="cursor-pointer" asChild>
-                        <Link href="/account">
+                        <Link href="/settings/profile">
                             <UserCog className="w-4 h-4"/>
                             Account settings
                         </Link>
                     </DropdownMenuItem>
                     {hasPermission(user, "admin:access") ? (
                         <DropdownMenuItem className="cursor-pointer" asChild>
-                            <Link href="/admin/users">
+                            <Link href="/admin">
                                 <ShieldAlert className="w-4 h-4"/>
                                 Admin
                             </Link>

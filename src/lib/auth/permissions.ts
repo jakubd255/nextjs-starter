@@ -7,15 +7,12 @@ export const ROLE_PERMISSIONS: Record<Role, Permission[]> = {
     MODERATOR: [
         "admin:access",
         "user:read",
-        "user:update:bio",
-        "user:update:avatar",
+        "user:update:profile",
     ],
     ADMIN: [
         "admin:access",
         "user:read",
-        "user:update:name",
-        "user:update:bio",
-        "user:update:avatar",
+        "user:update:profile",
         "user:update:verified",
         "user:update:role",
         "user:update:blocked",

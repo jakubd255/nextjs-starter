@@ -15,10 +15,10 @@ export default function RegisterForm() {
         <form className="flex flex-col gap-6" action={action}>
             <div className="flex flex-col gap-3">
                 <div>
-                    <Label htmlFor="username">
-                        Username
+                    <Label htmlFor="name">
+                        Name
                     </Label>
-                    <Input type="text" name="username" id="username" defaultValue={state?.name}/>
+                    <Input type="text" name="name" id="name" defaultValue={state?.name}/>
                     <FormSubmitError errors={state?.errors?.name}/>
                 </div>
                 <div>

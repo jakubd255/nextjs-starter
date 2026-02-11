@@ -1,7 +1,7 @@
 import { User } from "@/lib/types";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 
-type Size = "xs" | "sm" | "md" | "lg";
+type Size = "xs" | "sm" | "md" | "lg" | "xl";
 
 interface UserAvatarProps {
     user: User;
@@ -13,7 +13,8 @@ const getSize = (size: Size) => {
     switch(size) {
         case "xs": return "w-[20px] h-[20px]";
         case "md": return "w-[100px] h-[100px]";
-        case "lg": return "w-[140px] h-[140px]";
+        case "lg": return "w-[150px] h-[150px]";
+        case "xl": return "w-[200px] h-[200px]";
         default: return "";
     }
 }
@@ -22,6 +23,7 @@ const getTextSize = (size: Size) => {
     switch(size) {
         case "md": return "text-5xl";
         case "lg": return "text-8xl";
+        case "xl": return "text-9xl";
         default: return "";
     }
 }
