@@ -20,6 +20,10 @@ export const createEmailVerificationToken = async (userId: string) => {
     return createToken(userId, "EMAIL_VERIFICATION");
 }
 
+export const createResetPasswordToken = async (userId: string) => {
+    return createToken(userId, "RESET_PASSWORD");
+}
+
 export const getTokenByCode = async (code: string) => {
     return await db.query.tokens.findFirst({
         where: eq(tokens.code, code)
