@@ -15,7 +15,7 @@ export default function UpdateProfileImageDropdown({onUpload, onSetFromUrl, onRe
         <div className="absolute left-0 bottom-0">
             <DropdownMenu>
                 <DropdownMenuTrigger asChild>
-                    <Button variant="outline">
+                    <Button className="backdrop-blur-md" variant="outline">
                         <Pencil className="w-4 h-4"/> Edit
                     </Button>
                 </DropdownMenuTrigger>

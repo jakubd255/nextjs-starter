@@ -1,14 +1,16 @@
+import UserAvatar from "@/components/user-avatar";
 import { validateRequest } from "@/lib/auth";
-import { notFound } from "next/navigation";
+import { forbidden } from "next/navigation";
 
 export default async function Home() {
     const {user} = await validateRequest();
     if(!user) {
-        notFound();
+        forbidden();
     }
     
     return(
         <div className="flex flex-col gap-3 items-center">
+            <UserAvatar user={user} size="lg"/>
             <h1 className="text-4xl font-bold">
                 {user.name}
             </h1>
