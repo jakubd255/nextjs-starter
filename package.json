@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@lucia-auth/adapter-drizzle": "^1.1.0",
+    "@tanstack/react-table": "^8.21.3",
     "@types/bcrypt": "^6.0.0",
     "@types/pg": "^8.16.0",
     "bcrypt": "^6.0.0",
