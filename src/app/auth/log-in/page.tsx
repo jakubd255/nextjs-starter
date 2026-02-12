@@ -1,5 +1,11 @@
 import AuthFormNavigate from "@/components/auth/auth-form-navigate";
 import LogInForm from "@/components/auth/log-in-form";
+import { APP_TITLE } from "@/lib/constants";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+    title: `Log in to ${APP_TITLE}`,
+};
 
 export default function LogInPage() {
     return(

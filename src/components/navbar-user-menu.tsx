@@ -34,7 +34,7 @@ export default function NavbarUserMenu() {
                         <DropdownMenuItem className="cursor-pointer" asChild>
                             <Link href="/admin">
                                 <ShieldAlert className="w-4 h-4"/>
-                                Admin
+                                Admin dashboard
                             </Link>
                         </DropdownMenuItem>
                     ) : null}

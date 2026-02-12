@@ -1,4 +1,10 @@
 import UpdateProfile from "@/components/settings/profile/update-profile";
+import { APP_TITLE } from "@/lib/constants";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+    title: `Profile | ${APP_TITLE}`,
+};
 
 export default function SettingsProfilePage() {
     return(

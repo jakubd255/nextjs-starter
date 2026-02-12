@@ -4,7 +4,6 @@ import { getSessionById } from "@/db/queries/sessions";
 import { actionFailure, actionSuccess } from "@/lib/action-result";
 import lucia, { terminateSession, validateRequest } from "@/lib/auth";
 import { hasPermission } from "@/lib/auth/permissions";
-import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 
 export default async function deleteSessionAction(id: string) {

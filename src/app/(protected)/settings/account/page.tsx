@@ -2,6 +2,12 @@ import { Separator } from "@/components/ui/separator";
 import EmailSection from "@/components/settings/account/email-section";
 import PasswordSection from "@/components/settings/account/password-section";
 import DeleteAccountSection from "@/components/settings/account/delete-account-section";
+import { Metadata } from "next";
+import { APP_TITLE } from "@/lib/constants";
+
+export const metadata: Metadata = {
+    title: `Account | ${APP_TITLE}`,
+};
 
 export default function SettingsAccountPage() {
     return(

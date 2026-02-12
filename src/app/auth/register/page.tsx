@@ -1,5 +1,11 @@
 import AuthFormNavigate from "@/components/auth/auth-form-navigate";
 import RegisterForm from "@/components/auth/register-form";
+import { APP_TITLE } from "@/lib/constants";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+    title: `Register to ${APP_TITLE}`,
+};
 
 export default function RegisterPage() {
     return(
