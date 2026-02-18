@@ -41,7 +41,7 @@ export default function DeleteAccountForm() {
             </div>
             <DialogFooter>
                 <DialogClose asChild>
-                    <Button variant="outline">
+                    <Button type="button" variant="outline">
                         Cancel
                     </Button>
                 </DialogClose>

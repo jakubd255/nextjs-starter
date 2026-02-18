@@ -1,7 +1,7 @@
 "use client";
 
 import deleteSessionAction from "@/actions/sessions/delete-session";
-import DialogProvider from "@/components/dialog-provider";
+import DialogLauncher from "@/components/dialog-launcher";
 import { Button } from "@/components/ui/button";
 import { DialogClose, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Trash2 } from "lucide-react";
@@ -19,7 +19,7 @@ export default function DeleteSessionDialog({currentSessionId, id, deleteSession
     }
 
     if(currentSessionId === id) return(
-        <DialogProvider icon={Trash2}>
+        <DialogLauncher icon={Trash2}>
             <DialogHeader>
                 <DialogTitle>
                     Delete session
@@ -30,7 +30,7 @@ export default function DeleteSessionDialog({currentSessionId, id, deleteSession
                 </DialogDescription>
                 <DialogFooter>
                     <DialogClose asChild>
-                        <Button variant="outline">
+                        <Button type="button" variant="outline">
                             Cancel
                         </Button>
                     </DialogClose>
@@ -39,7 +39,7 @@ export default function DeleteSessionDialog({currentSessionId, id, deleteSession
                     </Button>
                 </DialogFooter>
             </DialogHeader>
-        </DialogProvider>
+        </DialogLauncher>
     );
 
     else return(

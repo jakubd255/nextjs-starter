@@ -68,6 +68,7 @@ export const deleteUserById = async (id: string) => {
 
 export const getUsersAdmin = async ({
     page = 1,
+    pageSize = PAGE_SIZE,
     search,
     role,
     verified,
@@ -79,8 +80,8 @@ export const getUsersAdmin = async ({
 
     return await db.query.users.findMany({
         where: where,
-        limit: PAGE_SIZE,
-        offset: (page-1)*PAGE_SIZE,
+        limit: pageSize,
+        offset: (page-1)*pageSize,
         orderBy: getOrderBy(sortField, sortOrder),
     });
 }

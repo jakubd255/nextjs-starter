@@ -11,6 +11,7 @@ export interface UserFilters {
 
 export interface GetUsersParams {
     page?: number;
+    pageSize?: number;
     search?: string;
     role?: Role[];
     verified?: boolean;

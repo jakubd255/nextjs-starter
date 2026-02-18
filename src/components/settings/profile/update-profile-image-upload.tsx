@@ -1,7 +1,7 @@
 "use client";
 
 import updateAvatarAction from "@/actions/users/update-avatar";
-import { User } from "lucia";
+import { User } from "@/lib/types";
 import { RefObject, useActionState, useEffect, useRef } from "react";
 
 interface UpdateProfileImageUploadProps {
@@ -16,7 +16,7 @@ export default function UpdateProfileImageUpload({user, onUpdate, inputRef}: Upd
     const formRef = useRef<HTMLFormElement>(null);
 
     useEffect(() => {
-        if(state?.success && onUpdate) onUpdate(state.profileImage);
+        if(state?.success) onUpdate?.(state.profileImage);
     }, [state]);
     
     return(

@@ -3,27 +3,28 @@ import { Dialog, DialogContent, DialogTrigger } from "./ui/dialog";
 import { Button } from "./ui/button";
 import { LucideProps } from "lucide-react";
 
-interface DialogProviderProps {
+interface DialogLauncherProps {
     text?: string;
     icon?: ForwardRefExoticComponent<Omit<LucideProps, "ref"> & RefAttributes<SVGSVGElement>>;
-    destructive?: boolean;
+    variant?: "destructive" | "outline" | "link" | "default" | "secondary" | "ghost" | null;
     trigger?: ReactNode;
     open?: boolean;
+    disabled?: boolean;
     onOpenChange?: (open: boolean) => void;
 }
 
-export default function DialogProvider(props: PropsWithChildren<DialogProviderProps>) {
+export default function DialogLauncher(props: PropsWithChildren<DialogLauncherProps>) {
     return(
         <Dialog open={props.open} onOpenChange={props.onOpenChange}>
             {props.text || props.icon ? (
                 <DialogTrigger asChild>
                     {props.text ? (
-                        <Button variant={props.destructive ? "destructive" : "outline"}>
+                        <Button variant={props.variant} disabled={props.disabled}>
                             {props.icon ? <props.icon/> : null}
                             {props.text}
                         </Button>
                     ) : props.icon ? (
-                        <Button variant="outline" size="icon" className="h-8! w-8!" >
+                        <Button variant={props.variant || "outline"} size="icon" disabled={props.disabled}>
                             <props.icon/>
                         </Button>
                     ) : null}

@@ -1,8 +1,10 @@
 "use client";
 
+import UserActionDropdown from "@/components/admin/users/user-actions-dropdown";
 import DataTableColumnHeader from "@/components/data-table/data-table-column-header";
 import { Badge } from "@/components/ui/badge";
 import UserAvatar from "@/components/user-avatar";
+import UserEmail from "@/components/user-email";
 import { formatDateTimeShort } from "@/lib/date-format";
 import { User } from "@/lib/types";
 import { ColumnDef } from "@tanstack/react-table";
@@ -24,13 +26,14 @@ export const columns: ColumnDef<User>[] = [
     },
     {
         accessorKey: "email",
-        header: () => (<DataTableColumnHeader accessorKey="email" label="E-mail"/>)
+        header: () => (<DataTableColumnHeader accessorKey="email" label="E-mail"/>),
+        cell: ({row}) => (<UserEmail user={row.original}/>)
     },
     {
         accessorKey: "bio",
         header: "Bio",
         cell: ({row}) => (
-            <div className="max-w-50 truncate whitespace-nowrap overflow-hidden">
+            <div className="max-w-50 line-clamp-2 whitespace-pre-line text-wrap">
                 {row.original.bio}
             </div>
         )
@@ -63,6 +66,7 @@ export const columns: ColumnDef<User>[] = [
         cell: ({row}) => formatDateTimeShort(row.original.createdAt)
     },
     {
-        id: "actions"
+        id: "actions",
+        cell: ({row}) => (<UserActionDropdown row={row}/>)
     }
 ];

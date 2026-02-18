@@ -5,9 +5,10 @@ import { validateRequest } from "@/lib/auth";
 import { hasPermission } from "@/lib/auth/permissions";
 import { forbidden } from "next/navigation";
 import { Suspense } from "react";
-import UsersTableToolbar from "@/components/admin/users-table-toolbar";
-import { parseUserParams, UserSearchParams } from "@/lib/params/users";
+import UsersTableToolbar from "@/components/admin/users/users-table-toolbar";
 import { PaginationWithLinks } from "@/components/ui/pagination-with-links";
+import { parseUserParams, UserSearchParams } from "./params";
+import { DataTableSkeleton } from "@/components/data-table/data-table-skeleton";
 
 interface AdminUsersPageProps {
     searchParams: Promise<UserSearchParams>;
@@ -20,9 +21,11 @@ export default async function AdminUsersPage({searchParams}: AdminUsersPageProps
     }
 
     const params = await searchParams;
+    const parsedParams = parseUserParams(params);
+
     const [users, count] = await Promise.all([
-        getUsersAdmin(parseUserParams(params)),
-        countUsersAdmin(parseUserParams(params))
+        getUsersAdmin(parsedParams), 
+        countUsersAdmin(parsedParams)
     ]);
 
     return(
@@ -30,10 +33,19 @@ export default async function AdminUsersPage({searchParams}: AdminUsersPageProps
             <h1 className="text-4xl font-bold">
                 Users
             </h1>
-            <Suspense>
+            <Suspense 
+                fallback={(<DataTableSkeleton columnCount={10}/>)}
+            >
                 <UsersTableToolbar/>
                 <DataTable columns={columns} data={users}/>
-                <PaginationWithLinks page={params.page} totalCount={count}/>
+                <div className="w-max ml-auto">
+                    <PaginationWithLinks 
+                        page={params.page} 
+                        totalCount={count} 
+                        pageSize={params.pageSize} 
+                        pageSizeSelectOptions={{pageSizeOptions: [10, 20, 30, 40, 50]}}
+                    />
+                </div>
             </Suspense>
         </div>
     );

@@ -21,6 +21,9 @@ export default async function resendVerificationTokenAction(_: unknown, data: Fo
     else if(user.pendingEmail) {
         await sendVerificationToken(user.pendingEmail, token.code);
     }
+    else {
+        return actionFailure();
+    }
 
     return actionSuccess();
 }

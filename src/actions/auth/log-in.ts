@@ -36,6 +36,10 @@ export default async function logInAction(_: unknown, data: FormData) {
         return actionFailure({password: ["Invalid password"]}, {email});
     }
 
+    if(user.blocked) {
+        return actionFailure({email: ["Invalid email"]}, {email});
+    }
+
     if(user.verified) {
         await createSessionCookie(user.id, os, browser);
         redirect(redirectTo ?? "/");

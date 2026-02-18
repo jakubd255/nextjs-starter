@@ -5,6 +5,7 @@ import { Button } from "../ui/button";
 import { DropdownMenu, DropdownMenuCheckboxItem, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from "../ui/dropdown-menu";
 import { Separator } from "../ui/separator";
 import { updateSearchParams } from "@/lib/params";
+import { ChevronDown } from "lucide-react";
 
 interface DataTableFilterSingleProps {
     accessorKey: string;
@@ -42,7 +43,9 @@ export default function DataTableFilterSingle({accessorKey, label, data}: DataTa
                                 {data.find(i => i.value === selected)?.label}
                             </small>
                         </>
-                    ): null}
+                    ) : (
+                        <ChevronDown className="w-4 h-4 opacity-50"/>
+                    )}
                 </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent>
@@ -62,7 +65,7 @@ export default function DataTableFilterSingle({accessorKey, label, data}: DataTa
                             Clear filter
                         </DropdownMenuItem> 
                     </>
-                ): null}
+                ) : null}
             </DropdownMenuContent>
         </DropdownMenu>
     );

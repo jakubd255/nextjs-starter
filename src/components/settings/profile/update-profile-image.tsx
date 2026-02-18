@@ -2,13 +2,13 @@
 
 import { Label } from "@/components/ui/label";
 import UserAvatar from "@/components/user-avatar";
-import { User } from "lucia";
 import { useRef, useState } from "react";
 import UpdateProfileImageDropdown from "./update-profile-image-dropdown";
-import DialogProvider from "@/components/dialog-provider";
+import DialogLauncher from "@/components/dialog-launcher";
 import UpdateProfileImageUrlForm from "./update-profile-image-url-form";
 import updateAvatarAction from "@/actions/users/update-avatar";
 import UpdateProfileImageUpload from "./update-profile-image-upload";
+import { User } from "@/lib/types";
 
 interface UpdateProfileImageFormProps {
     user: User;
@@ -43,13 +43,13 @@ export default function UpdateProfileImage({user, onUpdate}: UpdateProfileImageF
             </Label>
             <UserAvatar user={user} size="xl"/>
             <UpdateProfileImageDropdown 
-                onUpload={() => {}} 
+                onUpload={() => fileInputRef.current?.click()} 
                 onSetFromUrl={() => setDialogOpen(true)} 
                 onRemove={handleDeleteImage}
             />
-            <DialogProvider open={isDialogOpen} onOpenChange={handleToggleOpen}>
+            <DialogLauncher open={isDialogOpen} onOpenChange={handleToggleOpen}>
                 <UpdateProfileImageUrlForm user={user} onUpdate={handleSetImageUrl}/>
-            </DialogProvider>
+            </DialogLauncher>
             <UpdateProfileImageUpload user={user} inputRef={fileInputRef}/>
         </div>
     );

@@ -21,7 +21,7 @@ export default async function AdminLayout({children}: Readonly<{children: React.
     return(
         <SessionProvider value={{user, session}}>
             <Navbar showUser/>
-            <main className="w-full max-w-350 mx-auto flex gap-10 px-2 sm:px-4 mt-10">
+            <main className="w-full max-w-350 mx-auto flex gap-10 px-2 sm:px-4 my-10">
                 <AdminNavigation/>
                 {children}
             </main>

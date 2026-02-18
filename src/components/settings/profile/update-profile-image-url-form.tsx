@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { DialogClose, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { User } from "lucia";
+import { User } from "@/lib/types";
 import { useActionState, useEffect } from "react";
 
 interface UpdateProfileImageUrlFormProps {
@@ -16,7 +16,7 @@ export default function UpdateProfileImageUrlForm({user, onUpdate}: UpdateProfil
     const [state, action, pending] = useActionState(updateAvatarAction, undefined);
 
     useEffect(() => {
-        if(state?.success && onUpdate) onUpdate(state.profileImage);
+        if(state?.success) onUpdate?.(state.profileImage);
     }, [state]);
 
     return(
@@ -35,7 +35,7 @@ export default function UpdateProfileImageUrlForm({user, onUpdate}: UpdateProfil
             <input type="hidden" name="id" defaultValue={user.id} hidden/>
             <DialogFooter>
                 <DialogClose asChild>
-                    <Button variant="outline" type="button">
+                    <Button type="button" variant="outline">
                         Close
                     </Button>
                 </DialogClose>

@@ -13,9 +13,8 @@ export const ROLE_PERMISSIONS: Record<Role, Permission[]> = {
         "admin:access",
         "user:read",
         "user:update:profile",
-        "user:update:verified",
+        "user:update:security",
         "user:update:role",
-        "user:update:blocked",
         "user:delete",
         "session:terminate",
         "token:resend"
@@ -24,7 +23,7 @@ export const ROLE_PERMISSIONS: Record<Role, Permission[]> = {
 
 export const hasPermission = (user: User | null | undefined, permission: Permission): boolean => {
     if(!user) return false;
-    if (user.blocked) return false;
+    if(user.blocked) return false;
 
     const permissions = ROLE_PERMISSIONS[user.role] ?? [];
     return permissions.includes(permission);

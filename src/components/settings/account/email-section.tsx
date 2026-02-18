@@ -1,9 +1,9 @@
 "use client";
 
-import DialogProvider from "@/components/dialog-provider";
+import DialogLauncher from "@/components/dialog-launcher";
 import { useSession } from "@/components/providers/session-provider";
-import Link from "next/link";
 import UpdateEmailForm from "./update-email-form";
+import UserEmail from "@/components/user-email";
 
 export default function EmailSection() {
     const {user} = useSession();
@@ -13,23 +13,11 @@ export default function EmailSection() {
             <h2 className="text-2xl font-bold">
                 Email
             </h2>
-            <span>
-                {user.email} {user.pendingEmail ? "(current)" : null}
-            </span>
-            {user.pendingEmail ? (
-                <div className="flex gap-2">
-                    <span>
-                        {user.pendingEmail} (pending)
-                    </span>
-                    <Link className="font-bold text-primary hover:underline" href={`/auth/verify-email?userId=${user.id}`}>
-                            Verify
-                        </Link>
-                    </div>
-            ) : null}
+            <UserEmail user={user} showVerify/>
             <div>
-                <DialogProvider text="Change E-mail">
+                <DialogLauncher text="Change E-mail">
                     <UpdateEmailForm/>
-                </DialogProvider>
+                </DialogLauncher>
             </div>
         </section>
     );

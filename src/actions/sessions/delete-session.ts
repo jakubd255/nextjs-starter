@@ -17,8 +17,8 @@ export default async function deleteSessionAction(id: string) {
         return actionFailure();
     }
 
-    if(user.id !== session.userId && !hasPermission(user, "session:terminate")) {
-        return actionFailure();
+    if(user.id !== session.userId || !hasPermission(user, "session:terminate")) {
+        return actionFailure({permission: ["You dont have permission to terminate this session"]});
     }
 
     if(session.id === currentSession.id) {

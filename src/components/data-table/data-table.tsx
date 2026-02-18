@@ -1,19 +1,7 @@
 "use client"
 
-import { 
-    ColumnDef, flexRender, getCoreRowModel, 
-    useReactTable, getPaginationRowModel, SortingState, 
-    getSortedRowModel, ColumnFiltersState 
-} from "@tanstack/react-table"
+import { ColumnDef, flexRender, getCoreRowModel, useReactTable } from "@tanstack/react-table"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
-import { useEffect, useState } from "react";
-
-declare module "@tanstack/react-table" {
-    interface TableMeta<TData extends unknown> {
-        deleteRowById?: (id: string) => void;
-        updateRowById?: (id: string, data: Partial<TData>) => void;
-    }
-}
 
 interface DataTableProps<TData extends {id: string}, TValue> {
     columns: ColumnDef<TData, TValue>[];
@@ -23,37 +11,18 @@ interface DataTableProps<TData extends {id: string}, TValue> {
 }
 
 export function DataTable<TData extends {id: string}, TValue>({columns, data: defaultData}: DataTableProps<TData, TValue>) {
-    const [sorting, setSorting] = useState<SortingState>([]);
-    const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
-    const [data, setData] = useState(() => [...defaultData]);
+    const data = defaultData;
 
     const table = useReactTable({
         data, 
         columns, 
         getCoreRowModel: getCoreRowModel(),
-        getPaginationRowModel: getPaginationRowModel(),
-        onSortingChange: setSorting,
-        getSortedRowModel: getSortedRowModel(),
-        state: {
-            sorting,
-            columnFilters
-        },
-        meta: {
-            deleteRowById: (id: string) => {
-                setData(old => old.filter(row => row.id !== id));
-            },
-            updateRowById: (id: string, data: Partial<TData>) => {
-                setData(old => old.map(row => row.id === id ? ({...row, ...data}) : row));
-            }
-        }
+        manualPagination: true,
+        manualSorting: true
     });
 
-    useEffect(() => {
-        setData([...defaultData]);
-    }, [defaultData]);
-
     return(
-        <div className="rounded-md border">
+        <div className="rounded-md border w-full">
             <Table>
                 <TableHeader>
                     {table.getHeaderGroups().map((headerGroup) => (

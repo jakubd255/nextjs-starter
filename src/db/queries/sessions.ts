@@ -1,4 +1,4 @@
-import { and, eq} from "drizzle-orm"
+import { and, eq, ne} from "drizzle-orm"
 import db from ".."
 import { sessions } from "../schema"
 
@@ -14,8 +14,11 @@ export const getSessionById = async (id: string) => {
     });
 }
 
-export const deleteSessionsByUserId = async (userId: string) => {
+export const deleteSessionsByUserId = async (userId: string, excludedId?: string) => {
     await db
         .delete(sessions)
-        .where(eq(sessions.userId, userId));
+        .where(and(
+            eq(sessions.userId, userId),
+            excludedId ? ne(sessions.id, excludedId) : undefined
+        ));
 }

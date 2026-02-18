@@ -46,7 +46,7 @@ export default async function updateAvatarAction(_: unknown, data: FormData) {
     }
 
     if(user.id !== session.user.id && !hasPermission(session.user, "user:update:profile")) {
-        return actionFailure();
+        return actionFailure({permission: ["You dont have permission to update user's profile"]});
     }
 
     if(user.profileImage && isUploaded(user.profileImage)) {

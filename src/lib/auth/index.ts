@@ -59,6 +59,10 @@ export const validateRequest = cache(async () => {
 	}
 	catch {}
 
+	if(result.user?.blocked) {
+		return {user: null, session: null};
+	}
+
 	return result;
 });
 

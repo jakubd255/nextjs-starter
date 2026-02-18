@@ -1,4 +1,4 @@
-import DialogProvider from "@/components/dialog-provider";
+import DialogLauncher from "@/components/dialog-launcher";
 import UpdatePasswordForm from "./update-password-form";
 
 export default function PasswordSection() {
@@ -8,9 +8,9 @@ export default function PasswordSection() {
                 Password
             </h2>
             <div>
-                <DialogProvider text="Change password">
+                <DialogLauncher text="Change password">
                     <UpdatePasswordForm/>
-                </DialogProvider>
+                </DialogLauncher>
             </div>
         </section>
     );

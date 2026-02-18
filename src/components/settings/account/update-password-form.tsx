@@ -58,7 +58,7 @@ export default function UpdatePasswordForm() {
             </div>
             <DialogFooter>
                 <DialogClose asChild>
-                    <Button variant="outline" ref={ref}>
+                    <Button type="button" variant="outline" ref={ref}>
                         Cancel
                     </Button>
                 </DialogClose>

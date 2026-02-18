@@ -9,6 +9,7 @@ import {
 import { Separator } from "../ui/separator";
 import { updateSearchParams } from "@/lib/params";
 import { useEffect, useState } from "react";
+import { ChevronDown } from "lucide-react";
 
 interface DataTableFilterProps {
     accessorKey: string;
@@ -65,7 +66,9 @@ export default function DataTableFilterMulti({accessorKey, label, data}: DataTab
                                 </small>
                             ))}
                         </>
-                    ) : null}
+                    ) : (
+                        <ChevronDown className="w-4 h-4 opacity-50"/>
+                    )}
                 </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent>
@@ -93,7 +96,7 @@ export default function DataTableFilterMulti({accessorKey, label, data}: DataTab
                             Clear filter
                         </DropdownMenuItem>
                     </>
-                ): null}
+                ) : null}
             </DropdownMenuContent>
         </DropdownMenu>
     );

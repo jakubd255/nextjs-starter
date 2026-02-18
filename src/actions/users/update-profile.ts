@@ -28,7 +28,7 @@ export default async function updateProfileAction(_: unknown, data: FormData) {
     }
 
     if(user.id !== session.user.id && !hasPermission(session.user, "user:update:profile")) {
-        return actionFailure();
+        return actionFailure({permission: ["You dont have permission to update user's profile"]});
     }
     
     await updateUser(user.id, {name, bio});

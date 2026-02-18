@@ -1,8 +1,9 @@
-import DataTableSearch from "../data-table/data-table-search";
-import DataTableReset from "../data-table/data-table-reset";
-import DataTableFilterMulti from "../data-table/data-table-filter-multi";
-import DataTableFilterSingle from "../data-table/data-table-filter-single";
-import { Separator } from "../ui/separator";
+import DataTableFilterMulti from "@/components/data-table/data-table-filter-multi";
+import DataTableFilterSingle from "@/components/data-table/data-table-filter-single";
+import DataTableReset from "@/components/data-table/data-table-reset";
+import DataTableSearch from "@/components/data-table/data-table-search";
+import { Separator } from "@/components/ui/separator";
+import { ROLES } from "@/lib/auth/permissions";
 
 export default function UsersTableToolbar() {
     return(
@@ -12,11 +13,7 @@ export default function UsersTableToolbar() {
             <DataTableFilterMulti 
                 accessorKey="role" 
                 label="Role" 
-                data={[
-                    {value: "ADMIN", label: "ADMIN"},
-                    {value: "MODERATOR", label: "MODERATOR"},
-                    {value: "USER", label: "USER"}
-                ]}
+                data={ROLES.map(role => ({value: role, label: role}))}
             />
             <DataTableFilterSingle 
                 accessorKey="verified" 

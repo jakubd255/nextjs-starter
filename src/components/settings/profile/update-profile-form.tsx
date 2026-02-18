@@ -2,12 +2,12 @@
 
 import { useActionState, useEffect, useState } from "react";
 import updateProfileAction from "@/actions/users/update-profile";
-import { User } from "lucia";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import FormSubmitError from "@/components/form-submit-error";
 import { Textarea } from "@/components/ui/textarea";
 import FormSubmitButton from "@/components/form-submit-button";
+import { User } from "@/lib/types";
 
 interface UpdateProfileFormProps {
     user: User;
@@ -24,7 +24,7 @@ export default function UpdateProfileForm({user, onUpdate}: UpdateProfileFormPro
         if(state?.success && onUpdate) onUpdate(name, bio);
     }, [state]);
 
-    const disabled = name === user.name && bio === user.bio;
+    const disabled = name === user.name && bio === (user.bio ?? "");
 
     return(
         <form className="flex flex-col gap-3 w-full" action={action}>
