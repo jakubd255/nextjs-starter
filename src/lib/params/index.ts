@@ -1,8 +1,8 @@
 import { AppRouterInstance } from "next/dist/shared/lib/app-router-context.shared-runtime";
 
 type UpdateParamsOptions = {
-  resetPage?: boolean;
-  clearOthers?: boolean;
+    resetPage?: boolean;
+    clearOthers?: boolean;
 };
 
 export const updateSearchParams = (

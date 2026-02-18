@@ -19,7 +19,7 @@ export default function DeleteSessionDialog({currentSessionId, id, deleteSession
     }
 
     if(currentSessionId === id) return(
-        <DialogLauncher icon={Trash2}>
+        <DialogLauncher variant="ghost" icon={Trash2}>
             <DialogHeader>
                 <DialogTitle>
                     Delete session
@@ -43,7 +43,7 @@ export default function DeleteSessionDialog({currentSessionId, id, deleteSession
     );
 
     else return(
-        <Button variant="outline" size="icon" onClick={handleDeleteSession}>
+        <Button variant="ghost" size="icon" onClick={handleDeleteSession}>
             <Trash2 className="w-4 h-4"/>
         </Button>
     );

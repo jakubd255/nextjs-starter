@@ -7,9 +7,9 @@ import { and, count, eq } from "drizzle-orm";
 import { PAGE_SIZE } from "@/lib/constants";
 import { buildUserSearchWhere, getOrderBy, GetUsersParams, UserFilters } from "../filters/users";
 
-export const createUser = async (name: string, email: string, rawPassword: string, role: Role = "USER", verified = false) => {
+export const createUser = async (name: string, email: string, rawPassword?: string | null, role: Role = "USER", verified = false) => {
     const id = generateIdFromEntropySize(10);
-    const password = hashPassword(rawPassword);
+    const password = rawPassword ? hashPassword(rawPassword) : null;
 
     const [res] = await db
         .insert(users)
@@ -62,7 +62,6 @@ export const deleteUserById = async (id: string) => {
         .delete(users)
         .where(eq(users.id, id))
         .returning();
-
     return !!res.length;
 }
 

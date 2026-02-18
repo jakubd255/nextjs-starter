@@ -8,7 +8,6 @@ import logInAction from "@/actions/auth/log-in";
 import FormSubmitButton from "../form-submit-button";
 import PasswordInput from "../password-input";
 import FormSubmitError from "../form-submit-error";
-import DeviceInfoCollector from "./device-info-collector";
 import RedirectToCollector from "./redirect-to-collector";
 
 export default function LogInForm() {
@@ -37,7 +36,6 @@ export default function LogInForm() {
                     <FormSubmitError errors={state?.errors?.password}/>
                 </div>
             </div>
-            <DeviceInfoCollector/>
             <RedirectToCollector/>
             <FormSubmitButton pending={pending}>
                 Log in

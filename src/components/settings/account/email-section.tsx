@@ -15,7 +15,7 @@ export default function EmailSection() {
             </h2>
             <UserEmail user={user} showVerify/>
             <div>
-                <DialogLauncher text="Change E-mail">
+                <DialogLauncher variant="outline" text="Change E-mail">
                     <UpdateEmailForm/>
                 </DialogLauncher>
             </div>

@@ -11,7 +11,7 @@ interface SessionProps {
 
 export default function SessionCard({session, currentSession, deleteSession}: SessionProps) {
     return(
-        <div className="border p-2 rounded-sm flex justify-between">
+        <div className="border p-4 rounded-md flex justify-between">
             <div className="flex gap-2 items-center">
                 <span>
                     {session.os} {session.browser ? `(${session.browser})` : null} 

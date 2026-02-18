@@ -3,7 +3,6 @@
 import { useActionState } from "react";
 import { Input } from "../ui/input";
 import { Label } from "../ui/label";
-import DeviceInfoCollector from "./device-info-collector";
 import verifyEmailAction from "@/actions/auth/verify-email";
 import FormSubmitError from "../form-submit-error";
 import FormSubmitButton from "../form-submit-button";
@@ -25,7 +24,6 @@ export default function VerifyEmailForm({userId}: VerifyEmailFormProps) {
                 <FormSubmitError errors={state?.errors?.code}/>
             </div>
             <input type="hidden" name="userId" defaultValue={userId} hidden/>
-            <DeviceInfoCollector/>
             <FormSubmitButton pending={pending}>
                 Verify E-mail
             </FormSubmitButton>

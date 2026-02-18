@@ -4,14 +4,13 @@ import { getTokenByCode } from "@/db/queries/tokens";
 import { getUserById, updateUser } from "@/db/queries/users";
 import { actionFailure } from "@/lib/action-result";
 import { createSessionCookie } from "@/lib/auth";
+import { getDeviceInfo } from "@/lib/auth/device-info";
 import { redirect } from "next/navigation";
 import z from "zod";
 
 const schema = z.object({
     userId: z.string(),
-    code: z.string().length(8),
-    os: z.string(),
-    browser: z.string().optional().nullable()
+    code: z.string().length(8)
 });
 
 export default async function verifyEmailAction(_: unknown, data: FormData) {
@@ -22,7 +21,7 @@ export default async function verifyEmailAction(_: unknown, data: FormData) {
         return actionFailure(validationResult.error?.flatten().fieldErrors);
     }
 
-    const {userId, code, os, browser} = validationResult.data;
+    const {userId, code} = validationResult.data;
 
     const user = await getUserById(userId);
     if(!user) {
@@ -35,6 +34,7 @@ export default async function verifyEmailAction(_: unknown, data: FormData) {
     }
 
     if(!user.verified) {
+        const {os, browser} = await getDeviceInfo();
         await updateUser(userId, {verified: true});
         await createSessionCookie(userId, os, browser);
     }

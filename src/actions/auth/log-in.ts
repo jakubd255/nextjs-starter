@@ -5,6 +5,7 @@ import { getUserByEmail } from "@/db/queries/users";
 import { actionFailure } from "@/lib/action-result";
 import { createSessionCookie } from "@/lib/auth";
 import { validatePassword } from "@/lib/auth/password";
+import { getDeviceInfo } from "@/lib/auth/device-info";
 import { sendVerificationToken } from "@/lib/email";
 import { redirect } from "next/navigation";
 import z from "zod";
@@ -12,8 +13,6 @@ import z from "zod";
 const schema = z.object({
     email: z.email(), 
     password: z.string().min(8),
-    os: z.string(),
-    browser: z.string().optional().nullable(),
     redirectTo: z.string().optional().nullable()
 });
 
@@ -25,7 +24,7 @@ export default async function logInAction(_: unknown, data: FormData) {
         return actionFailure(validationResult.error.flatten().fieldErrors);
     }
 
-    const {email, password, os, browser, redirectTo} = validationResult.data;
+    const {email, password, redirectTo} = validationResult.data;
 
     const user = await getUserByEmail(email);
     if(!user) {
@@ -41,6 +40,7 @@ export default async function logInAction(_: unknown, data: FormData) {
     }
 
     if(user.verified) {
+        const {os, browser} = await getDeviceInfo();
         await createSessionCookie(user.id, os, browser);
         redirect(redirectTo ?? "/");
     }
