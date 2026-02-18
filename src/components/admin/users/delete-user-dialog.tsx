@@ -28,7 +28,7 @@ export default function DeleteUserDialog({user, redirect=false, onDelete}: Delet
                     Delete user
                 </DialogTitle>
                 <DialogDescription>
-                    This action will permanently delete {user.name} and all associated data. 
+                    This action will permanently delete <b>{user.name}</b> and all associated data. 
                     This operation cannot be undone. Please confirm that you want to proceed.
                 </DialogDescription>
             </DialogHeader>

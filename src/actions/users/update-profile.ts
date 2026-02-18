@@ -3,18 +3,12 @@
 import { validateRequest } from "@/lib/auth";
 import { getUserById, updateUser } from "@/db/queries/users";
 import { actionFailure, actionSuccess } from "@/lib/action-result";
-import { z } from "zod";
 import { hasPermission } from "@/lib/auth/permissions";
-
-const schema = z.object({
-    id: z.string().min(10),
-    name: z.string().min(2).max(32),
-    bio: z.string().nullable().optional()
-});
+import { updateProfileSchema } from "@/lib/validation/user";
 
 export default async function updateProfileAction(_: unknown, data: FormData) {
     const formData = Object.fromEntries(data.entries());
-    const validationResult = schema.safeParse(formData);
+    const validationResult = updateProfileSchema.safeParse(formData);
 
     if(!validationResult.success) {
         return actionFailure(validationResult.error?.flatten().fieldErrors);

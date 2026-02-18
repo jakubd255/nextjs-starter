@@ -5,15 +5,11 @@ import { getUserByEmail, updateUser } from "@/db/queries/users";
 import { actionFailure, actionSuccess } from "@/lib/action-result";
 import { validateRequest } from "@/lib/auth";
 import { sendVerificationToken } from "@/lib/email";
-import z from "zod";
-
-const schema = z.object({
-    email: z.email()
-});
+import { updateEmailSchema } from "@/lib/validation/auth";
 
 export default async function updateEmailAction(_: unknown, data: FormData) {
     const formData = Object.fromEntries(data.entries());
-    const validationResult = schema.safeParse(formData);
+    const validationResult = updateEmailSchema.safeParse(formData);
     
     if(!validationResult.success) {
         return actionFailure(validationResult.error?.flatten().fieldErrors);

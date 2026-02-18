@@ -4,23 +4,12 @@ import { deleteUserById, getUserById } from "@/db/queries/users";
 import { actionFailure } from "@/lib/action-result";
 import { terminateSession, validateRequest } from "@/lib/auth";
 import { validatePassword } from "@/lib/auth/password";
+import { passwordSchema } from "@/lib/validation/auth";
 import { redirect } from "next/navigation";
-import z from "zod";
-
-const schema = z.object({
-    password: z.string().min(8),
-    confirmPassword: z.string().min(8)
-})
-.refine(data => {
-    return data.password === data.confirmPassword
-}, {
-    message: "Passwords don't match",
-    path: ["confirmPassword"]
-});
 
 export default async function deleteAccountAction(_: unknown, data: FormData) {
     const formData = Object.fromEntries(data.entries());
-    const validationResult = schema.safeParse(formData);
+    const validationResult = passwordSchema.safeParse(formData);
 
     if(!validationResult.success) {
         return actionFailure(validationResult.error?.flatten().fieldErrors);

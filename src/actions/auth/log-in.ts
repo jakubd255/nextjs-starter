@@ -8,17 +8,11 @@ import { validatePassword } from "@/lib/auth/password";
 import { getDeviceInfo } from "@/lib/auth/device-info";
 import { sendVerificationToken } from "@/lib/email";
 import { redirect } from "next/navigation";
-import z from "zod";
-
-const schema = z.object({
-    email: z.email(), 
-    password: z.string().min(8),
-    redirectTo: z.string().optional().nullable()
-});
+import { loginSchema } from "@/lib/validation/auth";
 
 export default async function logInAction(_: unknown, data: FormData) {
     const formData = Object.fromEntries(data.entries());
-    const validationResult = schema.safeParse(formData);
+    const validationResult = loginSchema.safeParse(formData);
 
     if(!validationResult.success) {
         return actionFailure(validationResult.error.flatten().fieldErrors);

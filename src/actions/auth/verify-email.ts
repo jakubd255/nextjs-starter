@@ -5,17 +5,12 @@ import { getUserById, updateUser } from "@/db/queries/users";
 import { actionFailure } from "@/lib/action-result";
 import { createSessionCookie } from "@/lib/auth";
 import { getDeviceInfo } from "@/lib/auth/device-info";
+import { verifyEmailSchema } from "@/lib/validation/auth";
 import { redirect } from "next/navigation";
-import z from "zod";
-
-const schema = z.object({
-    userId: z.string(),
-    code: z.string().length(8)
-});
 
 export default async function verifyEmailAction(_: unknown, data: FormData) {
     const formData = Object.fromEntries(data.entries());
-    const validationResult = schema.safeParse(formData);
+    const validationResult = verifyEmailSchema.safeParse(formData);
 
     if(!validationResult.success) {
         return actionFailure(validationResult.error?.flatten().fieldErrors);

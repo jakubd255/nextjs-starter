@@ -79,6 +79,10 @@ export async function GET(request: Request): Promise<Response> {
         await createSessionCookie(userId, os, browser);
     }
 
+    if(session?.userId !== userId) {
+        return new Response(null, {status: 400});
+    }
+
     return new Response(null, {
         status: 302,
         headers: {Location: parsedState.redirectTo || "/"}

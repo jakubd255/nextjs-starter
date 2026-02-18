@@ -7,7 +7,7 @@ import { redirect } from "next/navigation";
 import { z } from "zod";
 
 const schema = z.object({
-    email: z.string().email()
+    email: z.email()
 });
 
 export default async function requestResetPasswordAction(_: unknown, data: FormData) {
