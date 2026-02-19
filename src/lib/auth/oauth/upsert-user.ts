@@ -18,7 +18,7 @@ export async function upsertOAuthUser({
 	name,
 	profileImage,
 	bio,
-	providerUsername
+	providerUsername,
 }: UpsertOAuthUserParams) {
     const existingProvider = await getUserByOAuthProvider(provider, providerUserId);
 
@@ -26,8 +26,8 @@ export async function upsertOAuthUser({
 		return existingProvider.userId;
 	}
 
-    let userId: string;
 	const existingUser = await getUserByEmail(email);
+	let userId: string;
 
     if(!existingUser) {
 		const user = await createUser(name, email, null, "USER", true);
@@ -42,7 +42,16 @@ export async function upsertOAuthUser({
 		userId = existingUser.id;
 	}
     
-    await createOAuthProvider(userId, provider, providerUserId, providerUsername);
+    try {
+		await createOAuthProvider(userId, provider, providerUserId, providerUsername);
+	}
+	catch(error) {
+		const afterRace = await getUserByOAuthProvider(provider, providerUserId);
+		if(afterRace?.user) {
+			return afterRace.userId;
+		}
+		throw error;
+	}
 
 	return userId;
 }

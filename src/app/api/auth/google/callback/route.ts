@@ -12,7 +12,7 @@ interface GoogleUser {
     name: string;
     picture?: string | null;
     email: string | null;
-    email_verified: string | null;
+    email_verified: boolean | null;
 }
 
 export async function GET(request: Request): Promise<Response> {
@@ -57,11 +57,21 @@ export async function GET(request: Request): Promise<Response> {
 
     const {os, browser} = await getDeviceInfo();
 
+    const {session} = await validateRequest();
+
     if(provider?.user) {
+        if(session && session.userId !== provider.userId) {
+            cookieStore.set("oauth_error", "account_conflict", {path: "/", maxAge: 10, httpOnly: false});
+            return new Response(null, {
+                status: 302,
+                headers: {Location: parsedState.redirectTo || "/"}
+            });
+        }
+        
         await createSessionCookie(provider.userId, os, browser);
         return new Response(null, {
             status: 302,
-            headers: {Location: "/"}
+            headers: {Location: parsedState.redirectTo || "/"}
         });
     }
 
@@ -74,13 +84,16 @@ export async function GET(request: Request): Promise<Response> {
         profileImage: picture
     });
 
-    const {session} = await validateRequest();
+    if(!userId) {
+        console.log("This user is taken");
+        return new Response(null, {
+            status: 302,
+            headers: {Location: parsedState.redirectTo || "/"}
+        });
+    }
+    
     if(!session) {
         await createSessionCookie(userId, os, browser);
-    }
-
-    if(session?.userId !== userId) {
-        return new Response(null, {status: 400});
     }
 
     return new Response(null, {

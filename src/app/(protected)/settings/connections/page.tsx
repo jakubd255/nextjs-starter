@@ -4,6 +4,7 @@ import { validateRequest } from "@/lib/auth";
 import { getOAuthProvidersByUserId } from "@/db/queries/providers";
 import { forbidden } from "next/navigation";
 import ProvidersList from "@/components/settings/connections/providers-list";
+import AccountLinkErrorToast from "@/components/settings/connections/account-link-error-toast";
 
 export const metadata: Metadata = {
     title: `Connected accounts | ${APP_TITLE}`
@@ -23,6 +24,7 @@ export default async function SettingsConnectionstPage() {
                 Connected accounts
             </h1>
             <ProvidersList providers={providers}/>
+            <AccountLinkErrorToast/>
         </div>
     );
 }

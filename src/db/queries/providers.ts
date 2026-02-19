@@ -9,6 +9,7 @@ export const createOAuthProvider = async (userId: string, provider: string, prov
     const [res] = await db
         .insert(providers)
         .values({id, userId, provider, providerUserId, providerUsername})
+        .onConflictDoNothing()
         .returning();
     return res;
 }
