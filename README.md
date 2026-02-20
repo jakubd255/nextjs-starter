@@ -3,7 +3,7 @@ Starter NextJS application providing login/registration system, account manageme
 
 ## Features
 - Login and registration
-- OAUth2 with GitHub and Google
+- OAuth2 with GitHub and Google
 - Email verification (verification code in console.log)
 - Account management
 - Profile image upload
