@@ -1,7 +1,6 @@
 import { getUserByOAuthProvider } from "@/db/queries/providers";
-import { createSessionCookie, validateRequest } from "@/lib/auth";
+import { createSessionCookie, validateRequest } from "@/lib/auth/session";
 import { google } from "@/lib/auth/oauth";
-import { getDeviceInfo } from "@/lib/auth/device-info";
 import { decodeIdToken, OAuth2Tokens } from "arctic";
 import { cookies } from "next/headers";
 import { upsertOAuthUser } from "@/lib/auth/oauth/upsert-user";
@@ -55,7 +54,6 @@ export async function GET(request: Request): Promise<Response> {
 
     const provider = await getUserByOAuthProvider("google", String(googleUserId));
 
-    const {os, browser} = await getDeviceInfo();
 
     const {session} = await validateRequest();
 
@@ -68,7 +66,7 @@ export async function GET(request: Request): Promise<Response> {
             });
         }
         
-        await createSessionCookie(provider.userId, os, browser);
+        await createSessionCookie(provider.userId);
         return new Response(null, {
             status: 302,
             headers: {Location: parsedState.redirectTo || "/"}
@@ -83,17 +81,9 @@ export async function GET(request: Request): Promise<Response> {
         providerUsername: email,
         profileImage: picture
     });
-
-    if(!userId) {
-        console.log("This user is taken");
-        return new Response(null, {
-            status: 302,
-            headers: {Location: parsedState.redirectTo || "/"}
-        });
-    }
     
     if(!session) {
-        await createSessionCookie(userId, os, browser);
+        await createSessionCookie(userId);
     }
 
     return new Response(null, {

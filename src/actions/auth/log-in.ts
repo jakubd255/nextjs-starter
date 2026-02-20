@@ -3,9 +3,8 @@
 import { createEmailVerificationToken } from "@/db/queries/tokens";
 import { getUserByEmail } from "@/db/queries/users";
 import { actionFailure } from "@/lib/action-result";
-import { createSessionCookie } from "@/lib/auth";
+import { createSessionCookie } from "@/lib/auth/session";
 import { validatePassword } from "@/lib/auth/password";
-import { getDeviceInfo } from "@/lib/auth/device-info";
 import { sendVerificationToken } from "@/lib/email";
 import { redirect } from "next/navigation";
 import { loginSchema } from "@/lib/validation/auth";
@@ -34,8 +33,7 @@ export default async function logInAction(_: unknown, data: FormData) {
     }
 
     if(user.verified) {
-        const {os, browser} = await getDeviceInfo();
-        await createSessionCookie(user.id, os, browser);
+        await createSessionCookie(user.id);
         redirect(redirectTo ?? "/");
     }
     else {

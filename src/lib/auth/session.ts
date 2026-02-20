@@ -1,42 +1,10 @@
-import { Lucia } from "lucia";
 import { cache } from "react";
-import { cookies } from "next/headers";
-import { User } from "../types";
-import { adapter } from "@/db";
-
-declare module "lucia" {
-	interface Register {
-		Lucia: typeof lucia;
-		DatabaseUserAttributes: User;
-	}
-}
-
-const lucia = new Lucia(adapter, {
-    sessionCookie: {
-		expires: false,
-		attributes: {
-			sameSite: "lax",
-        	path: "/",
-			secure: process.env.NODE_ENV === "production"
-		}
-	},
-	getUserAttributes(databaseUserAttributes) {
-		return {
-			id: databaseUserAttributes.id,
-			name: databaseUserAttributes.name,
-            email: databaseUserAttributes.email,
-            pendingEmail: databaseUserAttributes.pendingEmail,
-            verified: databaseUserAttributes.verified,
-			profileImage: databaseUserAttributes.profileImage,
-			bio: databaseUserAttributes.bio,
-			hasPassword: !!databaseUserAttributes.password,
-			role: databaseUserAttributes.role,
-            blocked: databaseUserAttributes.blocked,
-			createdAt: databaseUserAttributes.createdAt
-		}
-	},
-});
-export default lucia;
+import { cookies, headers } from "next/headers";
+import { Permission } from "../types";
+import { hasPermission } from "./permissions";
+import { redirect } from "next/navigation";
+import { UAParser } from "ua-parser-js";
+import lucia from "./lucia";
 
 export const validateRequest = cache(async () => {
 	const sessionId = (await cookies()).get(lucia.sessionCookieName)?.value ?? null;
@@ -66,7 +34,19 @@ export const validateRequest = cache(async () => {
 	return result;
 });
 
-export const createSessionCookie = async (userId: string, os: string, browser?: string | null) => {
+const getDeviceInfo = async () => {
+	const userAgent = (await headers()).get("user-agent") ?? "";
+	const parser = new UAParser(userAgent);
+	const {os, browser} = parser.getResult();
+
+	return {
+		os: String(os.name), 
+		browser: browser.name
+	}
+}
+
+export const createSessionCookie = async (userId: string) => {
+	const {os, browser} = await getDeviceInfo();
 	const session = await lucia.createSession(userId, {os, browser});
     const sessionCookie = lucia.createSessionCookie(session.id);
     (await cookies()).set(sessionCookie.name, sessionCookie.value, sessionCookie.attributes);
@@ -76,4 +56,18 @@ export const terminateSession = async (id: string) => {
 	lucia.invalidateSession(id);
 	const sessionCookie = lucia.createBlankSessionCookie();
 	(await cookies()).set(sessionCookie.name, sessionCookie.value, sessionCookie.attributes);
+}
+
+export const requireAuth = async (permission?: Permission) => {
+	const {user, session} = await validateRequest();
+
+	if(!user || !session) {
+		return redirect("/auth/log-in");
+	}
+
+	if(permission && !hasPermission(user, permission)) {
+		return redirect("/forbidden");
+	}
+
+	return {user, session};
 }

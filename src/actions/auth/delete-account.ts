@@ -2,7 +2,7 @@
 
 import { deleteUserById, getUserById } from "@/db/queries/users";
 import { actionFailure } from "@/lib/action-result";
-import { terminateSession, validateRequest } from "@/lib/auth";
+import { terminateSession, validateRequest } from "@/lib/auth/session";
 import { validatePassword } from "@/lib/auth/password";
 import { passwordSchema } from "@/lib/validation/auth";
 import { redirect } from "next/navigation";

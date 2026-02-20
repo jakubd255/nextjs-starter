@@ -1,6 +1,6 @@
 "use server";
 
-import { validateRequest } from "@/lib/auth";
+import { validateRequest } from "@/lib/auth/session";
 import { validatePassword } from "@/lib/auth/password";
 import { getUserById, updateUser } from "@/db/queries/users";
 import { actionFailure, actionSuccess } from "@/lib/action-result";

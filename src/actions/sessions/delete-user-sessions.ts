@@ -2,7 +2,7 @@
 
 import { deleteSessionsByUserId } from "@/db/queries/sessions";
 import { actionFailure, actionSuccess } from "@/lib/action-result";
-import { validateRequest } from "@/lib/auth";
+import { validateRequest } from "@/lib/auth/session";
 import { hasPermission } from "@/lib/auth/permissions";
 
 export default async function deleteUserSessionsAction(id: string) {

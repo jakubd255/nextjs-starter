@@ -1,6 +1,6 @@
 "use server";
 
-import { terminateSession, validateRequest } from "@/lib/auth";
+import { terminateSession, validateRequest } from "@/lib/auth/session";
 import { actionFailure } from "@/lib/action-result";
 import { redirect } from "next/navigation";
 

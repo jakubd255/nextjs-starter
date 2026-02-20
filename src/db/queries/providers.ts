@@ -2,8 +2,9 @@ import { generateIdFromEntropySize } from "lucia";
 import db from ".."
 import { providers } from "../schema"
 import { and, eq } from "drizzle-orm";
+import { Provider } from "@/lib/types";
 
-export const createOAuthProvider = async (userId: string, provider: string, providerUserId: string, providerUsername: string) => {
+export const createOAuthProvider = async (userId: string, provider: string, providerUserId: string, providerUsername: string): Promise<Provider> => {
     const id = generateIdFromEntropySize(10);
     
     const [res] = await db
@@ -14,14 +15,14 @@ export const createOAuthProvider = async (userId: string, provider: string, prov
     return res;
 }
 
-export const getOAuthProviderById = async (id: string) => {
+export const getOAuthProviderById = async (id: string): Promise<Provider | undefined> => {
     return await db.query.providers.findFirst({
         where: eq(providers.id, id),
         with: {user: true}
     });
 }
 
-export const getUserByOAuthProvider = async (provider: string, providerUserId: string) => {
+export const getUserByOAuthProvider = async (provider: string, providerUserId: string): Promise<Provider | undefined> => {
     return await db.query.providers.findFirst({
         where: and(
             eq(providers.provider, provider),
@@ -31,7 +32,7 @@ export const getUserByOAuthProvider = async (provider: string, providerUserId: s
     });
 }
 
-export const getOAuthProvidersByUserId = async (userId: string) => {
+export const getOAuthProvidersByUserId = async (userId: string): Promise<Provider[]> => {
     return await db.query.providers.findMany({
         where: eq(providers.userId, userId)
     });

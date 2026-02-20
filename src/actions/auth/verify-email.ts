@@ -3,8 +3,7 @@
 import { getTokenByCode } from "@/db/queries/tokens";
 import { getUserById, updateUser } from "@/db/queries/users";
 import { actionFailure } from "@/lib/action-result";
-import { createSessionCookie } from "@/lib/auth";
-import { getDeviceInfo } from "@/lib/auth/device-info";
+import { createSessionCookie } from "@/lib/auth/session";
 import { verifyEmailSchema } from "@/lib/validation/auth";
 import { redirect } from "next/navigation";
 
@@ -29,9 +28,8 @@ export default async function verifyEmailAction(_: unknown, data: FormData) {
     }
 
     if(!user.verified) {
-        const {os, browser} = await getDeviceInfo();
         await updateUser(userId, {verified: true});
-        await createSessionCookie(userId, os, browser);
+        await createSessionCookie(userId);
     }
     else if(user.pendingEmail) {
         await updateUser(user.id, {email: user.pendingEmail, pendingEmail: null});

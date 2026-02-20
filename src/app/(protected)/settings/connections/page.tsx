@@ -1,8 +1,7 @@
 import { Metadata } from "next";
 import { APP_TITLE } from "@/lib/constants";
-import { validateRequest } from "@/lib/auth";
+import { requireAuth } from "@/lib/auth/session";
 import { getOAuthProvidersByUserId } from "@/db/queries/providers";
-import { forbidden } from "next/navigation";
 import ProvidersList from "@/components/settings/connections/providers-list";
 import AccountLinkErrorToast from "@/components/settings/connections/account-link-error-toast";
 
@@ -11,10 +10,7 @@ export const metadata: Metadata = {
 };
 
 export default async function SettingsConnectionstPage() {
-    const {user} = await validateRequest();
-    if(!user) {
-        forbidden();
-    }
+    const {user} = await requireAuth();
 
     const providers = await getOAuthProvidersByUserId(user.id);
 

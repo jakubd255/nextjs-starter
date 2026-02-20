@@ -29,7 +29,7 @@ export default function DeleteUserSection({user, disabled=true}: DeleteUserSecti
                         text="Delete user" 
                         variant="destructive" 
                         open={open} 
-                        onOpenChange={() => setOpen(false)} 
+                        onOpenChange={setOpen} 
                         disabled={disabled}
                     >
                         <DeleteUserDialog user={user} redirect/>

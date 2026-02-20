@@ -1,20 +1,15 @@
 import SessionsList from "@/components/settings/sessions/sessions-list";
 import { getSessionsByUserId } from "@/db/queries/sessions";
-import { validateRequest } from "@/lib/auth";
+import { requireAuth } from "@/lib/auth/session";
 import { APP_TITLE } from "@/lib/constants";
 import { Metadata } from "next";
-import { forbidden } from "next/navigation";
 
 export const metadata: Metadata = {
     title: `Sessions | ${APP_TITLE}`,
 };
 
 export default async function SettingsSessionsPage() {
-    const {user, session: currentSession} = await validateRequest();
-    if(!user) {
-        forbidden();
-    }
-
+    const {user, session: currentSession} = await requireAuth();
     const sessions = await getSessionsByUserId(user.id);
 
     return(

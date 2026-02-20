@@ -1,6 +1,10 @@
 "use client";
 
-import { DropdownMenu, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "./ui/dropdown-menu";
+import { 
+    DropdownMenu, DropdownMenuContent, DropdownMenuGroup, 
+    DropdownMenuItem, DropdownMenuLabel, 
+    DropdownMenuSeparator, DropdownMenuTrigger 
+} from "./ui/dropdown-menu";
 import { LogOut, ShieldAlert, UserCog } from "lucide-react";
 import Link from "next/link";
 import { useSession } from "./providers/session-provider";
@@ -31,12 +35,15 @@ export default function NavbarUserMenu() {
                         </Link>
                     </DropdownMenuItem>
                     {hasPermission(user, "admin:access") ? (
-                        <DropdownMenuItem className="cursor-pointer" asChild>
-                            <Link href="/admin">
-                                <ShieldAlert className="w-4 h-4"/>
-                                Admin dashboard
-                            </Link>
-                        </DropdownMenuItem>
+                        <>
+                            <DropdownMenuSeparator/>
+                            <DropdownMenuItem className="cursor-pointer" asChild>
+                                <Link href="/admin">
+                                    <ShieldAlert className="w-4 h-4"/>
+                                    Admin dashboard
+                                </Link>
+                            </DropdownMenuItem>
+                        </>
                     ) : null}
                     <DropdownMenuSeparator/>
                     <DropdownMenuItem onClick={logOutAction} className="cursor-pointer">

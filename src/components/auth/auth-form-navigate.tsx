@@ -1,7 +1,7 @@
 "use client";
 
+import useRedirectTo from "@/lib/hooks/use-redirect-to";
 import Link from "next/link";
-import { useSearchParams } from "next/navigation";
 
 interface AuthFormNavigateProps {
     text: string;
@@ -10,14 +10,12 @@ interface AuthFormNavigateProps {
 }
 
 export default function AuthFormNavigate({text, href, name}: AuthFormNavigateProps) {
-    const params = useSearchParams();
-    const redirectTo = params.get("redirectTo") || "/";
-    const link = redirectTo === "/" ? href : `${href}?redirectTo=${encodeURIComponent(redirectTo)}`;
+    const redirectTo = useRedirectTo();
     
     return(
         <div>
             {text} &nbsp;
-            <Link href={link} className="font-bold hover:underline">
+            <Link href={{pathname: href, query: redirectTo}} className="font-bold hover:underline">
                 {name}
             </Link>
         </div>

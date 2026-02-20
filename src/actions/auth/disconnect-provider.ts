@@ -2,7 +2,7 @@
 
 import { deleteOAuthProviderById, getOAuthProviderById } from "@/db/queries/providers";
 import { actionFailure } from "@/lib/action-result";
-import { validateRequest } from "@/lib/auth";
+import { validateRequest } from "@/lib/auth/session";
 import { redirect } from "next/navigation";
 
 export default async function disconnectProviderAction(id: string) {

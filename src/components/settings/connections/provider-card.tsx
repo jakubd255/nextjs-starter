@@ -27,6 +27,7 @@ export default function ProviderCard({provider, connectedProvider}: ProviderCard
                         className={provider.iconDark ? "dark:hidden h-4 w-4" : "h-4 w-4"}
                         width={16}
                         height={16}
+                        draggable={false}
                     />
                     {provider.iconDark && (
                         <Image
@@ -35,6 +36,7 @@ export default function ProviderCard({provider, connectedProvider}: ProviderCard
                             className="hidden dark:block h-4 w-4"
                             width={16}
                             height={16}
+                            draggable={false}
                         />
                     )}
                     <b>
@@ -45,7 +47,7 @@ export default function ProviderCard({provider, connectedProvider}: ProviderCard
                     <ProviderDropdownMenu provider={connectedProvider}/>
                 ) : (
                     <Button variant="outline" asChild>
-                        <Link href={`${provider.url}?redirect=/settings/connections`}>
+                        <Link href={`${provider.url}?redirectTo=/settings/connections`}>
                             Connect
                         </Link>
                     </Button>

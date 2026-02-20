@@ -4,34 +4,29 @@ import ProfileSection from "@/components/admin/users/profile-section";
 import RoleSection from "@/components/admin/users/role-section";
 import SecuritySection from "@/components/admin/users/security-section";
 import { getUserById } from "@/db/queries/users";
-import { validateRequest } from "@/lib/auth";
+import { requireAuth } from "@/lib/auth/session";
 import { hasPermission } from "@/lib/auth/permissions";
-import { forbidden, notFound } from "next/navigation";
+import { notFound } from "next/navigation";
 
 interface AdminUserEditPageProps {
     params: Promise<{id: string}>;
 }
 
 export default async function AdminUserEditPage({params}: AdminUserEditPageProps) {
-    const {id} = await params;
+    const session = await requireAuth("admin:access");
 
+    const {id} = await params;
     const user = await getUserById(id);
     if(!user) {
         notFound();
     }
 
-    const session = await validateRequest();
     const permissions = {
-        access: hasPermission(session.user, "admin:access"),
         profile: hasPermission(session.user, "user:update:profile"),
         tokenResend: hasPermission(session.user, "token:resend"),
         security: hasPermission(session.user, "user:update:security"),
         role: hasPermission(session.user, "user:update:role"),
         delete: hasPermission(session.user, "user:delete")
-    }
-
-    if(!permissions.access || !session.user) {
-        forbidden();
     }
 
     return(

@@ -1,13 +1,13 @@
 "use client";
 
-import { SessionFull } from "@/lib/types/session";
+import { Session } from "@/lib/types/session";
 import { useState } from "react";
-import { Session } from "lucia";
+import { Session as AuthSession } from "lucia";
 import SessionCard from "./session-card";
 
 interface SessionsListProps {
-    sessions: SessionFull[];
-    currentSession: Session;
+    sessions: Session[];
+    currentSession: AuthSession;
 }
 
 export default function SessionsList({sessions: sessionsList, currentSession}: SessionsListProps) {

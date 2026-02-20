@@ -2,7 +2,7 @@
 
 import { getUserById, updateUser } from "@/db/queries/users";
 import { actionFailure, actionSuccess } from "@/lib/action-result";
-import { validateRequest } from "@/lib/auth";
+import { validateRequest } from "@/lib/auth/session";
 import { hasPermission } from "@/lib/auth/permissions";
 import { deleteFile, extractFilenameFromUrl, isUploaded, uploadFile } from "@/lib/file-handler";
 

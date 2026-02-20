@@ -2,9 +2,10 @@
 
 import { getSessionById } from "@/db/queries/sessions";
 import { actionFailure, actionSuccess } from "@/lib/action-result";
-import lucia, { terminateSession, validateRequest } from "@/lib/auth";
+import { terminateSession, validateRequest } from "@/lib/auth/session";
 import { hasPermission } from "@/lib/auth/permissions";
 import { redirect } from "next/navigation";
+import lucia from "@/lib/auth/lucia";
 
 export default async function deleteSessionAction(id: string) {
     const {user, session: currentSession} = await validateRequest();

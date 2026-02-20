@@ -1,6 +1,6 @@
 export const encodeState = (request: Request, state: string) => {
     const urlObj = new URL(request.url);
-	const redirectParam = urlObj.searchParams.get("redirect");
+	const redirectParam = urlObj.searchParams.get("redirectTo");
 	const statePayload = JSON.stringify({
 		csrf: state,
 		redirectTo: redirectParam?.startsWith("/") ? redirectParam : null

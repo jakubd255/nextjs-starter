@@ -1,11 +1,11 @@
 import { formatDateTimeShort } from "@/lib/date-format";
-import { SessionFull } from "@/lib/types/session";
-import { Session } from "lucia";
+import { Session } from "@/lib/types/session";
+import { Session as AuthSession } from "lucia";
 import DeleteSessionDialog from "./delete-session-dialog";
 
 interface SessionProps {
-    session: SessionFull;
-    currentSession: Session;
+    session: Session;
+    currentSession: AuthSession;
     deleteSession: (id: string) => void;
 }
 

@@ -1,11 +1,10 @@
 import { getUserByOAuthProvider } from "@/db/queries/providers";
-import { createSessionCookie, validateRequest } from "@/lib/auth";
+import { createSessionCookie, validateRequest } from "@/lib/auth/session";
 import { github } from "@/lib/auth/oauth";
-import { getDeviceInfo } from "@/lib/auth/device-info";
 import { OAuth2Tokens } from "arctic";
 import { cookies } from "next/headers";
 import { upsertOAuthUser } from "@/lib/auth/oauth/upsert-user";
-import { getGithubUserEmail } from "@/lib/auth/oauth/github-email";
+import { getGithubUserEmail } from "@/lib/auth/oauth/email";
 import { decodeState } from "@/lib/auth/oauth/state";
 
 export async function GET(request: Request): Promise<Response> {
@@ -54,13 +53,22 @@ export async function GET(request: Request): Promise<Response> {
 
 	const provider = await getUserByOAuthProvider("github", String(githubUserId));
 
-	const {os, browser} = await getDeviceInfo();
+	const {session} = await validateRequest();
 
 	if(provider?.user) {
-		await createSessionCookie(provider.userId, os, browser);
+		if(session && session.userId !== provider.userId) {
+            cookieStore.set("oauth_error", "account_conflict", {path: "/", maxAge: 10, httpOnly: false});
+            return new Response(null, {
+                status: 302,
+                headers: {Location: parsedState.redirectTo || "/"}
+            });
+        }
+
+		await createSessionCookie(provider.userId);
+		console.log(parsedState.redirectTo);
 		return new Response(null, {
 			status: 302,
-			headers: {Location: "/"}
+			headers: {Location: parsedState.redirectTo || "/"}
 		});
 	}
 	
@@ -74,14 +82,9 @@ export async function GET(request: Request): Promise<Response> {
 		bio: githubUser.bio
 	});
 
-	const {session} = await validateRequest();
 	if(!session) {
-		await createSessionCookie(userId, os, browser);
+		await createSessionCookie(userId);
 	}
-
-	if(session?.userId !== userId) {
-        return new Response(null, {status: 400});
-    }
     
 	return new Response(null, {
 		status: 302,

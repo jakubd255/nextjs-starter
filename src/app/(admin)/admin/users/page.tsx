@@ -1,9 +1,7 @@
 import { DataTable } from "@/components/data-table/data-table";
 import { columns } from "./columns";
 import { countUsersAdmin, getUsersAdmin } from "@/db/queries/users";
-import { validateRequest } from "@/lib/auth";
-import { hasPermission } from "@/lib/auth/permissions";
-import { forbidden } from "next/navigation";
+import { requireAuth } from "@/lib/auth/session";
 import { Suspense } from "react";
 import UsersTableToolbar from "@/components/admin/users/users-table-toolbar";
 import { PaginationWithLinks } from "@/components/ui/pagination-with-links";
@@ -15,10 +13,7 @@ interface AdminUsersPageProps {
 };
 
 export default async function AdminUsersPage({searchParams}: AdminUsersPageProps) {
-    const {user} = await validateRequest();
-    if(!user || !hasPermission(user, "user:read")) {
-        forbidden();
-    }
+    await requireAuth("user:read");
 
     const params = await searchParams;
     const parsedParams = parseUserParams(params);

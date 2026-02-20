@@ -3,7 +3,7 @@
 import { createEmailVerificationToken } from "@/db/queries/tokens";
 import { getUserByEmail, updateUser } from "@/db/queries/users";
 import { actionFailure, actionSuccess } from "@/lib/action-result";
-import { validateRequest } from "@/lib/auth";
+import { validateRequest } from "@/lib/auth/session";
 import { sendVerificationToken } from "@/lib/email";
 import { updateEmailSchema } from "@/lib/validation/auth";
 

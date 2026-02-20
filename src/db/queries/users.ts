@@ -7,7 +7,7 @@ import { and, count, eq } from "drizzle-orm";
 import { PAGE_SIZE } from "@/lib/constants";
 import { buildUserSearchWhere, getOrderBy, GetUsersParams, UserFilters } from "../filters/users";
 
-export const createUser = async (name: string, email: string, rawPassword?: string | null, role: Role = "USER", verified = false) => {
+export const createUser = async (name: string, email: string, rawPassword?: string | null, role: Role = "USER", verified = false): Promise<User> => {
     const id = generateIdFromEntropySize(10);
     const password = rawPassword ? hashPassword(rawPassword) : null;
 
@@ -19,31 +19,32 @@ export const createUser = async (name: string, email: string, rawPassword?: stri
 }
 
 export const countUsersByRole = async (role: Role) => {
-    const res = await db.select({count: count()})
+    const [res] = await db.select({count: count()})
         .from(users)
         .where(eq(users.role, role));
-    return res[0].count;
+    return res.count;
 }
 
-export const getUserById = async (id: string) => {
+export const getUserById = async (id: string): Promise<User | undefined> => {
     return await db.query.users.findFirst({
         where: eq(users.id, id)
     });
 }
 
-export const getUserByEmail = async (email: string) => {
+export const getUserByEmail = async (email: string): Promise<User | undefined> => {
     return await db.query.users.findFirst({
         where: eq(users.email, email)
     });
 }
 
 export const getIsUserEmailTaken = async (email: string) => {
-    return !!(await db.query.users.findFirst({
+    const res = await db.query.users.findFirst({
         where: and(
             eq(users.email, email),
             eq(users.verified, true)
         )
-    }));
+    });
+    return !!res;
 }
 
 export const updateUser = async (id: string, data: Partial<User>) => {
@@ -74,7 +75,7 @@ export const getUsersAdmin = async ({
     blocked,
     sortField = "createdAt",
     sortOrder = "asc"
-}: GetUsersParams) => {
+}: GetUsersParams): Promise<User[]> => {
     const where = buildUserSearchWhere({search, role, verified, blocked});
 
     return await db.query.users.findMany({
@@ -88,10 +89,10 @@ export const getUsersAdmin = async ({
 export const countUsersAdmin = async (filters: UserFilters) => {
     const where = buildUserSearchWhere(filters);
 
-    const result = await db
+    const [result] = await db
         .select({count: count()})
         .from(users)
         .where(where);
 
-    return Number(result[0].count);
+    return result.count;
 }

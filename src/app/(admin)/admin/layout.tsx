@@ -1,11 +1,9 @@
 import AdminNavigation from "@/components/admin/admin-navigation";
 import Navbar from "@/components/navbar";
 import { SessionProvider } from "@/components/providers/session-provider";
-import { validateRequest } from "@/lib/auth";
-import { hasPermission } from "@/lib/auth/permissions";
+import { requireAuth } from "@/lib/auth/session";
 import { APP_TITLE } from "@/lib/constants";
 import { Metadata } from "next";
-import { forbidden } from "next/navigation";
 
 export const metadata: Metadata = {
     title: `Admin | ${APP_TITLE}`,
@@ -13,10 +11,7 @@ export const metadata: Metadata = {
 };
 
 export default async function AdminLayout({children}: Readonly<{children: React.ReactNode}>) {
-    const {user, session} = await validateRequest();
-    if((!user && !session) || !hasPermission(user, "admin:access")) {
-        forbidden();
-    }
+    const {user, session} = await requireAuth("admin:access");
 
     return(
         <SessionProvider value={{user, session}}>

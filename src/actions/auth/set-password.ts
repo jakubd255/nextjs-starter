@@ -2,7 +2,7 @@
 
 import { getUserById, updateUser } from "@/db/queries/users";
 import { actionFailure } from "@/lib/action-result";
-import { validateRequest } from "@/lib/auth";
+import { validateRequest } from "@/lib/auth/session";
 import { passwordSchema } from "@/lib/validation/auth";
 import { redirect } from "next/navigation";
 

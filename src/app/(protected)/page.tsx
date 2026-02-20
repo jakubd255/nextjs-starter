@@ -1,12 +1,8 @@
 import UserAvatar from "@/components/user-avatar";
-import { validateRequest } from "@/lib/auth";
-import { forbidden } from "next/navigation";
+import { requireAuth } from "@/lib/auth/session";
 
 export default async function Home() {
-    const {user} = await validateRequest();
-    if(!user) {
-        forbidden();
-    }
+    const {user} = await requireAuth();
     
     return(
         <div className="flex flex-col gap-3 items-center">

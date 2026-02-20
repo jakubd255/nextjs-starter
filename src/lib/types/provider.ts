@@ -1,3 +1,5 @@
+import { User } from "./user";
+
 export interface Provider {
     id: string;
     userId: string;
@@ -5,4 +7,5 @@ export interface Provider {
     providerUserId: string;
     providerUsername: string;
     createdAt: Date;
+    user?: User | null;
 }

@@ -11,15 +11,7 @@ interface UpsertOAuthUserParams {
 	providerUsername: string;
 }
 
-export async function upsertOAuthUser({
-	provider,
-	providerUserId,
-	email,
-	name,
-	profileImage,
-	bio,
-	providerUsername,
-}: UpsertOAuthUserParams) {
+export async function upsertOAuthUser({provider, providerUserId, email, name, profileImage, bio, providerUsername}: UpsertOAuthUserParams) {
     const existingProvider = await getUserByOAuthProvider(provider, providerUserId);
 
     if(existingProvider?.user) {
