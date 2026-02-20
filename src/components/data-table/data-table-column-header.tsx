@@ -6,8 +6,7 @@ import {
     DropdownMenuGroup, DropdownMenuItem, DropdownMenuTrigger 
 } from "../ui/dropdown-menu";
 import { Button } from "../ui/button";
-import { useRouter, useSearchParams } from "next/navigation";
-import { updateSearchParams } from "@/lib/params";
+import useTableQuery from "@/lib/hooks/use-table-query";
 
 interface DataTableColumnHeaderProps {
     accessorKey: string;
@@ -15,26 +14,22 @@ interface DataTableColumnHeaderProps {
 }
 
 export default function DataTableColumnHader({accessorKey, label}: DataTableColumnHeaderProps) {
-    const router = useRouter();
+    const {sort} = useTableQuery();
+
+    const isChecked = (order?: string | null) => {
+        return sort.field === accessorKey && order === sort.order;
+    }
 
     const handleSetAsc = () => {
-        updateSearchParams(router, {sortField: accessorKey, sortOrder: "asc"}, {resetPage: true});
+        sort.set(accessorKey, "asc");
     }
 
     const handleSetDesc = () => {
-        updateSearchParams(router, {sortField: accessorKey, sortOrder: "desc"}, {resetPage: true});
+        sort.set(accessorKey, "desc");
     }
 
     const handleReset = () => {
-        updateSearchParams(router, {sortField: null, sortOrder: null}, {resetPage: true});
-    }
-
-    const searchParams = useSearchParams();
-    const sortField = searchParams.get("sortField");
-    const sortOrder = searchParams.get("sortOrder");
-
-    const isChecked = (order?: string | null) => {
-        return sortField === accessorKey && order === sortOrder;
+        sort.set(null, null);
     }
 
     return(
@@ -53,7 +48,7 @@ export default function DataTableColumnHader({accessorKey, label}: DataTableColu
             </DropdownMenuTrigger>
             <DropdownMenuContent>
                 <DropdownMenuGroup>
-                    <DropdownMenuCheckboxItem checked={isChecked("asc")} onClick={handleSetAsc}>
+                    <DropdownMenuCheckboxItem checked={isChecked("asc")} onClick={(handleSetAsc)}>
                         <ChevronUp className="w-4 h-4"/>
                         Asc
                     </DropdownMenuCheckboxItem>
@@ -61,7 +56,7 @@ export default function DataTableColumnHader({accessorKey, label}: DataTableColu
                         <ChevronDown className="w-4 h-4"/>
                         Desc
                     </DropdownMenuCheckboxItem>
-                    {sortField === accessorKey && sortOrder ? (
+                    {sort.field === accessorKey && sort.order ? (
                         <DropdownMenuItem onClick={handleReset}>
                             <X className="w-4 h-4"/>
                             Reset

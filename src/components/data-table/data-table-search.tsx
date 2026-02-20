@@ -1,29 +1,22 @@
 "use client";
 
-import { useRouter, useSearchParams } from "next/navigation";
 import { FormEvent, useEffect, useState } from "react";
 import { Input } from "../ui/input";
 import { Button } from "../ui/button";
-import { updateSearchParams } from "@/lib/params";
+import useTableQuery from "@/lib/hooks/use-table-query";
 
 export default function DataTableSearch() {
-    const router = useRouter();
-    const searchParams = useSearchParams();
-    const search = searchParams.get("search") ?? "";
-    const [filter, setFilter] = useState(search);
+    const {search} = useTableQuery();
+    const [filter, setFilter] = useState(search.value);
 
-    const handleSearch = () => {
-        updateSearchParams(router, {search: filter}, {resetPage: true});
-    }
+    useEffect(() => {
+        setFilter(search.value);
+    }, [search.value]);
 
     const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-        handleSearch();
+        search.set(filter);
     }
-
-    useEffect(() => {
-        setFilter(search);
-    }, [searchParams, search]);
 
     return(
         <form className="flex gap-2 max-w-75" onSubmit={handleSubmit}>
@@ -32,7 +25,7 @@ export default function DataTableSearch() {
                 value={filter} 
                 onChange={e => setFilter(e.target.value)}
             />
-            <Button variant="outline" onClick={handleSearch}>
+            <Button variant="outline">
                 Search
             </Button>
         </form>

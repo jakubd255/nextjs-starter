@@ -1,10 +1,9 @@
 "use client";
 
-import { useRouter, useSearchParams } from "next/navigation";
 import { Button } from "../ui/button";
-import { updateSearchParams } from "@/lib/params";
 import { X } from "lucide-react";
 import { Separator } from "../ui/separator";
+import useTableQuery from "@/lib/hooks/use-table-query";
 
 interface DataTableResetProps {
     keys: string[];
@@ -12,19 +11,9 @@ interface DataTableResetProps {
 }
 
 export default function DataTableReset({keys = [], showSeparator=false}: DataTableResetProps) {
-    const router = useRouter();
-    const searchParams = useSearchParams();
+    const { params, filter } = useTableQuery();
 
-    const page = searchParams.get("page");
-    const sortField = searchParams.get("sortField");
-    const sortOrder = searchParams.get("sortOrder");
-    
-
-    const handleReset = () => {
-        updateSearchParams(router, {page, sortField, sortOrder}, {resetPage: true, clearOthers: true})
-    }
-
-    const values = keys.map((key) => searchParams.get(key));
+    const values = keys.map((key) => params[key]);
     const isHidden = values.every((v) => v === null || v === undefined);
 
     if(isHidden) return null;
@@ -32,7 +21,7 @@ export default function DataTableReset({keys = [], showSeparator=false}: DataTab
     return(
         <>
             {showSeparator ? (<Separator orientation="vertical"/>) : null}
-            <Button variant="outline" onClick={handleReset}>
+            <Button variant="outline" onClick={filter.clearAll}>
                 <X className="w-4 h-4"/>
                 Reset
             </Button>

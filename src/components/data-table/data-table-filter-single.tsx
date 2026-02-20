@@ -1,11 +1,13 @@
 "use client";
 
-import { useRouter, useSearchParams } from "next/navigation";
 import { Button } from "../ui/button";
-import { DropdownMenu, DropdownMenuCheckboxItem, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from "../ui/dropdown-menu";
+import { 
+    DropdownMenu, DropdownMenuCheckboxItem, DropdownMenuContent, 
+    DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger 
+} from "../ui/dropdown-menu";
 import { Separator } from "../ui/separator";
-import { updateSearchParams } from "@/lib/params";
 import { ChevronDown } from "lucide-react";
+import useTableQuery from "@/lib/hooks/use-table-query";
 
 interface DataTableFilterSingleProps {
     accessorKey: string;
@@ -17,16 +19,15 @@ interface DataTableFilterSingleProps {
 }
 
 export default function DataTableFilterSingle({accessorKey, label, data}: DataTableFilterSingleProps) {
-    const router = useRouter();
-    const searchParams = useSearchParams();
-    const selected = searchParams.get(accessorKey);
+    const { filter } = useTableQuery();
+    const selected = filter.get(accessorKey);
 
     const toggleChecked = (value: string) => {
-        updateSearchParams(router, {[accessorKey]: selected === value ? null : value}, {resetPage: true});
+        filter.toggleSingle(accessorKey, value);
     }
 
     const handleClear = () => {
-        updateSearchParams(router, {[accessorKey]: null}, {resetPage: true});
+        filter.clear(accessorKey);
     }
 
     return(

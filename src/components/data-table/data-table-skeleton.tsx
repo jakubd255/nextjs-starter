@@ -1,24 +1,17 @@
 
 import { Skeleton } from "@/components/ui/skeleton";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { PAGE_SIZE } from "@/lib/constants";
 import { cn } from "@/lib/utils";
 
 interface DataTableSkeletonProps extends React.ComponentProps<"div"> {
-  columnCount: number;
-  rowCount?: number;
-  filterCount?: number;
-  cellWidths?: string[];
-  withViewOptions?: boolean;
-  withPagination?: boolean;
-  shrinkZero?: boolean;
+    columnCount: number;
+    rowCount?: number;
+    filterCount?: number;
+    cellWidths?: string[];
+    withViewOptions?: boolean;
+    withPagination?: boolean;
+    shrinkZero?: boolean;
 }
 
 export function DataTableSkeleton({
