@@ -13,13 +13,14 @@ export default async function SettingsConnectionstPage() {
     const {user} = await requireAuth();
 
     const providers = await getOAuthProvidersByUserId(user.id);
+    const canDisconnect = user.hasPassword || providers.length > 1;
 
     return(
         <div className="flex flex-col gap-6 w-full">
             <h1 className="text-4xl font-bold">
                 Connected accounts
             </h1>
-            <ProvidersList providers={providers}/>
+            <ProvidersList providers={providers} canDisconnect={canDisconnect}/>
             <AccountLinkErrorToast/>
         </div>
     );

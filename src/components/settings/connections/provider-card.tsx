@@ -14,9 +14,10 @@ interface ProviderCardProps {
         key: string;
     }
 	connectedProvider?: Provider;
+    canDisconnect: boolean;
 }
 
-export default function ProviderCard({provider, connectedProvider}: ProviderCardProps) {
+export default function ProviderCard({provider, connectedProvider, canDisconnect}: ProviderCardProps) {
     return(
         <div className="flex flex-col gap-2 p-4 rounded-md border max-w-115">
             <div className="flex justify-between">
@@ -44,7 +45,10 @@ export default function ProviderCard({provider, connectedProvider}: ProviderCard
                     </b>
                 </div>
                 {connectedProvider ? (
-                    <ProviderDropdownMenu provider={connectedProvider}/>
+                    <ProviderDropdownMenu 
+                        provider={connectedProvider} 
+                        disabled={!canDisconnect}
+                    />
                 ) : (
                     <Button variant="outline" asChild>
                         <Link href={`${provider.url}?redirectTo=/settings/connections`}>

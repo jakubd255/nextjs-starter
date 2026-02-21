@@ -4,9 +4,10 @@ import { AVAILABLE_PROVIDERS } from "@/lib/auth/oauth";
 
 interface ProvidersListProps {
     providers: Provider[];
+    canDisconnect: boolean;
 }
 
-export default function ProvidersList({providers}: ProvidersListProps) {
+export default function ProvidersList({providers, canDisconnect}: ProvidersListProps) {
     const providersMap = Object.fromEntries(providers.map(p => [p.provider, p]));
 
     return(
@@ -15,6 +16,7 @@ export default function ProvidersList({providers}: ProvidersListProps) {
                 <ProviderCard
 					provider={provider}
 					connectedProvider={providersMap[provider.key]}
+                    canDisconnect={canDisconnect}
                     key={provider.key}
 				/>
             ))}

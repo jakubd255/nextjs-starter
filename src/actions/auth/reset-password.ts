@@ -2,7 +2,7 @@
 
 import { deleteSessionsByUserId } from "@/db/queries/sessions";
 import { getTokenByCode } from "@/db/queries/tokens";
-import { updateUser } from "@/db/queries/users";
+import { getUserById, updateUser } from "@/db/queries/users";
 import { actionFailure } from "@/lib/action-result";
 import { resetPasswordSchema } from "@/lib/validation/auth";
 import { redirect } from "next/navigation";
@@ -19,6 +19,11 @@ export default async function resetPasswordAction(_: unknown, data: FormData) {
 
     const token = await getTokenByCode(code);
     if(!token) {
+        return actionFailure({});
+    }
+
+    const user = await getUserById(token.userId);
+    if(!user || !user.verified) {
         return actionFailure({});
     }
 

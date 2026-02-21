@@ -8,23 +8,28 @@ import { Ellipsis } from "lucide-react";
 
 interface ProviderDropdownMenuProps {
     provider: Provider;
+    disabled?: boolean;
 }
 
-export default function ProviderDropdownMenu({provider}: ProviderDropdownMenuProps) {
+export default function ProviderDropdownMenu({provider, disabled=false}: ProviderDropdownMenuProps) {
     const handleDisconnect = async () => {
         await disconnectProviderAction(provider.id);
     }
 
     return(
         <DropdownMenu>
-            <DropdownMenuTrigger asChild>
+            <DropdownMenuTrigger disabled={disabled} asChild>
                 <Button variant="ghost" size="icon">
                     <Ellipsis className="w-4 h-4"/>
                 </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent>
                 <DropdownMenuGroup>
-                    <DropdownMenuItem variant="destructive" onClick={handleDisconnect}>
+                    <DropdownMenuItem 
+                        variant="destructive" 
+                        disabled={disabled} 
+                        onClick={handleDisconnect}
+                    >
                         Disconnect
                     </DropdownMenuItem>
                 </DropdownMenuGroup>

@@ -3,7 +3,7 @@
 import DialogLauncher from "@/components/dialog-launcher";
 import { useSession } from "@/components/providers/session-provider";
 import UpdateEmailForm from "./update-email-form";
-import UserEmail from "@/components/user-email";
+import UserEmail from "@/components/settings/account/user-email";
 
 export default function EmailSection() {
     const {user} = useSession();

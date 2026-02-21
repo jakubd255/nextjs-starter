@@ -35,7 +35,7 @@ export default function DataTableColumnHader({accessorKey, label}: DataTableColu
     return(
         <DropdownMenu>
             <DropdownMenuTrigger asChild>
-                <Button className="px-0!" variant="ghost">
+                <Button className="px-0! rounded-none" variant="ghost">
                     {label}
                     {isChecked("asc") ? (
                         <ChevronUp className="w-4 h-4"/>

@@ -2,6 +2,8 @@ import { formatDateTimeShort } from "@/lib/date-format";
 import { Session } from "@/lib/types/session";
 import { Session as AuthSession } from "lucia";
 import DeleteSessionDialog from "./delete-session-dialog";
+import DialogLauncher from "@/components/dialog-launcher";
+import { Trash2 } from "lucide-react";
 
 interface SessionProps {
     session: Session;
@@ -26,11 +28,13 @@ export default function SessionCard({session, currentSession, deleteSession}: Se
                 <span>
                     {formatDateTimeShort(session.createdAt)}
                 </span>
-                <DeleteSessionDialog 
-                    id={session.id} 
-                    currentSessionId={currentSession.id} 
-                    deleteSession={deleteSession}
-                />
+                {currentSession.id !== session.id ? (
+                    <DialogLauncher variant="ghost" icon={Trash2}>
+                        <DeleteSessionDialog id={session.id} deleteSession={deleteSession}/>
+                    </DialogLauncher>
+                ) : (
+                    <div className="w-9"></div>
+                )}
             </div>
         </div>
     );
