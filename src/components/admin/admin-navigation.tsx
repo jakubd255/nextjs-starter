@@ -1,7 +1,7 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { Home, Users } from "lucide-react";
+import { Home, LinkIcon, Users } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
@@ -19,6 +19,11 @@ export default function AdminNavigation() {
             label: "Users",
             path: "/admin/users",
             icon: Users
+        },
+        {
+            label: "OAuth accounts",
+            path: "/admin/providers",
+            icon: LinkIcon
         }
     ];
 

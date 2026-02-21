@@ -17,7 +17,10 @@ export const ROLE_PERMISSIONS: Record<Role, Permission[]> = {
         "user:update:role",
         "user:delete",
         "session:terminate",
-        "token:resend"
+        "token:resend",
+        "oauth:read",
+        "oauth:disconnect",
+        "audit:read"
     ]
 };
 

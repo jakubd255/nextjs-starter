@@ -10,10 +10,7 @@ export const providers = pgTable("providers", {
     providerUsername: text().notNull(),
     createdAt: timestamp({withTimezone: true}).defaultNow().notNull()
 }, (table) => ({
-    providerUnique: uniqueIndex().on(
-        table.provider,
-        table.providerUserId
-    )
+    providerUnique: uniqueIndex().on(table.provider, table.providerUserId)
 }));
 
 export const providersRelations = relations(providers, ({one}) => ({

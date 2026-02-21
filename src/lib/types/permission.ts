@@ -9,3 +9,6 @@ export type Permission =
     | "user:delete"
     | "session:terminate"
     | "token:resend"
+    | "oauth:read"
+    | "oauth:disconnect"
+    | "audit:read"

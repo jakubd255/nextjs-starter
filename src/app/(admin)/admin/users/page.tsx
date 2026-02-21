@@ -28,9 +28,9 @@ export default async function AdminUsersPage({searchParams}: AdminUsersPageProps
             <h1 className="text-4xl font-bold">
                 Users
             </h1>
-            <Suspense 
-                fallback={(<DataTableSkeleton columnCount={10}/>)}
-            >
+            <Suspense fallback={(
+                <DataTableSkeleton columnCount={10}/>
+            )}>
                 <UsersTableToolbar/>
                 <DataTable columns={columns} data={users}/>
                 <div className="w-max ml-auto">

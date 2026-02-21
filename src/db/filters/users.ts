@@ -12,12 +12,12 @@ export interface UserFilters {
 export interface GetUsersParams {
     page?: number;
     pageSize?: number;
+    sortField?: string;
+    sortOrder?: string;
     search?: string;
     role?: Role[];
     verified?: boolean;
     blocked?: boolean;
-    sortField?: string;
-    sortOrder?: string;
 };
 
 export const buildUserSearchWhere = (filters: UserFilters) => {

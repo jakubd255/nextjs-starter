@@ -1,6 +1,5 @@
 "use client";
 
-import deleteUserAction from "@/actions/users/delete-user";
 import resendVerifyUserAction from "@/actions/users/resend-verify-user";
 import DialogLauncher from "@/components/dialog-launcher";
 import { useSession } from "@/components/providers/session-provider";
@@ -10,13 +9,13 @@ import { ActionResult, handleActionResult } from "@/lib/action-result";
 import { hasPermission } from "@/lib/auth/permissions";
 import { User } from "@/lib/types";
 import { Row } from "@tanstack/react-table";
-import { BadgeCheck, Ellipsis, Pencil, Trash2 } from "lucide-react";
+import { BadgeCheck, Ellipsis, LinkIcon, Pencil, Trash2 } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
 import DeleteUserDialog from "./delete-user-dialog";
 
 interface UsersTableActionsProps {
-    row: Row<User>
+    row: Row<User>;
 }
 
 export default function UserActionDropdown({row}: UsersTableActionsProps) {
@@ -38,11 +37,12 @@ export default function UserActionDropdown({row}: UsersTableActionsProps) {
 
     const permissions = {
         profile: hasPermission(sessionUser, "user:update:profile"),
+        oAuth: hasPermission(sessionUser, "oauth:read"),
         tokenResend: hasPermission(sessionUser, "token:resend"),
         delete: hasPermission(sessionUser, "user:delete")
     }
 
-    if(!(permissions.profile || permissions.tokenResend || permissions.delete)) return null;
+    if(!(permissions.profile || permissions.delete)) return null;
 
     return(
         <DropdownMenu>
@@ -57,6 +57,14 @@ export default function UserActionDropdown({row}: UsersTableActionsProps) {
                         <Link href={`/admin/users/${user.id}`}>
                             <Pencil className="w-4 h-4"/>
                             Edit
+                        </Link>
+                    </DropdownMenuItem>
+                ) : null}
+                {hasPermission(sessionUser, "oauth:read") ? (
+                    <DropdownMenuItem asChild>
+                        <Link href={`/admin/providers?userId=${user.id}`}>
+                            <LinkIcon className="w-4 h-4"/>
+                            Connected accounts
                         </Link>
                     </DropdownMenuItem>
                 ) : null}
