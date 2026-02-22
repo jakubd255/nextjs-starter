@@ -1,22 +1,19 @@
-"use client";
-
-import { useActionState } from "react";
-import deleteUserAction from "@/actions/users/delete-user";
-import { User } from "@/lib/types";
-import { ActionResult } from "@/lib/action-result";
-import { DialogClose, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-import { Button } from "@/components/ui/button";
+import disconnectOAuthAccountAction from "@/actions/accounts/disconnect-account";
 import FormSubmitButton from "@/components/form-submit-button";
+import { Button } from "@/components/ui/button";
+import { DialogClose, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { ActionResult } from "@/lib/action-result";
+import { OAuthAccount } from "@/lib/types";
+import { useActionState } from "react";
 
-interface DeleteUserDialogProps {
-    user: User;
-    redirect?: boolean;
+interface DisconnectAccountDialogProps {
+    account: OAuthAccount;
     onDelete?: (result: ActionResult) => void;
 }
 
-export default function DeleteUserDialog({user, redirect=false, onDelete}: DeleteUserDialogProps) {
+export default function DisconnectAccountDialog({account, onDelete}: DisconnectAccountDialogProps) {
     const [_, action, pending] = useActionState(async () => {
-        const result = await deleteUserAction(user.id, redirect);
+        const result = await disconnectOAuthAccountAction(account.id, false);
         onDelete?.(result);
         return result;
     }, undefined);
@@ -25,11 +22,10 @@ export default function DeleteUserDialog({user, redirect=false, onDelete}: Delet
         <form className="flex flex-col gap-4" action={action}>
             <DialogHeader>
                 <DialogTitle>
-                    Delete user
+                    Disconnect account
                 </DialogTitle>
                 <DialogDescription>
-                    This action will permanently delete <b>{user.name}</b> and all associated data. 
-                    This operation cannot be undone. Please confirm that you want to proceed.
+                    This action will delete user's login method. Please confirm that you want to proceed.
                 </DialogDescription>
             </DialogHeader>
             <DialogFooter>
@@ -39,7 +35,7 @@ export default function DeleteUserDialog({user, redirect=false, onDelete}: Delet
                     </Button>
                 </DialogClose>
                 <FormSubmitButton variant="destructive" pending={pending}>
-                    Delete
+                    Disconnect
                 </FormSubmitButton>
             </DialogFooter>
         </form>

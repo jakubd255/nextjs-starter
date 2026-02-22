@@ -1,5 +1,6 @@
 "use client";
 
+import AccountActionsDropdown from "@/components/admin/accounts/account-actions-dropdown";
 import DataTableColumnHeader from "@/components/data-table/data-table-column-header";
 import { formatDateTimeShort } from "@/lib/date-format";
 import { OAuthAccount } from "@/lib/types";
@@ -26,5 +27,9 @@ export const columns: ColumnDef<OAuthAccount>[] = [
         accessorKey: "createdAt",
         header: () => (<DataTableColumnHeader accessorKey="createdAt" label="Created at"/>),
         cell: ({row}) => formatDateTimeShort(row.original.createdAt)
+    },
+    {
+        id: "actions",
+        cell: ({row}) => (<AccountActionsDropdown row={row}/>)
     }
 ];

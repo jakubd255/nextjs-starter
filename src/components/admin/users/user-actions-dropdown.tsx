@@ -41,7 +41,6 @@ export default function UserActionDropdown({row}: UsersTableActionsProps) {
         tokenResend: hasPermission(sessionUser, "token:resend"),
         delete: hasPermission(sessionUser, "user:delete")
     }
-
     if(!(permissions.profile || permissions.delete)) return null;
 
     return(

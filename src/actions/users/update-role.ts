@@ -7,10 +7,7 @@ import { hasPermission } from "@/lib/auth/permissions";
 import { Role } from "@/lib/types";
 import { revalidatePath } from "next/cache";
 
-export default async function updateRoleAction(_: unknown, data: FormData) {
-    const id = data.get("id") as string;
-    const role = data.get("role") as Role;
-
+export default async function updateRoleAction(id: string, role: Role) {
     const session = await validateRequest();
     if(!hasPermission(session.user, "user:update:role")) {
         return actionFailure({permission: ["You dont have permission to update role"]});

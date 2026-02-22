@@ -31,7 +31,7 @@ export default async function AdminOAuthAccountsPage({searchParams}: AdminOAuthP
                 OAuth accounts
             </h1>
             <Suspense fallback={(
-                <DataTableSkeleton columnCount={5}/>
+                <DataTableSkeleton columnCount={6}/>
             )}>
                 <AccountsTableToolbar user={user}/>
                 <DataTable columns={columns} data={providers}/>

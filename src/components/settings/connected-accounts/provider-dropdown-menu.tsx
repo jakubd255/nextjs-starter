@@ -1,6 +1,6 @@
 "use client";
 
-import disconnectOAuthAccountAction from "@/actions/auth/disconnect-account";
+import disconnectOAuthAccountAction from "@/actions/accounts/disconnect-account";
 import { Button } from "@/components/ui/button";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { OAuthAccount } from "@/lib/types";
@@ -13,7 +13,7 @@ interface ProviderDropdownMenuProps {
 
 export default function ProviderDropdownMenu({provider, disabled=false}: ProviderDropdownMenuProps) {
     const handleDisconnect = async () => {
-        await disconnectOAuthAccountAction(provider.id);
+        await disconnectOAuthAccountAction(provider.id, true);
     }
 
     return(

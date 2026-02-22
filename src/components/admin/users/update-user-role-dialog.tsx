@@ -1,12 +1,12 @@
 "use client";
 
 import { Role, User } from "@/lib/types";
-import FormSubmitButton from "../../form-submit-button";
-import { Button } from "../../ui/button";
-import { DialogClose, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "../../ui/dialog";
+import { DialogClose, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { useActionState } from "react";
 import updateRoleAction from "@/actions/users/update-role";
 import { ActionResult } from "@/lib/action-result";
+import { Button } from "@/components/ui/button";
+import FormSubmitButton from "@/components/form-submit-button";
 
 
 const getRoleWarning = (current: Role, next: Role) => {
@@ -37,8 +37,8 @@ interface UpdateUserRoleProps {
 }
 
 export default function UpdateUserRoleDialog({user, role, onChange}: UpdateUserRoleProps) {
-    const [_, action, pending] = useActionState(async (_: unknown, data: FormData) => {
-        const result = await updateRoleAction(_, data);
+    const [_, action, pending] = useActionState(async () => {
+        const result = await updateRoleAction(user.id, role);
         onChange?.(result, role);
         return result;
     }, undefined);
