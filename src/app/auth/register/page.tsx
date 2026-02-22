@@ -1,6 +1,7 @@
 import AuthFormNavigate from "@/components/auth/auth-form-navigate";
 import ContinueWithProviders from "@/components/auth/continue-with-providers";
 import RegisterForm from "@/components/auth/register-form";
+import SeparatorWithText from "@/components/ui/separator-with-text";
 import { APP_TITLE } from "@/lib/constants";
 import { Metadata } from "next";
 
@@ -15,6 +16,7 @@ export default function RegisterPage() {
                 Register
             </h1>
             <RegisterForm/>
+            <SeparatorWithText text="OR"/>
             <ContinueWithProviders/>
             <AuthFormNavigate text="Have an account?" href="log-in" name="Log in"/>
         </div>

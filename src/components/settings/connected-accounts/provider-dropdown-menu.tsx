@@ -1,19 +1,19 @@
 "use client";
 
-import disconnectProviderAction from "@/actions/auth/disconnect-provider";
+import disconnectOAuthAccountAction from "@/actions/auth/disconnect-account";
 import { Button } from "@/components/ui/button";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
-import { Provider } from "@/lib/types";
+import { OAuthAccount } from "@/lib/types";
 import { Ellipsis } from "lucide-react";
 
 interface ProviderDropdownMenuProps {
-    provider: Provider;
+    provider: OAuthAccount;
     disabled?: boolean;
 }
 
 export default function ProviderDropdownMenu({provider, disabled=false}: ProviderDropdownMenuProps) {
     const handleDisconnect = async () => {
-        await disconnectProviderAction(provider.id);
+        await disconnectOAuthAccountAction(provider.id);
     }
 
     return(

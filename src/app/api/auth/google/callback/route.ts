@@ -1,18 +1,8 @@
-import { getUserByOAuthProvider } from "@/db/queries/providers";
 import { createSessionCookie, validateRequest } from "@/lib/auth/session";
-import { google } from "@/lib/auth/oauth";
-import { decodeIdToken, OAuth2Tokens } from "arctic";
 import { cookies } from "next/headers";
-import { upsertOAuthUser } from "@/lib/auth/oauth/upsert-user";
 import { decodeState } from "@/lib/auth/oauth/state";
-
-interface GoogleUser {
-    sub: string;
-    name: string;
-    picture?: string | null;
-    email: string | null;
-    email_verified: boolean | null;
-}
+import { handleOAuthLoginOrRegister } from "@/lib/auth/oauth/upsert";
+import { getGoogleUser } from "@/lib/auth/oauth/google";
 
 export async function GET(request: Request): Promise<Response> {
     const url = new URL(request.url);
@@ -34,55 +24,26 @@ export async function GET(request: Request): Promise<Response> {
     cookieStore.delete("google_oauth_state");
     cookieStore.delete("google_code_verifier");
 
-	let tokens: OAuth2Tokens;
-    try {
-		tokens = await google.validateAuthorizationCode(code, codeVerifier);
-	} 
-    catch (e) {
-		return new Response(null, {status: 400});
-	}
-
-    const claims = decodeIdToken(tokens.idToken()) as GoogleUser;
-	const googleUserId = claims.sub;
-	const username = claims.name;
-    const picture = claims.picture;
-    const email = claims.email;
-
-    if(!email || !claims.email_verified) {
+    const result = await getGoogleUser(code, codeVerifier);
+    if(!result) {
         return new Response(null, {status: 400});
     }
 
-    const provider = await getUserByOAuthProvider("google", String(googleUserId));
-
+	const {email, name, googleUserId, profileImage} = result;
 
     const {session} = await validateRequest();
 
-    if(provider?.user) {
-        if(session && session.userId !== provider.userId) {
-            cookieStore.set("oauth_error", "account_conflict", {path: "/", maxAge: 10, httpOnly: false});
-            return new Response(null, {
-                status: 302,
-                headers: {Location: parsedState.redirectTo || "/"}
-            });
-        }
-        
-        await createSessionCookie(provider.userId);
-        return new Response(null, {
-            status: 302,
-            headers: {Location: parsedState.redirectTo || "/"}
-        });
-    }
-
-    const userId = await upsertOAuthUser({
+    const userId = await handleOAuthLoginOrRegister({
         provider: "google",
         providerUserId: googleUserId,
-        name: username,
-        email,
         providerUsername: email,
-        profileImage: picture
+        email: email,
+        name: name,
+        profileImage,
+        session: session
     });
     
-    if(!session) {
+    if(!session && userId) {
         await createSessionCookie(userId);
     }
 

@@ -6,11 +6,11 @@ import { Separator } from "@/components/ui/separator";
 import { AVAILABLE_PROVIDERS } from "@/lib/auth/oauth";
 import { User } from "@/lib/types";
 
-interface ProvidersTableToolbarProps {
+interface AccountsTableToolbarProps {
     user?: User;
 }
 
-export default function ProvidersTableToolbar({user}: ProvidersTableToolbarProps) {
+export default function AccountsTableToolbar({user}: AccountsTableToolbarProps) {
     return(
         <div className="flex gap-2">
             <DataTableSearch/>

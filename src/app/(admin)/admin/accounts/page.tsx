@@ -1,27 +1,27 @@
 import { requireAuth } from "@/lib/auth/session";
-import { parseProvidersParams, ProvidersSearchParams } from "./params";
-import { countOAuthProvidersAdmin, getOAuthProvidersAdmin } from "@/db/queries/providers";
 import { Suspense } from "react";
 import { DataTableSkeleton } from "@/components/data-table/data-table-skeleton";
 import { DataTable } from "@/components/data-table/data-table";
 import { columns } from "./columns";
 import { PaginationWithLinks } from "@/components/ui/pagination-with-links";
-import ProvidersTableToolbar from "@/components/admin/providers/providers-table-toolbar";
+import AccountsTableToolbar from "@/components/admin/accounts/accounts-table-toolbar";
 import { getUserById } from "@/db/queries/users";
+import { countOAuthAccountsAdmin, getOAuthAccountsAdmin } from "@/db/queries/accounts";
+import { AccountsSearchParams, parseAccountsParams } from "./params";
 
 interface AdminOAuthProvidersPageProps {
-    searchParams: Promise<ProvidersSearchParams>;
+    searchParams: Promise<AccountsSearchParams>;
 };
 
-export default async function AdminOAuthProvidersPage({searchParams}: AdminOAuthProvidersPageProps) {
+export default async function AdminOAuthAccountsPage({searchParams}: AdminOAuthProvidersPageProps) {
     await requireAuth("oauth:read");
 
     const params = await searchParams;
-    const parsedParams = parseProvidersParams(params);
+    const parsedParams = parseAccountsParams(params);
 
     const [providers, count, user] = await Promise.all([
-        getOAuthProvidersAdmin(parsedParams), 
-        countOAuthProvidersAdmin(parsedParams),
+        getOAuthAccountsAdmin(parsedParams), 
+        countOAuthAccountsAdmin(parsedParams),
         params.userId ? getUserById(params.userId) : undefined
     ]);
     
@@ -33,7 +33,7 @@ export default async function AdminOAuthProvidersPage({searchParams}: AdminOAuth
             <Suspense fallback={(
                 <DataTableSkeleton columnCount={5}/>
             )}>
-                <ProvidersTableToolbar user={user}/>
+                <AccountsTableToolbar user={user}/>
                 <DataTable columns={columns} data={providers}/>
                 <div className="w-max ml-auto">
                     <PaginationWithLinks 

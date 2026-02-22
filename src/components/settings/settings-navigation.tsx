@@ -21,7 +21,7 @@ export default function SettingsNavigation() {
         },
         {
             label: "Connected accounts",
-            path: "/settings/connections",
+            path: "/settings/connected-accounts",
             icon: LinkIcon
         },
         {

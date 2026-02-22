@@ -1,11 +1,8 @@
-import { getUserByOAuthProvider } from "@/db/queries/providers";
 import { createSessionCookie, validateRequest } from "@/lib/auth/session";
-import { github } from "@/lib/auth/oauth";
-import { OAuth2Tokens } from "arctic";
 import { cookies } from "next/headers";
-import { upsertOAuthUser } from "@/lib/auth/oauth/upsert-user";
-import { getGithubUserEmail } from "@/lib/auth/oauth/email";
 import { decodeState } from "@/lib/auth/oauth/state";
+import { handleOAuthLoginOrRegister } from "@/lib/auth/oauth/upsert";
+import { getGitHubUser } from "@/lib/auth/oauth/github";
 
 export async function GET(request: Request): Promise<Response> {
     const url = new URL(request.url);
@@ -25,66 +22,28 @@ export async function GET(request: Request): Promise<Response> {
 
 	cookieStore.delete("github_oauth_state");
 
-	let tokens: OAuth2Tokens;
-	try {
-		tokens = await github.validateAuthorizationCode(code);
-	} 
-    catch (e) {
-		return new Response(null, {status: 400});
-	}
-	const githubUserResponse = await fetch("https://api.github.com/user", {
-		headers: {
-			Authorization: `Bearer ${tokens.accessToken()}`
-		}
-	});
-
-	if(!githubUserResponse) {
+	const result = await getGitHubUser(code);
+	if(!result) {
 		return new Response(null, {status: 400});
 	}
 
-    const githubUser = await githubUserResponse.json();
-	const githubUserId = githubUser.id;
-	const githubUsername = githubUser.login;
-	
-	const githubUserEmail = await getGithubUserEmail(githubUser, tokens);
-	if(!githubUserEmail) {
-		return new Response(null, {status: 400});
-	}
-
-	const provider = await getUserByOAuthProvider("github", String(githubUserId));
+	const {email, name, githubUserId, profileImage} = result;
 
 	const {session} = await validateRequest();
 
-	if(provider?.user) {
-		if(session && session.userId !== provider.userId) {
-            cookieStore.set("oauth_error", "account_conflict", {path: "/", maxAge: 10, httpOnly: false});
-            return new Response(null, {
-                status: 302,
-                headers: {Location: parsedState.redirectTo || "/"}
-            });
-        }
-
-		await createSessionCookie(provider.userId);
-		console.log(parsedState.redirectTo);
-		return new Response(null, {
-			status: 302,
-			headers: {Location: parsedState.redirectTo || "/"}
-		});
-	}
-	
-	let userId = await upsertOAuthUser({
+	const userId = await handleOAuthLoginOrRegister({
 		provider: "github",
-		providerUserId: String(githubUserId),
-		name: String(githubUsername),
-		email: githubUserEmail,
-		providerUsername: String(githubUsername),
-		profileImage: githubUser.avatar_url,
-		bio: githubUser.bio
+		providerUserId: githubUserId,
+		providerUsername: name,
+		email: email,
+		name: name,
+		profileImage,
+		session: session
 	});
-
-	if(!session) {
-		await createSessionCookie(userId);
-	}
+    
+    if(!session && userId) {
+        await createSessionCookie(userId);
+    }
     
 	return new Response(null, {
 		status: 302,

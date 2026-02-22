@@ -13,9 +13,9 @@ export const validateRequest = cache(async () => {
 		return {user: null, session: null};
 	}
 
-	const result = await lucia.validateSession(sessionId);
-
 	try {
+		const result = await lucia.validateSession(sessionId);
+
 		if(result.session && result.session.fresh) {
 			const sessionCookie = lucia.createSessionCookie(result.session.id);
 			(await cookies()).set(sessionCookie.name, sessionCookie.value, sessionCookie.attributes);
@@ -24,14 +24,16 @@ export const validateRequest = cache(async () => {
 			const sessionCookie = lucia.createBlankSessionCookie();
 			(await cookies()).set(sessionCookie.name, sessionCookie.value, sessionCookie.attributes);
 		}
-	}
-	catch {}
 
-	if(result.user?.blocked) {
+		if(result.user?.blocked) {
+			return {user: null, session: null};
+		}
+
+		return result;
+	}
+	catch {
 		return {user: null, session: null};
 	}
-
-	return result;
 });
 
 const getDeviceInfo = async () => {

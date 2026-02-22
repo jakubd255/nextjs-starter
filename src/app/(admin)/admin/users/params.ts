@@ -21,6 +21,6 @@ export const parseUserParams = (params: UserSearchParams) => {
         verified: params.verified === undefined ? undefined : params.verified === "true",
         blocked: params.blocked === undefined ? undefined : params.blocked === "true",
         sortField: params.sortField as any,
-        sortOrder: params.sortOrder as any,
+        sortOrder: params.sortOrder as any
     };
 }

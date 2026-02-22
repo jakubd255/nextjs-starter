@@ -22,7 +22,7 @@ export default function AdminNavigation() {
         },
         {
             label: "OAuth accounts",
-            path: "/admin/providers",
+            path: "/admin/accounts",
             icon: LinkIcon
         }
     ];

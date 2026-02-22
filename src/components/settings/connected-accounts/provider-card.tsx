@@ -1,4 +1,4 @@
-import { Provider } from "@/lib/types";
+import { OAuthAccount } from "@/lib/types";
 import Image from "next/image";
 import ProviderDropdownMenu from "./provider-dropdown-menu";
 import { Button } from "@/components/ui/button";
@@ -13,11 +13,11 @@ interface ProviderCardProps {
         url: string;
         key: string;
     }
-	connectedProvider?: Provider;
+	account?: OAuthAccount;
     canDisconnect: boolean;
 }
 
-export default function ProviderCard({provider, connectedProvider, canDisconnect}: ProviderCardProps) {
+export default function ProviderCard({provider, account, canDisconnect}: ProviderCardProps) {
     return(
         <div className="flex flex-col gap-2 p-4 rounded-md border max-w-115">
             <div className="flex justify-between">
@@ -44,24 +44,24 @@ export default function ProviderCard({provider, connectedProvider, canDisconnect
                         {provider.label}
                     </b>
                 </div>
-                {connectedProvider ? (
+                {account ? (
                     <ProviderDropdownMenu 
-                        provider={connectedProvider} 
+                        provider={account} 
                         disabled={!canDisconnect}
                     />
                 ) : (
                     <Button variant="outline" asChild>
-                        <Link href={`${provider.url}?redirectTo=/settings/connections`}>
+                        <Link href={`${provider.url}?redirectTo=/settings/connected-accounts`}>
                             Connect
                         </Link>
                     </Button>
                 )}
             </div>
-            {connectedProvider && (
+            {account && (
                 <div className="flex gap-2 items-center">
                     <CircleCheckBig className="w-4 h-4 text-green-500" />
                     <span>
-                        Connected as <b>{connectedProvider.providerUsername}</b>
+                        Connected as <b>{account.providerUsername}</b>
                     </span>
                 </div>
             )}

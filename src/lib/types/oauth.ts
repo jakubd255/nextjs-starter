@@ -1,9 +1,11 @@
 import { User } from "./user";
 
-export interface Provider {
+export type OAuthProvider = "github" | "google";
+
+export interface OAuthAccount {
     id: string;
     userId: string;
-    provider: string;
+    provider: OAuthProvider;
     providerUserId: string;
     providerUsername: string;
     createdAt: Date;

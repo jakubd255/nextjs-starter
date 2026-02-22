@@ -1,13 +1,13 @@
 import * as users from "./users";
 import * as sessions from "./sessions";
 import * as tokens from "./tokens";
-import * as providers from "./providers";
+import * as accounts from "./accounts";
 
 export {users} from "./users";
 export {sessions} from "./sessions";
 export {tokens} from "./tokens";
-export {providers} from "./providers";
+export {accounts} from "./accounts";
 
-const schema = {...users, ...sessions, ...tokens, ...providers};
+const schema = {...users, ...sessions, ...tokens, ...accounts};
 
 export default schema;
