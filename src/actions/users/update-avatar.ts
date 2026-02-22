@@ -6,10 +6,7 @@ import { validateRequest } from "@/lib/auth/session";
 import { hasPermission } from "@/lib/auth/permissions";
 import { deleteFile, extractFilenameFromUrl, isUploaded, uploadFile } from "@/lib/file-handler";
 
-type AvatarAction =
-  | { type: "upload"; file: File }
-  | { type: "url"; url: string }
-  | { type: "remove" };
+type AvatarAction = | {type: "upload"; file: File} | {type: "url"; url: string} | {type: "remove"};
 
 const resolveAvatarAction = (data: FormData): AvatarAction | null => {
     const file = data.get("image");
@@ -51,7 +48,6 @@ export default async function updateAvatarAction(_: unknown, data: FormData) {
 
     if(user.profileImage && isUploaded(user.profileImage)) {
         const path = extractFilenameFromUrl(user.profileImage);
-        console.log(path);
         deleteFile(path);
     }
 
