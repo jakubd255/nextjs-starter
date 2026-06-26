@@ -1,15 +1,11 @@
 import DataTableFilterMulti from "@/components/data-table/data-table-filter-multi";
 import DataTableFilterSingle from "@/components/data-table/data-table-filter-single";
-import DataTableReset from "@/components/data-table/data-table-reset";
-import DataTableSearch from "@/components/data-table/data-table-search";
-import { Separator } from "@/components/ui/separator";
 import { ROLES } from "@/lib/auth/permissions";
+import { BaseTableToolbar } from "../base-table-toolbar";
 
 export default function UsersTableToolbar() {
     return(
-        <div className="flex gap-2">
-            <DataTableSearch/>
-            <Separator orientation="vertical"/>
+        <BaseTableToolbar resetKeys={["role", "verified", "blocked"]}>
             <DataTableFilterMulti 
                 accessorKey="role" 
                 label="Role" 
@@ -31,7 +27,6 @@ export default function UsersTableToolbar() {
                     {value: "false", label: "Active"},
                 ]}
             />
-            <DataTableReset keys={["search", "role", "verified", "blocked"]} showSeparator/>
-        </div>
+        </BaseTableToolbar>
     );
 }

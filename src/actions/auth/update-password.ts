@@ -5,6 +5,7 @@ import { validatePassword } from "@/lib/auth/password";
 import { getUserById, updateUser } from "@/db/queries/users";
 import { actionFailure, actionSuccess } from "@/lib/action-result";
 import { updatePasswordSchema } from "@/lib/validation/auth";
+import { logPasswordResetRequest } from "@/db/queries/audit-logs";
 
 export default async function updatePasswordAction(_: unknown, data: FormData) {
     const formData = Object.fromEntries(data.entries());
@@ -31,6 +32,7 @@ export default async function updatePasswordAction(_: unknown, data: FormData) {
     }
 
     await updateUser(user.id, {password: newPassword});
+    await logPasswordResetRequest(user.id);
 
     return actionSuccess();
 }

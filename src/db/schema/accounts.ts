@@ -13,7 +13,7 @@ export const accounts = pgTable("accounts", {
     providerUnique: uniqueIndex().on(table.provider, table.providerUserId)
 }));
 
-export const providersRelations = relations(accounts, ({one}) => ({
+export const accountsRelations = relations(accounts, ({one}) => ({
     user: one(users, {
         fields: [accounts.userId],
         references: [users.id]

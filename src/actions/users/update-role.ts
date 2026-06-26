@@ -6,6 +6,7 @@ import { validateRequest } from "@/lib/auth/session";
 import { hasPermission } from "@/lib/auth/permissions";
 import { Role } from "@/lib/types";
 import { revalidatePath } from "next/cache";
+import { logRoleChange } from "@/db/queries/audit-logs";
 
 export default async function updateRoleAction(id: string, role: Role) {
     const session = await validateRequest();
@@ -17,6 +18,8 @@ export default async function updateRoleAction(id: string, role: Role) {
     if(!user) {
         return actionFailure();
     }
+
+    await logRoleChange(session.user!.id, user.id, user.role, role);
 
     await updateUser(id, {role});
 

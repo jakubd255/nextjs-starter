@@ -6,6 +6,7 @@ import { validateRequest } from "@/lib/auth/session";
 import { hasPermission } from "@/lib/auth/permissions";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
+import { logUserDeleted } from "@/db/queries/audit-logs";
 
 export default async function deleteUserAction(id: string, redirectToAdmin: boolean = false) {    
     const session = await validateRequest();
@@ -17,6 +18,8 @@ export default async function deleteUserAction(id: string, redirectToAdmin: bool
     if(!user) {
         return actionFailure();
     }
+
+    await logUserDeleted(session.user!.id, user.id);
 
     await deleteUserById(id);
 

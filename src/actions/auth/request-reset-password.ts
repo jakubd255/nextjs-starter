@@ -1,5 +1,6 @@
 "use server";
 
+import { logPasswordResetRequest } from "@/db/queries/audit-logs";
 import { createResetPasswordToken } from "@/db/queries/tokens";
 import { getUserByEmail } from "@/db/queries/users";
 import { actionFailure } from "@/lib/action-result";
@@ -24,6 +25,6 @@ export default async function requestResetPasswordAction(_: unknown, data: FormD
     }
 
     const token = await createResetPasswordToken(user.id);
-
+    await logPasswordResetRequest(user.id);
     redirect(`/auth/forgot-password/${token.code}`);
 }

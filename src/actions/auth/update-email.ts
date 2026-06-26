@@ -1,5 +1,6 @@
 "use server";
 
+import { logEmailChange } from "@/db/queries/audit-logs";
 import { createEmailVerificationToken } from "@/db/queries/tokens";
 import { getUserByEmail, updateUser } from "@/db/queries/users";
 import { actionFailure, actionSuccess } from "@/lib/action-result";
@@ -23,8 +24,11 @@ export default async function updateEmailAction(_: unknown, data: FormData) {
     const {email} = validationResult.data;
 
     const user = await getUserByEmail(email);
+    if(!user) {
+        return actionFailure();
+    }
    
-    if(user?.id === session.user.id && user.verified) {
+    if(user.id === session.user.id && user.verified) {
         updateUser(session.user.id, {email, pendingEmail: null});
         return actionSuccess({email, cancel: true});
     }
@@ -32,6 +36,8 @@ export default async function updateEmailAction(_: unknown, data: FormData) {
     if(user?.verified) {
         return actionFailure({email: ["This email is taken"]});
     }
+
+    await logEmailChange(user.id, user.email, email);
 
     await updateUser(session.user.id, {pendingEmail: email});
 

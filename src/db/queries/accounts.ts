@@ -3,8 +3,9 @@ import db from ".."
 import { accounts } from "../schema"
 import { and, count, eq } from "drizzle-orm";
 import { OAuthAccount, OAuthProvider } from "@/lib/types";
-import { PAGE_SIZE } from "@/lib/constants";
-import { AccountFilters, buildAccountSearchWhere, GetAccountParams, getOrderBy } from "../filters/accounts";
+import { buildAccountSearchWhere, getAccountOrderBy } from "../filters/accounts";
+import { parseAccountsParams } from "@/app/(admin)/admin/accounts/params";
+import { countTableRows } from "../filters/generic";
 
 export const createOAuthAccount = async (userId: string, provider: OAuthProvider, providerUserId: string, providerUsername: string): Promise<OAuthAccount> => {
     const id = generateIdFromEntropySize(10);
@@ -48,34 +49,18 @@ export const deleteOAuthAccountById = async (id: string) => {
     return !!res.length;
 }
 
-export const getOAuthAccountsAdmin = async ({
-    page = 1,
-    pageSize = PAGE_SIZE,
-    search,
-    userId,
-    provider,
-    providerUserId,
-    sortField = "createdAt",
-    sortOrder = "asc"
-}: GetAccountParams): Promise<OAuthAccount[]> => {
-    const where = buildAccountSearchWhere({search, userId, provider, providerUserId});
+export const getOAuthAccountsAdmin = async (parsedParams: ReturnType<typeof parseAccountsParams>) => {
+    const where = buildAccountSearchWhere(parsedParams);
 
     return await db.query.accounts.findMany({
         where: where,
-        with: {user: true},
-        limit: pageSize,
-        offset: (page-1)*pageSize,
-        orderBy: getOrderBy(sortField, sortOrder),
+        with: { user: true },
+        limit: parsedParams.pageSize,
+        offset: (parsedParams.page - 1) * parsedParams.pageSize,
+        orderBy: getAccountOrderBy(parsedParams.sortField, parsedParams.sortOrder),
     });
-}
+};
 
-export const countOAuthAccountsAdmin = async (filters: AccountFilters) => {
-    const where = buildAccountSearchWhere(filters);
-
-    const [result] = await db
-        .select({count: count()})
-        .from(accounts)
-        .where(where);
-
-    return result.count;
-}
+export const countOAuthAccountsAdmin = async (filters: any) => {
+    return countTableRows(db, accounts, buildAccountSearchWhere(filters));
+};

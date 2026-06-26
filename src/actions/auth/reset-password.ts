@@ -1,5 +1,6 @@
 "use server";
 
+import { logPasswordResetSuccess } from "@/db/queries/audit-logs";
 import { deleteSessionsByUserId } from "@/db/queries/sessions";
 import { getTokenByCode } from "@/db/queries/tokens";
 import { getUserById, updateUser } from "@/db/queries/users";
@@ -29,6 +30,7 @@ export default async function resetPasswordAction(_: unknown, data: FormData) {
 
     await updateUser(token.userId, {password: newPassword});
     await deleteSessionsByUserId(token.userId);
+    await logPasswordResetSuccess(user.id);
 
     redirect("/auth/log-in");
 }

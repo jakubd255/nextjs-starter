@@ -36,7 +36,13 @@ export const validateRequest = cache(async () => {
 	}
 });
 
-const getDeviceInfo = async () => {
+export const getClientIp = async () => {
+  const h = await headers();
+
+  return(h.get("cf-connecting-ip") || h.get("x-forwarded-for")?.split(",")[0].trim() || h.get("x-real-ip") || null);
+}
+
+export const getDeviceInfo = async () => {
 	const userAgent = (await headers()).get("user-agent") ?? "";
 	const parser = new UAParser(userAgent);
 	const {os, browser} = parser.getResult();

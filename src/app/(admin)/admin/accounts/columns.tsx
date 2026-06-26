@@ -21,7 +21,7 @@ export const columns: ColumnDef<OAuthAccount>[] = [
     },
     {
         accessorKey: "providerUserId",
-        header: "Provider User Id",
+        header: "Provider's user Id",
     },
     {
         accessorKey: "createdAt",

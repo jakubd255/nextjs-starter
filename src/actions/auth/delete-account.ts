@@ -6,6 +6,7 @@ import { terminateSession, validateRequest } from "@/lib/auth/session";
 import { validatePassword } from "@/lib/auth/password";
 import { passwordSchema } from "@/lib/validation/auth";
 import { redirect } from "next/navigation";
+import { logUserDeleted } from "@/db/queries/audit-logs";
 
 export default async function deleteAccountAction(_: unknown, data: FormData) {
     const formData = Object.fromEntries(data.entries());
@@ -34,6 +35,8 @@ export default async function deleteAccountAction(_: unknown, data: FormData) {
     if(!validatePassword(password, user.password)) {
         return actionFailure({password: ["Invalid password"]});
     }
+
+    await logUserDeleted(session.user!.id, user.id);
 
     deleteUserById(user.id);
 

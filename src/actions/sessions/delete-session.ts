@@ -6,6 +6,7 @@ import { terminateSession, validateRequest } from "@/lib/auth/session";
 import { hasPermission } from "@/lib/auth/permissions";
 import { redirect } from "next/navigation";
 import lucia from "@/lib/auth/lucia";
+import { logForceLogout } from "@/db/queries/audit-logs";
 
 export default async function deleteSessionAction(id: string) {
     const {user, session: currentSession} = await validateRequest();
@@ -25,6 +26,10 @@ export default async function deleteSessionAction(id: string) {
     if(session.id === currentSession.id) {
         terminateSession(session.id);
         redirect("/auth/log-in");
+    }
+
+    if(session.userId !== user.id) {
+        await logForceLogout(user.id, session.userId);
     }
 
     lucia.invalidateSession(session.id);

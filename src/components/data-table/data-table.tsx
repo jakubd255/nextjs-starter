@@ -3,14 +3,14 @@
 import { ColumnDef, flexRender, getCoreRowModel, useReactTable } from "@tanstack/react-table"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 
-interface DataTableProps<TData extends {id: string}, TValue> {
+interface DataTableProps<TData, TValue> {
     columns: ColumnDef<TData, TValue>[];
     data: TData[];
     showPagination?: boolean;
     showSearch?: boolean;
 }
 
-export function DataTable<TData extends {id: string}, TValue>({columns, data: defaultData}: DataTableProps<TData, TValue>) {
+export function DataTable<TData, TValue>({columns, data: defaultData}: DataTableProps<TData, TValue>) {
     const data = defaultData;
 
     const table = useReactTable({

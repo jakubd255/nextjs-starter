@@ -61,7 +61,7 @@ export default function UserActionDropdown({row}: UsersTableActionsProps) {
                 ) : null}
                 {hasPermission(sessionUser, "oauth:read") ? (
                     <DropdownMenuItem asChild>
-                        <Link href={`/admin/providers?userId=${user.id}`}>
+                        <Link href={`/admin/accounts?userId=${user.id}`}>
                             <LinkIcon className="w-4 h-4"/>
                             Connected accounts
                         </Link>

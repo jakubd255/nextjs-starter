@@ -5,6 +5,7 @@ import { actionFailure, actionSuccess } from "@/lib/action-result";
 import { validateRequest } from "@/lib/auth/session";
 import { hasPermission } from "@/lib/auth/permissions";
 import { revalidatePath } from "next/cache";
+import { logUserBlocked, logUserUnlocked } from "@/db/queries/audit-logs";
 
 export default async function blockUserAction(id: string) {
     const session = await validateRequest();
@@ -15,6 +16,13 @@ export default async function blockUserAction(id: string) {
     const user = await getUserById(id);
     if(!user) {
         return actionFailure();
+    }
+
+    if(user.blocked) {
+        await logUserUnlocked(session.user!.id, user.id);
+    }
+    else {
+        await logUserBlocked(session.user!.id, user.id);
     }
 
     await updateUser(id, {blocked: !user.blocked});

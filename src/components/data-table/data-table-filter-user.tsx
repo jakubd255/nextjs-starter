@@ -21,7 +21,6 @@ export default function DataTableFilterUser({user}: DataTableFilterUserProps) {
 
     return(
         <>
-            <Separator orientation="vertical"/>
             <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                     <Button variant="outline">
@@ -34,6 +33,7 @@ export default function DataTableFilterUser({user}: DataTableFilterUserProps) {
                     </DropdownMenuItem> 
                 </DropdownMenuContent>
             </DropdownMenu>
+            <Separator orientation="vertical"/>
         </>
     );
 }

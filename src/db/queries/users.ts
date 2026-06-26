@@ -4,8 +4,9 @@ import db from "..";
 import { users } from "../schema";
 import { Role, User } from "@/lib/types";
 import { and, count, eq } from "drizzle-orm";
-import { PAGE_SIZE } from "@/lib/constants";
-import { buildUserSearchWhere, getOrderBy, GetUsersParams, UserFilters } from "../filters/users";
+import { buildUserSearchWhere, getUserOrderBy } from "../filters/users";
+import { parseUserParams } from "@/app/(admin)/admin/users/params";
+import { countTableRows } from "../filters/generic";
 
 export const createUser = async (name: string, email: string, rawPassword?: string | null, role: Role = "USER", verified = false): Promise<User> => {
     const id = generateIdFromEntropySize(10);
@@ -66,33 +67,17 @@ export const deleteUserById = async (id: string) => {
     return !!res.length;
 }
 
-export const getUsersAdmin = async ({
-    page = 1,
-    pageSize = PAGE_SIZE,
-    search,
-    role,
-    verified,
-    blocked,
-    sortField = "createdAt",
-    sortOrder = "asc"
-}: GetUsersParams): Promise<User[]> => {
-    const where = buildUserSearchWhere({search, role, verified, blocked});
+export const getUsersAdmin = async (parsedParams: ReturnType<typeof parseUserParams>) => {
+    const where = buildUserSearchWhere(parsedParams);
 
     return await db.query.users.findMany({
         where: where,
-        limit: pageSize,
-        offset: (page-1)*pageSize,
-        orderBy: getOrderBy(sortField, sortOrder),
+        limit: parsedParams.pageSize,
+        offset: (parsedParams.page - 1) * parsedParams.pageSize,
+        orderBy: getUserOrderBy(parsedParams.sortField, parsedParams.sortOrder),
     });
 }
 
-export const countUsersAdmin = async (filters: UserFilters) => {
-    const where = buildUserSearchWhere(filters);
-
-    const [result] = await db
-        .select({count: count()})
-        .from(users)
-        .where(where);
-
-    return result.count;
+export const countUsersAdmin = async (filters: any) => {
+    return countTableRows(db, users, buildUserSearchWhere(filters));
 }

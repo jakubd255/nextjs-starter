@@ -1,12 +1,9 @@
-import { DataTable } from "@/components/data-table/data-table";
 import { columns } from "./columns";
 import { countUsersAdmin, getUsersAdmin } from "@/db/queries/users";
 import { requireAuth } from "@/lib/auth/session";
-import { Suspense } from "react";
 import UsersTableToolbar from "@/components/admin/users/users-table-toolbar";
-import { PaginationWithLinks } from "@/components/ui/pagination-with-links";
 import { parseUserParams, UserSearchParams } from "./params";
-import { DataTableSkeleton } from "@/components/data-table/data-table-skeleton";
+import AdminTablePageLayout from "@/components/admin/table-page-layout";
 
 interface AdminUsersPageProps {
     searchParams: Promise<UserSearchParams>;
@@ -24,24 +21,14 @@ export default async function AdminUsersPage({searchParams}: AdminUsersPageProps
     ]);
 
     return(
-        <div className="flex flex-col gap-6 w-full">
-            <h1 className="text-4xl font-bold">
-                Users
-            </h1>
-            <Suspense fallback={(
-                <DataTableSkeleton columnCount={10}/>
-            )}>
-                <UsersTableToolbar/>
-                <DataTable columns={columns} data={users}/>
-                <div className="w-max ml-auto">
-                    <PaginationWithLinks 
-                        page={params.page} 
-                        totalCount={count} 
-                        pageSize={params.pageSize} 
-                        pageSizeSelectOptions={{pageSizeOptions: [10, 20, 30, 40, 50]}}
-                    />
-                </div>
-            </Suspense>
-        </div>
+        <AdminTablePageLayout
+            title="Users"
+            toolbar={<UsersTableToolbar/>}
+            columns={columns}
+            data={users}
+            totalCount={count}
+            page={parsedParams.page}
+            pageSize={parsedParams.pageSize}
+        />
     );
 }
