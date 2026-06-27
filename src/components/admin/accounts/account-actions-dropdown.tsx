@@ -3,12 +3,12 @@ import { useSession } from "@/components/providers/session-provider";
 import { Button } from "@/components/ui/button";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { hasPermission } from "@/lib/auth/permissions";
-import { OAuthAccount } from "@/lib/types";
 import { Row } from "@tanstack/react-table";
 import { Ellipsis, Trash2 } from "lucide-react";
 import { useState } from "react";
 import DisconnectAccountDialog from "./disconnect-account-dialog";
 import { ActionResult, handleActionResult } from "@/lib/action-result";
+import { OAuthAccount } from "@/db/schema/accounts";
 
 interface AccountActionsDropdownProps {
     row: Row<OAuthAccount>;

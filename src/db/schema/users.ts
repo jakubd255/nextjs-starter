@@ -20,6 +20,8 @@ export const users = pgTable("users", {
     createdAt: timestamp({withTimezone: true}).defaultNow().notNull()
 });
 
+export type User = typeof users.$inferSelect;
+
 export const usersRelations = relations(users, ({many}) => ({
     sessions: many(sessions),
     tokens: many(tokens),

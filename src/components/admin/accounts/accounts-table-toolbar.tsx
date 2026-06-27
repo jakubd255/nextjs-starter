@@ -1,8 +1,8 @@
 import DataTableFilterMulti from "@/components/data-table/data-table-filter-multi";
 import DataTableFilterUser from "@/components/data-table/data-table-filter-user";
 import { AVAILABLE_PROVIDERS } from "@/lib/auth/oauth";
-import { User } from "@/lib/types";
 import { BaseTableToolbar } from "../base-table-toolbar";
+import { User } from "@/db/schema/users";
 
 interface AccountsTableToolbarProps {
     user?: User;

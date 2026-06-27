@@ -1,7 +1,7 @@
 "use client";
 
 import updateAvatarAction from "@/actions/users/update-avatar";
-import { User } from "@/lib/types";
+import { User } from "lucia";
 import { RefObject, useActionState, useEffect, useRef } from "react";
 
 interface UpdateProfileImageUploadProps {

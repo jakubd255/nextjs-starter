@@ -1,15 +1,14 @@
 import { and, eq, ne} from "drizzle-orm"
 import db from ".."
-import { sessions } from "../schema"
-import { Session } from "@/lib/types";
+import { sessions } from "../schema/sessions";
 
-export const getSessionsByUserId = async (userId: string): Promise<Session[]> => {
+export const getSessionsByUserId = async (userId: string) => {
     return await db.query.sessions.findMany({
         where: eq(sessions.userId, userId)
     });
 }
 
-export const getSessionById = async (id: string): Promise<Session | undefined> => {
+export const getSessionById = async (id: string) => {
     return await db.query.sessions.findFirst({
         where: eq(sessions.id, id)
     });

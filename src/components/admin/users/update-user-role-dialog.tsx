@@ -1,12 +1,13 @@
 "use client";
 
-import { Role, User } from "@/lib/types";
+import { User } from "@/db/schema/users";
 import { DialogClose, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { useActionState } from "react";
 import updateRoleAction from "@/actions/users/update-role";
 import { ActionResult } from "@/lib/action-result";
 import { Button } from "@/components/ui/button";
 import FormSubmitButton from "@/components/form-submit-button";
+import { Role } from "@/lib/auth/permissions";
 
 
 const getRoleWarning = (current: Role, next: Role) => {

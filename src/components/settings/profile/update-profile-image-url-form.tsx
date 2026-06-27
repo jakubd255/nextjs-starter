@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { DialogClose, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { User } from "@/lib/types";
+import { User } from "lucia";
 import { useActionState, useEffect } from "react";
 
 interface UpdateProfileImageUrlFormProps {

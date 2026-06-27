@@ -2,13 +2,14 @@ import { hashPassword } from "@/lib/auth/password";
 import { generateIdFromEntropySize } from "lucia";
 import db from "..";
 import { users } from "../schema";
-import { Role, User } from "@/lib/types";
 import { and, count, eq } from "drizzle-orm";
 import { buildUserSearchWhere, getUserOrderBy } from "../filters/users";
 import { parseUserParams } from "@/app/(admin)/admin/users/params";
 import { countTableRows } from "../filters/generic";
+import { Role } from "@/lib/auth/permissions";
+import { User } from "../schema/users";
 
-export const createUser = async (name: string, email: string, rawPassword?: string | null, role: Role = "USER", verified = false): Promise<User> => {
+export const createUser = async (name: string, email: string, rawPassword?: string | null, role: Role = "USER", verified = false) => {
     const id = generateIdFromEntropySize(10);
     const password = rawPassword ? hashPassword(rawPassword) : null;
 
@@ -26,13 +27,13 @@ export const countUsersByRole = async (role: Role) => {
     return res.count;
 }
 
-export const getUserById = async (id: string): Promise<User | undefined> => {
+export const getUserById = async (id: string) => {
     return await db.query.users.findFirst({
         where: eq(users.id, id)
     });
 }
 
-export const getUserByEmail = async (email: string): Promise<User | undefined> => {
+export const getUserByEmail = async (email: string) => {
     return await db.query.users.findFirst({
         where: eq(users.email, email)
     });

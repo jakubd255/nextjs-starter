@@ -2,11 +2,11 @@
 
 import { useActionState } from "react";
 import deleteUserAction from "@/actions/users/delete-user";
-import { User } from "@/lib/types";
 import { ActionResult } from "@/lib/action-result";
 import { DialogClose, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import FormSubmitButton from "@/components/form-submit-button";
+import { User } from "@/db/schema/users";
 
 interface DeleteUserDialogProps {
     user: User;

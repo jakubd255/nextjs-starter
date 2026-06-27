@@ -1,6 +1,6 @@
 import { Lucia } from "lucia";
-import { User } from "../types";
 import { adapter } from "@/db";
+import { User } from "@/db/schema/users";
 
 declare module "lucia" {
     interface Register {

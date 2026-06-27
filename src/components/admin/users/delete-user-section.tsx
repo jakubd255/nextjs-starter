@@ -2,7 +2,7 @@
 
 import DialogLauncher from "@/components/dialog-launcher";
 import DeleteUserDialog from "./delete-user-dialog";
-import { User } from "@/lib/types";
+import { User } from "@/db/schema/users";
 import { useState } from "react";
 import { Separator } from "@/components/ui/separator";
 

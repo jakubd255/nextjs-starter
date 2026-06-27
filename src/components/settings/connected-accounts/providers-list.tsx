@@ -1,4 +1,4 @@
-import { OAuthAccount } from "@/lib/types";
+import { OAuthAccount } from "@/db/schema/accounts";
 import ProviderCard from "./provider-card";
 import { AVAILABLE_PROVIDERS } from "@/lib/auth/oauth";
 

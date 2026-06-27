@@ -1,7 +1,6 @@
 import { cache } from "react";
 import { cookies, headers } from "next/headers";
-import { Permission } from "../types";
-import { hasPermission } from "./permissions";
+import { hasPermission, Permission } from "./permissions";
 import { redirect } from "next/navigation";
 import { UAParser } from "ua-parser-js";
 import lucia from "./lucia";

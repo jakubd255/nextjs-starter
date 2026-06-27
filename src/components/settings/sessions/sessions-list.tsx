@@ -1,9 +1,9 @@
 "use client";
 
-import { Session } from "@/lib/types/session";
 import { useState } from "react";
 import { Session as AuthSession } from "lucia";
 import SessionCard from "./session-card";
+import { Session } from "@/db/schema/sessions";
 
 interface SessionsListProps {
     sessions: Session[];

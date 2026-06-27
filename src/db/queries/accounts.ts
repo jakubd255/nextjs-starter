@@ -2,12 +2,12 @@ import { generateIdFromEntropySize } from "lucia";
 import db from ".."
 import { accounts } from "../schema"
 import { and, count, eq } from "drizzle-orm";
-import { OAuthAccount, OAuthProvider } from "@/lib/types";
 import { buildAccountSearchWhere, getAccountOrderBy } from "../filters/accounts";
 import { parseAccountsParams } from "@/app/(admin)/admin/accounts/params";
 import { countTableRows } from "../filters/generic";
+import { OAuthProvider } from "../schema/accounts";
 
-export const createOAuthAccount = async (userId: string, provider: OAuthProvider, providerUserId: string, providerUsername: string): Promise<OAuthAccount> => {
+export const createOAuthAccount = async (userId: string, provider: OAuthProvider, providerUserId: string, providerUsername: string) => {
     const id = generateIdFromEntropySize(10);
     
     const [res] = await db
@@ -18,14 +18,14 @@ export const createOAuthAccount = async (userId: string, provider: OAuthProvider
     return res;
 }
 
-export const getOAuthAccountById = async (id: string): Promise<OAuthAccount | undefined> => {
+export const getOAuthAccountById = async (id: string) => {
     return await db.query.accounts.findFirst({
         where: eq(accounts.id, id),
         with: {user: true}
     });
 }
 
-export const getUserByOAuthAccount = async (provider: OAuthProvider, providerUserId: string): Promise<OAuthAccount | undefined> => {
+export const getUserByOAuthAccount = async (provider: OAuthProvider, providerUserId: string) => {
     return await db.query.accounts.findFirst({
         where: and(
             eq(accounts.provider, provider),
@@ -35,7 +35,7 @@ export const getUserByOAuthAccount = async (provider: OAuthProvider, providerUse
     });
 }
 
-export const getOAuthAccountsByUserId = async (userId: string): Promise<OAuthAccount[]> => {
+export const getOAuthAccountsByUserId = async (userId: string) => {
     return await db.query.accounts.findMany({
         where: eq(accounts.userId, userId)
     });

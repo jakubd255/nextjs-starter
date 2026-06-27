@@ -2,8 +2,8 @@ import disconnectOAuthAccountAction from "@/actions/accounts/disconnect-account"
 import FormSubmitButton from "@/components/form-submit-button";
 import { Button } from "@/components/ui/button";
 import { DialogClose, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { OAuthAccount } from "@/db/schema/accounts";
 import { ActionResult } from "@/lib/action-result";
-import { OAuthAccount } from "@/lib/types";
 import { useActionState } from "react";
 
 interface DisconnectAccountDialogProps {

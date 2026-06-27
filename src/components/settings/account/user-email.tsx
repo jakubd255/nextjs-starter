@@ -1,4 +1,4 @@
-import { User } from "@/lib/types";
+import { User } from "lucia";
 import Link from "next/link";
 
 interface UserEmailProps {

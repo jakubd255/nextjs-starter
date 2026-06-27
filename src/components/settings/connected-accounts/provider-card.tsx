@@ -1,9 +1,9 @@
-import { OAuthAccount } from "@/lib/types";
 import Image from "next/image";
 import ProviderDropdownMenu from "./provider-dropdown-menu";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { CircleCheckBig } from "lucide-react";
+import { OAuthAccount } from "@/db/schema/accounts";
 
 interface ProviderCardProps {
 	provider: {

@@ -1,9 +1,9 @@
 import { formatDateTimeShort } from "@/lib/date-format";
-import { Session } from "@/lib/types/session";
 import { Session as AuthSession } from "lucia";
 import DeleteSessionDialog from "./delete-session-dialog";
 import DialogLauncher from "@/components/dialog-launcher";
 import { Trash2 } from "lucide-react";
+import { Session } from "@/db/schema/sessions";
 
 interface SessionProps {
     session: Session;

@@ -3,7 +3,7 @@
 import disconnectOAuthAccountAction from "@/actions/accounts/disconnect-account";
 import { Button } from "@/components/ui/button";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
-import { OAuthAccount } from "@/lib/types";
+import { OAuthAccount } from "@/db/schema/accounts";
 import { Ellipsis } from "lucide-react";
 
 interface ProviderDropdownMenuProps {

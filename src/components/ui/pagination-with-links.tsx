@@ -13,7 +13,6 @@ import {
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "./select";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { cn } from "@/lib/utils";
-import { PAGE_SIZE } from "@/lib/constants";
 
 export interface PaginationWithLinksProps {
   pageSizeSelectOptions?: {
@@ -21,7 +20,7 @@ export interface PaginationWithLinksProps {
     pageSizeOptions: number[];
   };
   totalCount: number;
-  pageSize?: number;
+  pageSize: number;
   page?: number;
   pageSearchParam?: string;
   disableOnePage?: boolean;
@@ -41,7 +40,7 @@ export interface PaginationWithLinksProps {
  */
 export function PaginationWithLinks({
   pageSizeSelectOptions,
-  pageSize=PAGE_SIZE,
+  pageSize,
   totalCount,
   page=1,
   pageSearchParam,
@@ -71,7 +70,7 @@ export function PaginationWithLinks({
       const key = pageSizeSelectOptions?.pageSizeSearchParam || "pageSize";
       const newSearchParams = new URLSearchParams(searchParams || undefined);
 
-      if(newPageSize === PAGE_SIZE) {
+      if(newPageSize === pageSize) {
         newSearchParams.delete("pageSize");
       }
       else {

@@ -2,12 +2,11 @@ import { generateIdFromEntropySize } from "lucia";
 import { AuditAction, auditLogs } from "../schema/audit-logs";
 import { getClientIp, getDeviceInfo } from "@/lib/auth/session";
 import db from "..";
-import { AuditLog } from "@/lib/types";
 import { parseAuditLogParams } from "@/app/(admin)/admin/audit-logs/params";
 import { buildAuditLogSearchWhere, getAuditLogOrderBy } from "../filters/audit-logs";
 import { countTableRows } from "../filters/generic";
 
-const createAuditLog = async (actorId: string | null, targetUserId: string | null, action: AuditAction, metadata?: Record<string, unknown> | null): Promise<AuditLog> => {
+const createAuditLog = async (actorId: string | null, targetUserId: string | null, action: AuditAction, metadata?: Record<string, unknown> | null) => {
     const id = generateIdFromEntropySize(10);
     const device = await getDeviceInfo();
     const ip = await getClientIp();
@@ -16,14 +15,14 @@ const createAuditLog = async (actorId: string | null, targetUserId: string | nul
         .insert(auditLogs)
         .values({id, actorId, targetUserId, action, metadata, device, ip})
         .returning();
-    return res as AuditLog;
+    return res;
 }
 
-export const logLogInSuccess = async (actorId: string): Promise<AuditLog> => {
+export const logLogInSuccess = async (actorId: string) => {
     return createAuditLog(actorId, null, "LOGIN_SUCCESS", null);
 }
 
-export const logLogInFailed = async (actorId: string | null, email: string): Promise<AuditLog> => {
+export const logLogInFailed = async (actorId: string | null, email: string) => {
     return createAuditLog(actorId, null, "LOGIN_FAILED", {email});
 }
 
@@ -74,4 +73,6 @@ export const getAuditLogsAdmin = async (parsedParams: ReturnType<typeof parseAud
     });
 };
 
-export const countAuditLogsAdmin = async (filters: any) => countTableRows(db, auditLogs, buildAuditLogSearchWhere(filters));
+export const countAuditLogsAdmin = async (filters: any) => {
+    return countTableRows(db, auditLogs, buildAuditLogSearchWhere(filters));
+}

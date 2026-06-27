@@ -1,6 +1,6 @@
 import { createOAuthAccount, getUserByOAuthAccount } from "@/db/queries/accounts";
 import { createUser, getUserByEmail, updateUser } from "@/db/queries/users";
-import { OAuthProvider } from "@/lib/types";
+import { OAuthProvider } from "@/db/schema/accounts";
 import { Session } from "lucia";
 
 interface HandleOAuthParams {

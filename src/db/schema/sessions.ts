@@ -11,6 +11,8 @@ export const sessions = pgTable("sessions", {
     expiresAt: timestamp({withTimezone: true}).notNull()
 });
 
+export type Session = typeof sessions.$inferSelect;
+
 export const sessionsRelations = relations(sessions, ({one}) => ({
     user: one(users, {
         fields: [sessions.userId],

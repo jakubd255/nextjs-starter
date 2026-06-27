@@ -7,7 +7,7 @@ import { Input } from "@/components/ui/input";
 import FormSubmitError from "@/components/form-submit-error";
 import { Textarea } from "@/components/ui/textarea";
 import FormSubmitButton from "@/components/form-submit-button";
-import { User } from "@/lib/types";
+import { User } from "lucia";
 
 interface UpdateProfileFormProps {
     user: User;

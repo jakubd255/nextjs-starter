@@ -1,27 +1,32 @@
-import { Permission, Role, User } from "../types";
+import { User } from "lucia";
 
 export const ROLES = ["USER", "MODERATOR", "ADMIN"] as const;
+
+export const PERMISSIONS = [
+    "admin:access",
+    "user:read",
+    "user:update:profile",
+    "user:update:security",
+    "user:update:role",
+    "user:delete",
+    "session:terminate",
+    "token:resend",
+    "oauth:read",
+    "oauth:disconnect",
+    "audit:read"
+] as const;
+
+export type Role = typeof ROLES[number];
+export type Permission = typeof PERMISSIONS[number];
 
 export const ROLE_PERMISSIONS: Record<Role, Permission[]> = {
     USER: [],
     MODERATOR: [
         "admin:access",
         "user:read",
-        "user:update:profile",
+        "user:update:profile"
     ],
-    ADMIN: [
-        "admin:access",
-        "user:read",
-        "user:update:profile",
-        "user:update:security",
-        "user:update:role",
-        "user:delete",
-        "session:terminate",
-        "token:resend",
-        "oauth:read",
-        "oauth:disconnect",
-        "audit:read"
-    ]
+    ADMIN: [...PERMISSIONS]
 };
 
 export const hasPermission = (user: User | null | undefined, permission: Permission): boolean => {

@@ -3,8 +3,8 @@
 import DialogLauncher from "@/components/dialog-launcher";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Separator } from "@/components/ui/separator";
-import { ROLES } from "@/lib/auth/permissions";
-import { Role, User } from "@/lib/types";
+import { Role, ROLES } from "@/lib/auth/permissions";
+import { User } from "@/db/schema/users";
 import UpdateUserRoleDialog from "./update-user-role-dialog";
 import { ActionResult, handleActionResult } from "@/lib/action-result";
 import { useState } from "react";

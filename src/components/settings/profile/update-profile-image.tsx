@@ -8,7 +8,7 @@ import DialogLauncher from "@/components/dialog-launcher";
 import UpdateProfileImageUrlForm from "./update-profile-image-url-form";
 import updateAvatarAction from "@/actions/users/update-avatar";
 import UpdateProfileImageUpload from "./update-profile-image-upload";
-import { User } from "@/lib/types";
+import { User } from "lucia";
 
 interface UpdateProfileImageFormProps {
     user: User;

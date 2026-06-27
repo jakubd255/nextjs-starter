@@ -2,7 +2,7 @@
 
 import UpdateProfileForm from "@/components/settings/profile/update-profile-form";
 import UpdateProfileImage from "@/components/settings/profile/update-profile-image";
-import { User } from "@/lib/types";
+import { User } from "@/db/schema/users";
 import { useState } from "react";
 
 interface ProfileSectionProps {

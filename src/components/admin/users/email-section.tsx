@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import UserEmail from "@/components/settings/account/user-email";
 import { handleActionResult } from "@/lib/action-result";
-import { User } from "@/lib/types";
+import { User } from "@/db/schema/users";
 import { BadgeCheck } from "lucide-react";
 
 interface EmailSectionProps {

@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { ActionResult, handleActionResult } from "@/lib/action-result";
 import { hasPermission } from "@/lib/auth/permissions";
-import { User } from "@/lib/types";
+import { User } from "@/db/schema/users";
 import { Row } from "@tanstack/react-table";
 import { BadgeCheck, Ellipsis, LinkIcon, Pencil, Trash2 } from "lucide-react";
 import Link from "next/link";
