@@ -7,7 +7,7 @@ Starter NextJS application providing login/registration system, account manageme
 - Email verification (verification code in console.log)
 - Account management
 - Profile image upload
-- Admin dashboard
+- Admin dashboard with URL-state pagination, sorting and search params (deep linking)
 
 ## Tech Stack
 - NextJS
