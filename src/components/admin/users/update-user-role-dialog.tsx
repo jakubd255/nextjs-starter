@@ -4,11 +4,10 @@ import { User } from "@/db/schema/users";
 import { DialogClose, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { useActionState } from "react";
 import updateRoleAction from "@/actions/users/update-role";
-import { ActionResult } from "@/lib/action-result";
 import { Button } from "@/components/ui/button";
 import FormSubmitButton from "@/components/form-submit-button";
 import { Role } from "@/lib/auth/permissions";
-
+import { handleActionResult } from "@/lib/utils/action-result";
 
 const getRoleWarning = (current: Role, next: Role) => {
     if(current !== "ADMIN" && next === "ADMIN") {
@@ -34,14 +33,16 @@ const getRoleWarning = (current: Role, next: Role) => {
 interface UpdateUserRoleProps {
     user: User;
     role: Role;
-    onChange?: (result: ActionResult, role: Role) => void;
+    onSuccess: () => void;
 }
 
-export default function UpdateUserRoleDialog({user, role, onChange}: UpdateUserRoleProps) {
+export default function UpdateUserRoleDialog({user, role, onSuccess}: UpdateUserRoleProps) {
     const [_, action, pending] = useActionState(async () => {
         const result = await updateRoleAction(user.id, role);
-        onChange?.(result, role);
-        return result;
+        handleActionResult(result, `Successfully updated role to ${role}`);
+        if(result.success) {
+            onSuccess();
+        }
     }, undefined);
 
     const warning = getRoleWarning(user.role, role);
@@ -56,8 +57,6 @@ export default function UpdateUserRoleDialog({user, role, onChange}: UpdateUserR
                     {warning.description}
                 </DialogDescription>
             </DialogHeader>
-            <input type="hidden" name="id" defaultValue={user.id} hidden/>
-            <input type="hidden" name="role" defaultValue={role} hidden/>
             <DialogFooter>
                 <DialogClose asChild>
                     <Button type="button" variant="outline">

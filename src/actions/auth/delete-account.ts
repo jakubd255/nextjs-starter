@@ -1,7 +1,7 @@
 "use server";
 
 import { deleteUserById, getUserById } from "@/db/queries/users";
-import { actionFailure } from "@/lib/action-result";
+import { actionFailure } from "@/lib/utils/action-result";
 import { terminateSession, validateRequest } from "@/lib/auth/session";
 import { validatePassword } from "@/lib/auth/password";
 import { passwordSchema } from "@/lib/validation/auth";

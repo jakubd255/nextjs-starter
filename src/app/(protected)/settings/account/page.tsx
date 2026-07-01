@@ -18,7 +18,7 @@ export default async function SettingsAccountPage() {
             <h1 className="text-4xl font-bold">
                 Account
             </h1>
-            <EmailSection/>
+            <EmailSection user={user}/>
             <Separator/>
             <PasswordSection hasPassword={user.hasPassword}/>
             <Separator/>

@@ -2,7 +2,7 @@
 
 import { getTokenByCode } from "@/db/queries/tokens";
 import { getUserById, updateUser } from "@/db/queries/users";
-import { actionFailure } from "@/lib/action-result";
+import { actionFailure } from "@/lib/utils/action-result";
 import { createSessionCookie } from "@/lib/auth/session";
 import { verifyEmailSchema } from "@/lib/validation/auth";
 import { redirect } from "next/navigation";

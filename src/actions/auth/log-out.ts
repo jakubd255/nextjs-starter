@@ -1,7 +1,7 @@
 "use server";
 
 import { terminateSession, validateRequest } from "@/lib/auth/session";
-import { actionFailure } from "@/lib/action-result";
+import { actionFailure } from "@/lib/utils/action-result";
 import { redirect } from "next/navigation";
 
 export default async function logOutAction() {

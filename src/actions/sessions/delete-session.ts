@@ -1,12 +1,13 @@
 "use server";
 
 import { getSessionById } from "@/db/queries/sessions";
-import { actionFailure, actionSuccess } from "@/lib/action-result";
+import { actionFailure, actionSuccess } from "@/lib/utils/action-result";
 import { terminateSession, validateRequest } from "@/lib/auth/session";
 import { hasPermission } from "@/lib/auth/permissions";
 import { redirect } from "next/navigation";
 import lucia from "@/lib/auth/lucia";
 import { logForceLogout } from "@/db/queries/audit-logs";
+import { revalidatePath } from "next/cache";
 
 export default async function deleteSessionAction(id: string) {
     const {user, session: currentSession} = await validateRequest();
@@ -33,5 +34,8 @@ export default async function deleteSessionAction(id: string) {
     }
 
     lucia.invalidateSession(session.id);
+
+    revalidatePath("/settings/sessions");
+
     return actionSuccess();
 }

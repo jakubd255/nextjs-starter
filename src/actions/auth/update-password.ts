@@ -3,7 +3,7 @@
 import { validateRequest } from "@/lib/auth/session";
 import { validatePassword } from "@/lib/auth/password";
 import { getUserById, updateUser } from "@/db/queries/users";
-import { actionFailure, actionSuccess } from "@/lib/action-result";
+import { actionFailure, actionSuccess } from "@/lib/utils/action-result";
 import { updatePasswordSchema } from "@/lib/validation/auth";
 import { logPasswordResetRequest } from "@/db/queries/audit-logs";
 

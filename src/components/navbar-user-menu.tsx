@@ -1,5 +1,3 @@
-"use client";
-
 import { 
     DropdownMenu, DropdownMenuContent, DropdownMenuGroup, 
     DropdownMenuItem, DropdownMenuLabel, 
@@ -7,14 +5,14 @@ import {
 } from "./ui/dropdown-menu";
 import { LogOut, ShieldAlert, UserCog } from "lucide-react";
 import Link from "next/link";
-import { useSession } from "./providers/session-provider";
 import logOutAction from "@/actions/auth/log-out";
 import UserAvatar from "./user-avatar";
 import { hasPermission } from "@/lib/auth/permissions";
 import { Button } from "./ui/button";
+import { requireAuth } from "@/lib/auth/session";
 
-export default function NavbarUserMenu() {
-    const {user} = useSession();
+export default async function NavbarUserMenu() {
+    const {user} = await requireAuth();
 
     return(
         <DropdownMenu>

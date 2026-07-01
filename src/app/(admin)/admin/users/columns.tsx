@@ -5,9 +5,9 @@ import DataTableColumnHeader from "@/components/data-table/data-table-column-hea
 import { Badge } from "@/components/ui/badge";
 import UserAvatar from "@/components/user-avatar";
 import UserEmail from "@/components/settings/account/user-email";
-import { formatDateTimeShort } from "@/lib/date-format";
-import { User } from "@/lib/types";
+import { formatDateTimeShort } from "@/lib/utils/date-format";
 import { ColumnDef } from "@tanstack/react-table";
+import { User } from "@/db/schema/users";
 
 export const columns: ColumnDef<User>[] = [
     {

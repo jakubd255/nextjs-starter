@@ -12,7 +12,7 @@ import {
 } from "./pagination";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "./select";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
-import { cn } from "@/lib/utils";
+import { cn } from "@/lib/utils/cn";
 
 export interface PaginationWithLinksProps {
   pageSizeSelectOptions?: {

@@ -2,9 +2,10 @@
 
 import { validateRequest } from "@/lib/auth/session";
 import { getUserById, updateUser } from "@/db/queries/users";
-import { actionFailure, actionSuccess } from "@/lib/action-result";
+import { actionFailure, actionSuccess } from "@/lib/utils/action-result";
 import { hasPermission } from "@/lib/auth/permissions";
 import { updateProfileSchema } from "@/lib/validation/user";
+import { revalidatePath } from "next/cache";
 
 export default async function updateProfileAction(_: unknown, data: FormData) {
     const formData = Object.fromEntries(data.entries());
@@ -26,6 +27,8 @@ export default async function updateProfileAction(_: unknown, data: FormData) {
     }
     
     await updateUser(user.id, {name, bio});
+
+    revalidatePath("/");
     
-    return actionSuccess({name, bio});
+    return actionSuccess();
 }

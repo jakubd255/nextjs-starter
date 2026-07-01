@@ -1,7 +1,7 @@
 "use server";
 
 import { deleteSessionsByUserId } from "@/db/queries/sessions";
-import { actionFailure, actionSuccess } from "@/lib/action-result";
+import { actionFailure, actionSuccess } from "@/lib/utils/action-result";
 import { validateRequest } from "@/lib/auth/session";
 import { hasPermission } from "@/lib/auth/permissions";
 import { logForceLogout } from "@/db/queries/audit-logs";

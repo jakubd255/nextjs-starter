@@ -6,7 +6,6 @@ import { Separator } from "@/components/ui/separator";
 import { Role, ROLES } from "@/lib/auth/permissions";
 import { User } from "@/db/schema/users";
 import UpdateUserRoleDialog from "./update-user-role-dialog";
-import { ActionResult, handleActionResult } from "@/lib/action-result";
 import { useState } from "react";
 
 interface RoleSectionProps {
@@ -14,12 +13,7 @@ interface RoleSectionProps {
 }
 
 export default function RoleSection({user}: RoleSectionProps) {
-    const [dialog, setDialog] = useState<Role | null>(null);
-
-    const onUpdateRole = async (result: ActionResult, role: Role) => {
-        handleActionResult(result, `Successfully updated role to ${role}`);
-        setDialog(null);
-    }
+    const [pendingRole, setPendingRole] = useState<Role | null>(null);
 
     return(
         <>
@@ -29,7 +23,7 @@ export default function RoleSection({user}: RoleSectionProps) {
                     Role
                 </h2>
                 <div>
-                    <Select value={user.role} onValueChange={value => setDialog(value as Role)}>
+                    <Select value={user.role} onValueChange={value => setPendingRole(value as Role)}>
                         <SelectTrigger>
                             <SelectValue placeholder="Selct role"/>
                         </SelectTrigger>
@@ -42,11 +36,17 @@ export default function RoleSection({user}: RoleSectionProps) {
                         </SelectContent>
                     </Select>
                 </div>
-                {dialog}
             </section>
-            {!!dialog ? (
-                <DialogLauncher open={!!dialog} onOpenChange={() => setDialog(null)}>
-                    <UpdateUserRoleDialog user={user} role={dialog} onChange={onUpdateRole}/>
+            {!!pendingRole ? (
+                <DialogLauncher 
+                    open={!!pendingRole} 
+                    onOpenChange={() => setPendingRole(null)}
+                >
+                    <UpdateUserRoleDialog 
+                        user={user} 
+                        role={pendingRole} 
+                        onSuccess={() => setPendingRole(null)}
+                    />
                 </DialogLauncher>
             ) : null}
         </>

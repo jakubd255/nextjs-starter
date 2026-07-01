@@ -3,10 +3,11 @@
 import { logEmailChange } from "@/db/queries/audit-logs";
 import { createEmailVerificationToken } from "@/db/queries/tokens";
 import { getUserByEmail, updateUser } from "@/db/queries/users";
-import { actionFailure, actionSuccess } from "@/lib/action-result";
+import { actionFailure, actionSuccess } from "@/lib/utils/action-result";
 import { validateRequest } from "@/lib/auth/session";
 import { sendVerificationToken } from "@/lib/email";
 import { updateEmailSchema } from "@/lib/validation/auth";
+import { revalidatePath } from "next/cache";
 
 export default async function updateEmailAction(_: unknown, data: FormData) {
     const formData = Object.fromEntries(data.entries());
@@ -16,33 +17,30 @@ export default async function updateEmailAction(_: unknown, data: FormData) {
         return actionFailure(validationResult.error?.flatten().fieldErrors);
     }
 
-    const session = await validateRequest();
-    if(!session.user) {
+    const {user} = await validateRequest();
+    if(!user) {
         return actionFailure();
     }
 
     const {email} = validationResult.data;
 
-    const user = await getUserByEmail(email);
-    if(!user) {
-        return actionFailure();
-    }
-   
-    if(user.id === session.user.id && user.verified) {
-        updateUser(session.user.id, {email, pendingEmail: null});
-        return actionSuccess({email, cancel: true});
+    const existingUser = await getUserByEmail(email);
+    if(existingUser?.verified && existingUser.id !== user.id) {
+        return actionFailure({email: ["This email is taken"]});
     }
 
-    if(user?.verified) {
-        return actionFailure({email: ["This email is taken"]});
+    if(existingUser?.id === user.id && existingUser.verified) {
+        updateUser(user.id, {email, pendingEmail: null});
+    }
+    else {
+        await updateUser(user.id, {pendingEmail: email});
+        const token = await createEmailVerificationToken(user.id);
+        sendVerificationToken(email, token.code);
     }
 
     await logEmailChange(user.id, user.email, email);
 
-    await updateUser(session.user.id, {pendingEmail: email});
+    revalidatePath("/");
 
-    const token = await createEmailVerificationToken(session.user.id);
-    sendVerificationToken(email, token.code);
-
-    return actionSuccess({email});
+    return actionSuccess();
 }

@@ -3,7 +3,7 @@
 import blockUserAction from "@/actions/users/block-user";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Separator } from "@/components/ui/separator";
-import { handleActionResult } from "@/lib/action-result";
+import { handleActionResult } from "@/lib/utils/action-result";
 import { User } from "@/db/schema/users";
 
 interface SecuritySectionProps {

@@ -7,18 +7,16 @@ import { useRef } from "react";
 
 interface DeleteSessionDialogProps {
     id: string;
-    deleteSession: (id: string) => void;
 }
 
-export default function DeleteSessionDialog({id, deleteSession}: DeleteSessionDialogProps) {
+export default function DeleteSessionDialog({id}: DeleteSessionDialogProps) {
     const ref = useRef<HTMLButtonElement>(null);
 
     const handleDeleteSession = async () => {
         const result = await deleteSessionAction(id);
         if(result.success) {
-            deleteSession(id);
+            ref.current?.click();
         }
-        ref.current?.click();
     }
 
     return(

@@ -4,7 +4,7 @@ import resendVerifyUserAction from "@/actions/users/resend-verify-user";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import UserEmail from "@/components/settings/account/user-email";
-import { handleActionResult } from "@/lib/action-result";
+import { handleActionResult } from "@/lib/utils/action-result";
 import { User } from "@/db/schema/users";
 import { BadgeCheck } from "lucide-react";
 

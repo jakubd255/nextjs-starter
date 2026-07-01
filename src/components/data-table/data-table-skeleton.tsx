@@ -2,7 +2,7 @@
 import { Skeleton } from "@/components/ui/skeleton";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { PAGE_SIZE } from "@/lib/constants";
-import { cn } from "@/lib/utils";
+import { cn } from "@/lib/utils/cn";
 
 interface DataTableSkeletonProps extends React.ComponentProps<"div"> {
     columnCount: number;

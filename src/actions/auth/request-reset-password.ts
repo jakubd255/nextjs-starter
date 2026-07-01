@@ -3,7 +3,7 @@
 import { logPasswordResetRequest } from "@/db/queries/audit-logs";
 import { createResetPasswordToken } from "@/db/queries/tokens";
 import { getUserByEmail } from "@/db/queries/users";
-import { actionFailure } from "@/lib/action-result";
+import { actionFailure } from "@/lib/utils/action-result";
 import { redirect } from "next/navigation";
 import { z } from "zod";
 

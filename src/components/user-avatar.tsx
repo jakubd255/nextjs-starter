@@ -1,11 +1,11 @@
-import { User } from "lucia";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
-import { cn } from "@/lib/utils";
+import { cn } from "@/lib/utils/cn";
+import { UserProfile } from "@/db/schema/users";
 
 type Size = "xs" | "sm" | "md" | "lg" | "xl";
 
 interface UserAvatarProps {
-    user: User;
+    user: UserProfile;
     size?: Size;
     url?: string | null;
     hideBorder?: boolean;

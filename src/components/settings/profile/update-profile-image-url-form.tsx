@@ -1,23 +1,24 @@
+"use client";
+
 import updateAvatarAction from "@/actions/users/update-avatar";
 import FormSubmitButton from "@/components/form-submit-button";
 import { Button } from "@/components/ui/button";
 import { DialogClose, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { User } from "lucia";
-import { useActionState, useEffect } from "react";
+import { UserProfile } from "@/db/schema/users";
+import { useActionState } from "react";
 
 interface UpdateProfileImageUrlFormProps {
-    user: User;
-    onUpdate?: (profileImage?: string | null) => void;
+    user: UserProfile;
+    onSuccess: () => void;
 }
 
-export default function UpdateProfileImageUrlForm({user, onUpdate}: UpdateProfileImageUrlFormProps) {
-    const [state, action, pending] = useActionState(updateAvatarAction, undefined);
-
-    useEffect(() => {
-        if(state?.success) onUpdate?.(state.profileImage);
-    }, [state]);
+export default function UpdateProfileImageUrlForm({user, onSuccess}: UpdateProfileImageUrlFormProps) {
+    const [_, action, pending] = useActionState(async (_: unknown, data: FormData) => {
+        const result = await updateAvatarAction(undefined, data);
+        if(result.success) onSuccess();
+    }, undefined);
 
     return(
         <form className="flex flex-col gap-4" action={action}>

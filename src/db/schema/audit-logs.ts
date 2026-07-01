@@ -31,7 +31,7 @@ export const auditLogs = pgTable("audit_logs", {
     createdAt: timestamp({withTimezone: true}).defaultNow().notNull(),
 });
 
-export type AditLog = typeof auditLogs.$inferSelect;
+export type AuditLog = typeof auditLogs.$inferSelect;
 
 export const auditLogsRelations = relations(auditLogs, ({one}) => ({
     user: one(users, {

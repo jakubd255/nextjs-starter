@@ -8,16 +8,18 @@ import { Button } from "@/components/ui/button";
 import { DialogClose, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Label } from "@/components/ui/label";
 import Link from "next/link";
-import { useActionState, useEffect, useRef } from "react";
+import { useActionState, useRef } from "react";
 
 export default function UpdatePasswordForm() {
-    const [state, action, pending] = useActionState(updatePasswordAction, undefined);
-
     const ref = useRef<HTMLButtonElement>(null);
 
-    useEffect(() => {
-        if(state?.success) ref.current?.click();
-    }, [state]);
+    const [state, action, pending] = useActionState(async (_: unknown, data: FormData) => {
+        const result = await updatePasswordAction(undefined, data);
+        if(result.success) {
+            ref.current?.click();
+        }
+        return result;
+    }, undefined);
     
     return(
         <form className="flex flex-col gap-4" action={action}>

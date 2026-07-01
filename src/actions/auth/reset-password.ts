@@ -4,7 +4,7 @@ import { logPasswordResetSuccess } from "@/db/queries/audit-logs";
 import { deleteSessionsByUserId } from "@/db/queries/sessions";
 import { getTokenByCode } from "@/db/queries/tokens";
 import { getUserById, updateUser } from "@/db/queries/users";
-import { actionFailure } from "@/lib/action-result";
+import { actionFailure } from "@/lib/utils/action-result";
 import { resetPasswordSchema } from "@/lib/validation/auth";
 import { redirect } from "next/navigation";
 

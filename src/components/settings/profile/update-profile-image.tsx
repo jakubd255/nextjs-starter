@@ -8,30 +8,21 @@ import DialogLauncher from "@/components/dialog-launcher";
 import UpdateProfileImageUrlForm from "./update-profile-image-url-form";
 import updateAvatarAction from "@/actions/users/update-avatar";
 import UpdateProfileImageUpload from "./update-profile-image-upload";
-import { User } from "lucia";
+import { UserProfile } from "@/db/schema/users";
 
 interface UpdateProfileImageFormProps {
-    user: User;
-    onUpdate?: (profileImage?: string | null) => void;
+    user: UserProfile;
 }
 
-export default function UpdateProfileImage({user, onUpdate}: UpdateProfileImageFormProps) {
+export default function UpdateProfileImage({user}: UpdateProfileImageFormProps) {
     const [isDialogOpen, setDialogOpen] = useState(false);
     const handleToggleOpen = (open: boolean) => setDialogOpen(open);
-
-    const handleSetImageUrl = (profileImage?: string | null) => {
-        if(onUpdate) {
-            onUpdate(profileImage);
-            setDialogOpen(false);
-        }
-    }
 
     const handleDeleteImage = async () => {
         const formData = new FormData();
         formData.append("id", user.id);
         formData.append("remove", "true");
         await updateAvatarAction(null, formData);
-        if(onUpdate) onUpdate(null);
     }
 
     const fileInputRef = useRef<HTMLInputElement>(null);
@@ -48,7 +39,7 @@ export default function UpdateProfileImage({user, onUpdate}: UpdateProfileImageF
                 onRemove={handleDeleteImage}
             />
             <DialogLauncher open={isDialogOpen} onOpenChange={handleToggleOpen}>
-                <UpdateProfileImageUrlForm user={user} onUpdate={handleSetImageUrl}/>
+                <UpdateProfileImageUrlForm user={user} onSuccess={() => setDialogOpen(false)}/>
             </DialogLauncher>
             <UpdateProfileImageUpload user={user} inputRef={fileInputRef}/>
         </div>

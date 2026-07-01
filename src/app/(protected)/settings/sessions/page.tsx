@@ -1,4 +1,4 @@
-import SessionsList from "@/components/settings/sessions/sessions-list";
+import SessionCard from "@/components/settings/sessions/session-card";
 import { getSessionsByUserId } from "@/db/queries/sessions";
 import { requireAuth } from "@/lib/auth/session";
 import { APP_TITLE } from "@/lib/constants";
@@ -17,7 +17,15 @@ export default async function SettingsSessionsPage() {
             <h1 className="text-4xl font-bold">
                 Sessions
             </h1>
-            <SessionsList sessions={sessions} currentSession={currentSession}/>
+            <div className="flex flex-col gap-2">
+                {sessions.map((session, index) => (
+                    <SessionCard 
+                        session={session} 
+                        currentSession={currentSession} 
+                        key={index}
+                    />
+                ))}
+            </div>
         </div>
     );
 }

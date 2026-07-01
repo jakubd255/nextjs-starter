@@ -22,6 +22,15 @@ export const users = pgTable("users", {
 
 export type User = typeof users.$inferSelect;
 
+export interface UserProfile {
+    id: string;
+    name: string;
+    bio?: string | null;
+    profileImage?: string | null;
+    email: string;
+    pendingEmail?: string | null;
+}
+
 export const usersRelations = relations(users, ({many}) => ({
     sessions: many(sessions),
     tokens: many(tokens),

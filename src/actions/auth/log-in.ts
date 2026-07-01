@@ -2,7 +2,7 @@
 
 import { createEmailVerificationToken } from "@/db/queries/tokens";
 import { getUserByEmail } from "@/db/queries/users";
-import { actionFailure } from "@/lib/action-result";
+import { actionFailure } from "@/lib/utils/action-result";
 import { createSessionCookie } from "@/lib/auth/session";
 import { validatePassword } from "@/lib/auth/password";
 import { sendVerificationToken } from "@/lib/email";

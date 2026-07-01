@@ -1,7 +1,7 @@
 "use server";
 
 import { deleteOAuthAccountById, getOAuthAccountById } from "@/db/queries/accounts";
-import { actionFailure, actionSuccess } from "@/lib/action-result";
+import { actionFailure, actionSuccess } from "@/lib/utils/action-result";
 import { hasPermission } from "@/lib/auth/permissions";
 import { validateRequest } from "@/lib/auth/session";
 import { revalidatePath } from "next/cache";

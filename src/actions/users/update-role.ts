@@ -1,10 +1,9 @@
 "use server";
 
 import { getUserById, updateUser } from "@/db/queries/users";
-import { actionFailure, actionSuccess } from "@/lib/action-result";
+import { actionFailure, actionSuccess } from "@/lib/utils/action-result";
 import { validateRequest } from "@/lib/auth/session";
-import { hasPermission } from "@/lib/auth/permissions";
-import { Role } from "@/lib/types";
+import { hasPermission, Role } from "@/lib/auth/permissions";
 import { revalidatePath } from "next/cache";
 import { logRoleChange } from "@/db/queries/audit-logs";
 
@@ -23,7 +22,6 @@ export default async function updateRoleAction(id: string, role: Role) {
 
     await updateUser(id, {role});
 
-    revalidatePath(`/admin/users/${id}`);
     revalidatePath("/admin/users");
 
     return actionSuccess({role});

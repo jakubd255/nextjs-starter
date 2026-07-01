@@ -1,7 +1,7 @@
 "use server";
 
 import { deleteUserById, getUserById } from "@/db/queries/users";
-import { actionFailure, actionSuccess } from "@/lib/action-result";
+import { actionFailure, actionSuccess } from "@/lib/utils/action-result";
 import { validateRequest } from "@/lib/auth/session";
 import { hasPermission } from "@/lib/auth/permissions";
 import { revalidatePath } from "next/cache";
@@ -27,7 +27,6 @@ export default async function deleteUserAction(id: string, redirectToAdmin: bool
         redirect("/admin/users");
     }
     
-    revalidatePath(`/admin/users/${id}`);
     revalidatePath("/admin/users");
 
     return actionSuccess();

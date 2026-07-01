@@ -2,7 +2,7 @@
 
 import { useActionState } from "react";
 import deleteUserAction from "@/actions/users/delete-user";
-import { ActionResult } from "@/lib/action-result";
+import { handleActionResult } from "@/lib/utils/action-result";
 import { DialogClose, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import FormSubmitButton from "@/components/form-submit-button";
@@ -11,13 +11,16 @@ import { User } from "@/db/schema/users";
 interface DeleteUserDialogProps {
     user: User;
     redirect?: boolean;
-    onDelete?: (result: ActionResult) => void;
+    onSuccess?: () => void;
 }
 
-export default function DeleteUserDialog({user, redirect=false, onDelete}: DeleteUserDialogProps) {
+export default function DeleteUserDialog({user, redirect=false, onSuccess}: DeleteUserDialogProps) {
     const [_, action, pending] = useActionState(async () => {
         const result = await deleteUserAction(user.id, redirect);
-        onDelete?.(result);
+        handleActionResult(result, "Successfully deleted user");
+        if(result.success) {
+            onSuccess?.();
+        }
         return result;
     }, undefined);
 

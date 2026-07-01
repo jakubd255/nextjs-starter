@@ -1,28 +1,23 @@
 "use client";
 
-import { useActionState, useEffect, useState } from "react";
+import { useActionState, useState } from "react";
 import updateProfileAction from "@/actions/users/update-profile";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import FormSubmitError from "@/components/form-submit-error";
 import { Textarea } from "@/components/ui/textarea";
 import FormSubmitButton from "@/components/form-submit-button";
-import { User } from "lucia";
+import { UserProfile } from "@/db/schema/users";
 
 interface UpdateProfileFormProps {
-    user: User;
-    onUpdate?: (name: string, bio?: string | null) => void;
+    user: UserProfile;
 }
 
-export default function UpdateProfileForm({user, onUpdate}: UpdateProfileFormProps) {
+export default function UpdateProfileForm({user}: UpdateProfileFormProps) {
     const [name, setName] = useState(user.name);
     const [bio, setBio] = useState(user.bio ?? "");
 
     const [state, action, pending] = useActionState(updateProfileAction, undefined);
-
-    useEffect(() => {
-        if(state?.success && onUpdate) onUpdate(name, bio);
-    }, [state]);
 
     const disabled = name === user.name && bio === (user.bio ?? "");
 

@@ -1,10 +1,10 @@
 "use client";
 
-import { AuditLog } from "@/lib/types";
 import { ColumnDef } from "@tanstack/react-table";
 import DataTableColumnHeader from "@/components/data-table/data-table-column-header";
-import { formatDateTimeShort } from "@/lib/date-format";
+import { formatDateTimeShort } from "@/lib/utils/date-format";
 import { Badge } from "@/components/ui/badge";
+import { AuditLog } from "@/db/schema/audit-logs";
 
 export const columns: ColumnDef<AuditLog>[] = [
     {

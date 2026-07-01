@@ -2,7 +2,7 @@
 
 import { createEmailVerificationToken } from "@/db/queries/tokens";
 import { getUserById } from "@/db/queries/users";
-import { actionFailure, actionSuccess } from "@/lib/action-result";
+import { actionFailure, actionSuccess } from "@/lib/utils/action-result";
 import { sendVerificationToken } from "@/lib/email";
 
 export default async function resendVerificationTokenAction(_: unknown, data: FormData) {

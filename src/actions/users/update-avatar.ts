@@ -1,10 +1,11 @@
 "use server";
 
 import { getUserById, updateUser } from "@/db/queries/users";
-import { actionFailure, actionSuccess } from "@/lib/action-result";
+import { actionFailure, actionSuccess } from "@/lib/utils/action-result";
 import { validateRequest } from "@/lib/auth/session";
 import { hasPermission } from "@/lib/auth/permissions";
-import { deleteFile, extractFilenameFromUrl, isUploaded, uploadFile } from "@/lib/file-handler";
+import { deleteFile, extractFilenameFromUrl, isUploaded, uploadFile } from "@/lib/utils/file-handler";
+import { revalidatePath } from "next/cache";
 
 type AvatarAction = | {type: "upload"; file: File} | {type: "url"; url: string} | {type: "remove"};
 
@@ -56,17 +57,21 @@ export default async function updateAvatarAction(_: unknown, data: FormData) {
             const filename = await uploadFile(action.file);
             const profileImage = `${process.env.NEXT_PUBLIC_SITE_URL}/api/download/${filename}`;
             await updateUser(id, {profileImage});
-            return actionSuccess({profileImage});
+            break;
         }
 
         case "url": {
             await updateUser(id, {profileImage: action.url});
-            return actionSuccess({profileImage: action.url});
+            break;
         }
 
         case "remove": {
             await updateUser(id, {profileImage: null});
-            return actionSuccess({profileImage: null});
+            break;
         }
     }
+
+    revalidatePath("/")
+    
+    return actionSuccess();
 }

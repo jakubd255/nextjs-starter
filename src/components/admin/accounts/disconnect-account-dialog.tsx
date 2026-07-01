@@ -3,18 +3,21 @@ import FormSubmitButton from "@/components/form-submit-button";
 import { Button } from "@/components/ui/button";
 import { DialogClose, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { OAuthAccount } from "@/db/schema/accounts";
-import { ActionResult } from "@/lib/action-result";
+import { handleActionResult } from "@/lib/utils/action-result";
 import { useActionState } from "react";
 
 interface DisconnectAccountDialogProps {
     account: OAuthAccount;
-    onDelete?: (result: ActionResult) => void;
+    onSuccess?: () => void;
 }
 
-export default function DisconnectAccountDialog({account, onDelete}: DisconnectAccountDialogProps) {
+export default function DisconnectAccountDialog({account, onSuccess}: DisconnectAccountDialogProps) {
     const [_, action, pending] = useActionState(async () => {
         const result = await disconnectOAuthAccountAction(account.id, false);
-        onDelete?.(result);
+        handleActionResult(result, "Successfully disconnected account");
+        if(result.success) {
+            onSuccess?.();
+        }
         return result;
     }, undefined);
 

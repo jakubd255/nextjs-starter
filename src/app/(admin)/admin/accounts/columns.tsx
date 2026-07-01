@@ -2,7 +2,7 @@
 
 import AccountActionsDropdown from "@/components/admin/accounts/account-actions-dropdown";
 import DataTableColumnHeader from "@/components/data-table/data-table-column-header";
-import { formatDateTimeShort } from "@/lib/date-format";
+import { formatDateTimeShort } from "@/lib/utils/date-format";
 import { OAuthAccount } from "@/lib/types";
 import { ColumnDef } from "@tanstack/react-table";
 

@@ -7,7 +7,6 @@ import { Row } from "@tanstack/react-table";
 import { Ellipsis, Trash2 } from "lucide-react";
 import { useState } from "react";
 import DisconnectAccountDialog from "./disconnect-account-dialog";
-import { ActionResult, handleActionResult } from "@/lib/action-result";
 import { OAuthAccount } from "@/db/schema/accounts";
 
 interface AccountActionsDropdownProps {
@@ -17,16 +16,11 @@ interface AccountActionsDropdownProps {
 export default function AccountActionsDropdown({row}: AccountActionsDropdownProps) {
     const account = row.original;
     
-    const {user: sessionUser} = useSession();
+    const {user} = useSession();
 
     const [open, setOpen] = useState(false);
 
-    const onDisconnectAccount = (result: ActionResult) => {
-        handleActionResult(result, "Successfully disconnected account");
-        setOpen(false);
-    }
-
-    const permission = hasPermission(sessionUser, "oauth:disconnect");
+    const permission = hasPermission(user, "oauth:disconnect");
     if(!permission) return null;
 
     return(
@@ -46,7 +40,7 @@ export default function AccountActionsDropdown({row}: AccountActionsDropdownProp
                 <DialogLauncher open={open} onOpenChange={setOpen}>
                     <DisconnectAccountDialog 
                         account={account} 
-                        onDelete={onDisconnectAccount}
+                        onSuccess={() => setOpen(false)}
                     />
                 </DialogLauncher>
             ) : null}

@@ -1,8 +1,8 @@
-import { User } from "lucia";
+import { UserProfile } from "@/db/schema/users";
 import Link from "next/link";
 
 interface UserEmailProps {
-    user: User;
+    user: UserProfile;
     showVerify?: boolean;
 }
 

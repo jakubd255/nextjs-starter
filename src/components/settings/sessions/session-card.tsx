@@ -1,4 +1,4 @@
-import { formatDateTimeShort } from "@/lib/date-format";
+import { formatDateTimeShort } from "@/lib/utils/date-format";
 import { Session as AuthSession } from "lucia";
 import DeleteSessionDialog from "./delete-session-dialog";
 import DialogLauncher from "@/components/dialog-launcher";
@@ -8,10 +8,9 @@ import { Session } from "@/db/schema/sessions";
 interface SessionProps {
     session: Session;
     currentSession: AuthSession;
-    deleteSession: (id: string) => void;
 }
 
-export default function SessionCard({session, currentSession, deleteSession}: SessionProps) {
+export default function SessionCard({session, currentSession}: SessionProps) {
     return(
         <div className="border p-4 rounded-md flex justify-between">
             <div className="flex gap-2 items-center">
@@ -30,7 +29,7 @@ export default function SessionCard({session, currentSession, deleteSession}: Se
                 </span>
                 {currentSession.id !== session.id ? (
                     <DialogLauncher variant="ghost" icon={Trash2}>
-                        <DeleteSessionDialog id={session.id} deleteSession={deleteSession}/>
+                        <DeleteSessionDialog id={session.id}/>
                     </DialogLauncher>
                 ) : (
                     <div className="w-9"></div>
