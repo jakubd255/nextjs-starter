@@ -12,17 +12,17 @@ export default async function setPasswordAction(_: unknown, data: FormData) {
     const validationResult = passwordSchema.safeParse(formData);
 
     if(!validationResult.success) {
-        return actionFailure(validationResult.error?.flatten().fieldErrors);
+        return actionFailure(validationResult.error?.flatten().fieldErrors).build();
     }
 
     const session = await validateRequest();
     if(!session.user) {
-        return actionFailure();
+        return actionFailure().build();
     }
     
     const user = await getUserById(session.user.id);
     if(!user || user.password) {
-        return actionFailure();
+        return actionFailure().build();
     }
 
     const {password} = validationResult.data;

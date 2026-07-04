@@ -7,7 +7,7 @@ import { DialogClose, DialogFooter, DialogHeader, DialogTitle } from "@/componen
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { UserProfile } from "@/db/schema/users";
-import { useActionState } from "react";
+import { useFormAction } from "@/lib/hooks/use-form-action";
 
 interface UpdateProfileImageUrlFormProps {
     user: UserProfile;
@@ -15,10 +15,7 @@ interface UpdateProfileImageUrlFormProps {
 }
 
 export default function UpdateProfileImageUrlForm({user, onSuccess}: UpdateProfileImageUrlFormProps) {
-    const [_, action, pending] = useActionState(async (_: unknown, data: FormData) => {
-        const result = await updateAvatarAction(undefined, data);
-        if(result.success) onSuccess();
-    }, undefined);
+    const [_, action, pending] = useFormAction(updateAvatarAction, {onSuccess});
 
     return(
         <form className="flex flex-col gap-4" action={action}>

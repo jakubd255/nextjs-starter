@@ -3,8 +3,7 @@ import FormSubmitButton from "@/components/form-submit-button";
 import { Button } from "@/components/ui/button";
 import { DialogClose, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { OAuthAccount } from "@/db/schema/accounts";
-import { handleActionResult } from "@/lib/utils/action-result";
-import { useActionState } from "react";
+import { useFormAction } from "@/lib/hooks/use-form-action";
 
 interface DisconnectAccountDialogProps {
     account: OAuthAccount;
@@ -12,14 +11,7 @@ interface DisconnectAccountDialogProps {
 }
 
 export default function DisconnectAccountDialog({account, onSuccess}: DisconnectAccountDialogProps) {
-    const [_, action, pending] = useActionState(async () => {
-        const result = await disconnectOAuthAccountAction(account.id, false);
-        handleActionResult(result, "Successfully disconnected account");
-        if(result.success) {
-            onSuccess?.();
-        }
-        return result;
-    }, undefined);
+    const [_, action, pending] = useFormAction(() => disconnectOAuthAccountAction(account.id, false), {onSuccess});
 
     return(
         <form className="flex flex-col gap-4" action={action}>

@@ -5,7 +5,7 @@ import DialogLauncher from "@/components/dialog-launcher";
 import { useSession } from "@/components/providers/session-provider";
 import { Button } from "@/components/ui/button";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
-import { ActionResult, handleActionResult } from "@/lib/utils/action-result";
+import { handleActionResult } from "@/lib/utils/action-result";
 import { hasPermission } from "@/lib/auth/permissions";
 import { Row } from "@tanstack/react-table";
 import { BadgeCheck, Ellipsis, LinkIcon, Pencil, Trash2 } from "lucide-react";
@@ -25,9 +25,10 @@ export default function UserActionDropdown({row}: UsersTableActionsProps) {
 
     const [open, setOpen] = useState(false);
 
-    const handleResetToken = async () => {
+    const handleResendToken = async () => {
         const result = await resendVerifyUserAction(user.id);
-        handleActionResult(result, "Successfully resent verification token");
+        console.log(result);
+        handleActionResult(result);
     }
 
     const permissions = {
@@ -65,7 +66,7 @@ export default function UserActionDropdown({row}: UsersTableActionsProps) {
                 ) : null}
                 {permissions.tokenResend? (
                     <DropdownMenuItem 
-                        onClick={handleResetToken} 
+                        onClick={handleResendToken} 
                         disabled={user.verified && !user.pendingEmail}
                     >
                         <BadgeCheck className="w-4 h-4"/>

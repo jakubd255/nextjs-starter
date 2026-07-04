@@ -30,21 +30,21 @@ const resolveAvatarAction = (data: FormData): AvatarAction | null => {
 export default async function updateAvatarAction(_: unknown, data: FormData) {
     const id = data.get("id") as string;
     if(!id) {
-        return actionFailure();
+        return actionFailure().build();
     }
 
     const action = resolveAvatarAction(data);
     if(!action) {
-        return actionFailure();
+        return actionFailure().build();
     }
 
     const [session, user] = await Promise.all([validateRequest(), getUserById(id)]);
     if(!session.user || ! user) {
-        return actionFailure();
+        return actionFailure().build();
     }
 
     if(user.id !== session.user.id && !hasPermission(session.user, "user:update:profile")) {
-        return actionFailure({permission: ["You dont have permission to update user's profile"]});
+        return actionFailure().message("You dont have permission to update user's profile").build();
     }
 
     if(user.profileImage && isUploaded(user.profileImage)) {
@@ -73,5 +73,5 @@ export default async function updateAvatarAction(_: unknown, data: FormData) {
 
     revalidatePath("/")
     
-    return actionSuccess();
+    return actionSuccess().build();
 }

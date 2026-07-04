@@ -7,7 +7,7 @@ import { redirect } from "next/navigation";
 export default async function logOutAction() {
     const {session} = await validateRequest();
 	if(!session) {
-		return actionFailure({});
+		return actionFailure().build();
 	}
 
 	terminateSession(session.id);

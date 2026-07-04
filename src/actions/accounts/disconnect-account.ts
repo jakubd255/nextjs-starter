@@ -10,16 +10,16 @@ import { redirect } from "next/navigation";
 export default async function disconnectOAuthAccountAction(id: string, redirectToSettings: boolean = false) {
     const {user} = await validateRequest();
     if(!user) {
-        return actionFailure();
+        return actionFailure().build();
     }
 
     const account = await getOAuthAccountById(id);
     if(!account) {
-        return actionFailure();
+        return actionFailure().build();
     }
 
     if(account.userId !== user.id || !hasPermission(user, "oauth:disconnect")) {
-        return actionFailure({permission: ["You dont have permission to disconnect this account"]});
+        return actionFailure().message("You dont have permission to disconnect this account").build();
     }
 
     await deleteOAuthAccountById(id);
@@ -30,5 +30,5 @@ export default async function disconnectOAuthAccountAction(id: string, redirectT
 
     revalidatePath("/admin/accounts");
 
-    return actionSuccess();
+    return actionSuccess().build();
 }

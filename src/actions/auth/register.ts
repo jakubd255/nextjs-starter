@@ -12,7 +12,7 @@ export default async function registerAction(_: unknown, data: FormData) {
     const validationResult = registerSchema.safeParse(formData);
 
     if(!validationResult.success) {
-        return actionFailure(validationResult.error?.flatten().fieldErrors, formData);
+        return actionFailure(validationResult.error?.flatten().fieldErrors).data({formData}).build();
     }
 
     const {name, email, password} = validationResult.data;
@@ -31,6 +31,6 @@ export default async function registerAction(_: unknown, data: FormData) {
         redirect(`/auth/verify-email?userId=${existingUser.id}`);
     }
     else {
-        return actionFailure({email: ["This email is taken"]}, {email, name});
+        return actionFailure({email: ["This email is taken"]}).data({email, name}).build();
     }
 }

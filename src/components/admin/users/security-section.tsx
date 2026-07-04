@@ -13,7 +13,7 @@ interface SecuritySectionProps {
 export default function SecuritySection({user}: SecuritySectionProps) {
     const handleToggleBlocked = async () => {
         const result = await blockUserAction(user.id);
-        handleActionResult(result, !user.blocked ? "Successfully blocked user" : "Successfully unlocked user");
+        handleActionResult(result);
     }
     
     return(

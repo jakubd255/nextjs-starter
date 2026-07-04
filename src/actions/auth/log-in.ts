@@ -15,7 +15,7 @@ export default async function logInAction(_: unknown, data: FormData) {
     const validationResult = loginSchema.safeParse(formData);
 
     if(!validationResult.success) {
-        return actionFailure(validationResult.error.flatten().fieldErrors);
+        return actionFailure(validationResult.error.flatten().fieldErrors).build();
     }
 
     const {email, password, redirectTo} = validationResult.data;
@@ -23,17 +23,17 @@ export default async function logInAction(_: unknown, data: FormData) {
     const user = await getUserByEmail(email);
     if(!user) {
         await logLogInFailed(null, email);
-        return actionFailure({email: ["Invalid email"]}, {email});
+        return actionFailure({email: ["Invalid email"]}).data({email}).build();
     }
 
     if(!user.password || !validatePassword(password, user.password)) {
         await logLogInFailed(null, email);
-        return actionFailure({password: ["Invalid password"]}, {email});
+        return actionFailure({password: ["Invalid password"]}).data({email}).build();
     }
 
     if(user.blocked) {
         await logLogInFailed(null, email);
-        return actionFailure({email: ["Invalid email"]}, {email});
+        return actionFailure({email: ["Invalid email"]}).data({email}).build();
     }
 
     if(user.verified) {

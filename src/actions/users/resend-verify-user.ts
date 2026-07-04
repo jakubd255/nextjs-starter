@@ -10,12 +10,12 @@ import { sendVerificationToken } from "@/lib/email";
 export default async function resendVerifyUserAction(id: string) {
     const session = await validateRequest();
     if(!hasPermission(session.user, "token:resend")) {
-        return actionFailure({permission: ["You dont have permission to resend verification token"]});
+        return actionFailure().message("You dont have permission to resend verification token").build();
     }
 
     const user = await getUserById(id);
     if(!user) {
-        return actionFailure();
+        return actionFailure().build();
     }
 
     const token = await createEmailVerificationToken(id);
@@ -27,8 +27,8 @@ export default async function resendVerifyUserAction(id: string) {
         sendVerificationToken(user.pendingEmail, token.code);
     }
     else {
-        return actionFailure();
+        return actionFailure().build();
     }
 
-    return actionSuccess();
+    return actionSuccess().message("Successfully resent verification token").build();
 }

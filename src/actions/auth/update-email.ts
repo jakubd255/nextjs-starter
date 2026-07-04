@@ -14,19 +14,19 @@ export default async function updateEmailAction(_: unknown, data: FormData) {
     const validationResult = updateEmailSchema.safeParse(formData);
     
     if(!validationResult.success) {
-        return actionFailure(validationResult.error?.flatten().fieldErrors);
+        return actionFailure(validationResult.error?.flatten().fieldErrors).build();
     }
 
     const {user} = await validateRequest();
     if(!user) {
-        return actionFailure();
+        return actionFailure().build();
     }
 
     const {email} = validationResult.data;
 
     const existingUser = await getUserByEmail(email);
     if(existingUser?.verified && existingUser.id !== user.id) {
-        return actionFailure({email: ["This email is taken"]});
+        return actionFailure({email: ["This email is taken"]}).build();
     }
 
     if(existingUser?.id === user.id && existingUser.verified) {
@@ -42,5 +42,5 @@ export default async function updateEmailAction(_: unknown, data: FormData) {
 
     revalidatePath("/");
 
-    return actionSuccess();
+    return actionSuccess().build();
 }

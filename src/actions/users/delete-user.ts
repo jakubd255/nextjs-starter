@@ -11,12 +11,12 @@ import { logUserDeleted } from "@/db/queries/audit-logs";
 export default async function deleteUserAction(id: string, redirectToAdmin: boolean = false) {    
     const session = await validateRequest();
     if(!hasPermission(session.user, "user:delete")) {
-        return actionFailure({permission: ["You dont have permission to delete users"]});
+        return actionFailure().message("You dont have permission to delete users").build();
     }
     
     const user = await getUserById(id);
     if(!user) {
-        return actionFailure();
+        return actionFailure().build();
     }
 
     await logUserDeleted(session.user!.id, user.id);
@@ -29,5 +29,5 @@ export default async function deleteUserAction(id: string, redirectToAdmin: bool
     
     revalidatePath("/admin/users");
 
-    return actionSuccess();
+    return actionSuccess().build();
 }

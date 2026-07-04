@@ -14,14 +14,14 @@ const schema = z.object({
 export default async function requestResetPasswordAction(_: unknown, data: FormData) {
     const validationResult = schema.safeParse(Object.fromEntries(data.entries()));
     if(!validationResult.success) {
-        return actionFailure(validationResult.error?.flatten().fieldErrors);
+        return actionFailure(validationResult.error?.flatten().fieldErrors).build();
     }
 
     const {email} = validationResult.data;
 
     const user = await getUserByEmail(email);
     if(!user || !user.verified) {
-        return actionFailure({email: ["Invalid email"]}, {email});
+        return actionFailure({email: ["Invalid email"]}).data({email}).build();
     }
 
     const token = await createResetPasswordToken(user.id);

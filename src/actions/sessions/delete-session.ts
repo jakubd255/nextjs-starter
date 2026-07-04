@@ -12,16 +12,16 @@ import { revalidatePath } from "next/cache";
 export default async function deleteSessionAction(id: string) {
     const {user, session: currentSession} = await validateRequest();
     if(!user) {
-        return actionFailure();
+        return actionFailure().build();
     }
 
     const session = await getSessionById(id);
     if(!session) {
-        return actionFailure();
+        return actionFailure().build();
     }
 
     if(user.id !== session.userId || !hasPermission(user, "session:terminate")) {
-        return actionFailure({permission: ["You dont have permission to terminate this session"]});
+        return actionFailure().message("You dont have permission to terminate this session").build();
     }
 
     if(session.id === currentSession.id) {
@@ -37,5 +37,5 @@ export default async function deleteSessionAction(id: string) {
 
     revalidatePath("/settings/sessions");
 
-    return actionSuccess();
+    return actionSuccess().build();
 }

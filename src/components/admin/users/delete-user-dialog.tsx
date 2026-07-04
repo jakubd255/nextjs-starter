@@ -1,12 +1,11 @@
 "use client";
 
-import { useActionState } from "react";
 import deleteUserAction from "@/actions/users/delete-user";
-import { handleActionResult } from "@/lib/utils/action-result";
 import { DialogClose, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import FormSubmitButton from "@/components/form-submit-button";
 import { User } from "@/db/schema/users";
+import { useFormAction } from "@/lib/hooks/use-form-action";
 
 interface DeleteUserDialogProps {
     user: User;
@@ -15,14 +14,7 @@ interface DeleteUserDialogProps {
 }
 
 export default function DeleteUserDialog({user, redirect=false, onSuccess}: DeleteUserDialogProps) {
-    const [_, action, pending] = useActionState(async () => {
-        const result = await deleteUserAction(user.id, redirect);
-        handleActionResult(result, "Successfully deleted user");
-        if(result.success) {
-            onSuccess?.();
-        }
-        return result;
-    }, undefined);
+    const [_, action, pending] = useFormAction(() => deleteUserAction(user.id, redirect), {onSuccess});
 
     return(
         <form className="flex flex-col gap-4" action={action}>

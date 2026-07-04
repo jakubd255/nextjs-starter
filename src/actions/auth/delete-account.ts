@@ -13,27 +13,27 @@ export default async function deleteAccountAction(_: unknown, data: FormData) {
     const validationResult = passwordSchema.safeParse(formData);
 
     if(!validationResult.success) {
-        return actionFailure(validationResult.error?.flatten().fieldErrors);
+        return actionFailure(validationResult.error?.flatten().fieldErrors).build();
     }
 
     const session = await validateRequest();
     if(!session.user) {
-        return actionFailure();
+        return actionFailure().build();
     }
     
     const user = await getUserById(session.user.id);
     if(!user) {
-        return actionFailure();
+        return actionFailure().build();
     }
 
     if(!user.password) {
-        return actionFailure({password: ["Password is not set yet"]});
+        return actionFailure({password: ["Password is not set yet"]}).build();
     }
 
     const {password} = validationResult.data;
 
     if(!validatePassword(password, user.password)) {
-        return actionFailure({password: ["Invalid password"]});
+        return actionFailure({password: ["Invalid password"]}).build();
     }
 
     await logUserDeleted(session.user!.id, user.id);

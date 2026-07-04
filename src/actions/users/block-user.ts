@@ -10,12 +10,12 @@ import { logUserBlocked, logUserUnlocked } from "@/db/queries/audit-logs";
 export default async function blockUserAction(id: string) {
     const session = await validateRequest();
     if(!hasPermission(session.user, "user:update:security")) {
-        return actionFailure({permission: ["You dont have permission to block and unlock users"]});
+        return actionFailure().message("You dont have permission to block and unlock users").build();
     }
 
     const user = await getUserById(id);
     if(!user) {
-        return actionFailure();
+        return actionFailure().build();
     }
 
     if(user.blocked) {
@@ -29,5 +29,5 @@ export default async function blockUserAction(id: string) {
 
     revalidatePath("/admin/users");
 
-    return actionSuccess({blocked: !user.blocked});
+    return actionSuccess().message(!user.blocked ? "Successfully blocked user" : "Successfully unlocked user").build();
 }

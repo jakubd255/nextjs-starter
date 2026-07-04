@@ -2,12 +2,11 @@
 
 import { User } from "@/db/schema/users";
 import { DialogClose, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-import { useActionState } from "react";
 import updateRoleAction from "@/actions/users/update-role";
 import { Button } from "@/components/ui/button";
 import FormSubmitButton from "@/components/form-submit-button";
 import { Role } from "@/lib/auth/permissions";
-import { handleActionResult } from "@/lib/utils/action-result";
+import { useFormAction } from "@/lib/hooks/use-form-action";
 
 const getRoleWarning = (current: Role, next: Role) => {
     if(current !== "ADMIN" && next === "ADMIN") {
@@ -37,14 +36,7 @@ interface UpdateUserRoleProps {
 }
 
 export default function UpdateUserRoleDialog({user, role, onSuccess}: UpdateUserRoleProps) {
-    const [_, action, pending] = useActionState(async () => {
-        const result = await updateRoleAction(user.id, role);
-        handleActionResult(result, `Successfully updated role to ${role}`);
-        if(result.success) {
-            onSuccess();
-        }
-    }, undefined);
-
+    const [_, action, pending] = useFormAction(() => updateRoleAction(user.id, role), {onSuccess});
     const warning = getRoleWarning(user.role, role);
 
     return(

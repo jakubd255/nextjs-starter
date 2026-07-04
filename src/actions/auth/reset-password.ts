@@ -13,19 +13,19 @@ export default async function resetPasswordAction(_: unknown, data: FormData) {
     const validationResult = resetPasswordSchema.safeParse(formData);
     
     if(!validationResult.success) {
-        return actionFailure(validationResult.error?.flatten().fieldErrors);
+        return actionFailure(validationResult.error?.flatten().fieldErrors).build();
     }
 
     const {code, newPassword} = validationResult.data;
 
     const token = await getTokenByCode(code);
     if(!token) {
-        return actionFailure({});
+        return actionFailure().build();
     }
 
     const user = await getUserById(token.userId);
     if(!user || !user.verified) {
-        return actionFailure({});
+        return actionFailure().build();
     }
 
     await updateUser(token.userId, {password: newPassword});

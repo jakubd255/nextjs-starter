@@ -2,31 +2,69 @@ import { toast } from "sonner";
 
 export interface ActionResult {
     success: boolean;
-    errors?: Record<string, string[]>;
+    message?: string;
+    errors?: Record<string, string[] | undefined>;
     [key: string]: any;
 }
 
-export const actionSuccess = (value?: any): ActionResult => ({
-    success: true, ...value
-});
+class ActionReply {
+    protected result: ActionResult;
 
-export const actionFailure = (errors: Record<string, string[]> = {}, state: any = {}): ActionResult => ({
-    success: false, errors, ...state
-});
+    constructor(success: boolean) {
+        this.result = {success};
+    }
 
-export const handleActionResult = (result: ActionResult, successMessage: string) => {
+    message(msg: string) {
+        this.result.message = msg;
+        return this;
+    }
+
+    data(value: Record<string, any>) {
+        Object.assign(this.result, value);
+        return this;
+    }
+
+    build(): ActionResult {
+        return this.result;
+    }
+}
+
+class ActionSuccess extends ActionReply {
+    constructor() {
+        super(true);
+    }
+}
+
+class ActionFailure extends ActionReply {
+    constructor(errs: Record<string, string[] | undefined> = {}) {
+        super(false);
+        this.result.errors = errs;
+    }
+
+    errors(errs: Record<string, string[] | undefined>) {
+        this.result.errors = errs;
+        return this;
+    }
+}
+
+export const actionSuccess = () => new ActionSuccess();
+export const actionFailure = (errs?: Record<string, string[] | undefined>) => new ActionFailure(errs);
+
+
+export const handleActionResult = (result: ActionResult) => {
+    if(!result.message) return result.success;
+
     if(result.success) {
-        toast.success(successMessage, {
-            position: "top-center"
-        });
-        return true;
-    }
-
-    else if(result.errors?.permission) {
-        toast.error(result.errors?.permission, {
+        toast.success(result.message, {
             position: "top-center"
         });
     }
 
-    return false;
+    else if(!result.success) {
+        toast.error(result.message, {
+            position: "top-center"
+        });
+    }
+
+    return result.success;
 };

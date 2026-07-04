@@ -7,19 +7,14 @@ import PasswordInput from "@/components/password-input";
 import { Button } from "@/components/ui/button";
 import { DialogClose, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Label } from "@/components/ui/label";
+import { useFormAction } from "@/lib/hooks/use-form-action";
 import Link from "next/link";
-import { useActionState, useRef } from "react";
+import { useRef } from "react";
 
 export default function UpdatePasswordForm() {
     const ref = useRef<HTMLButtonElement>(null);
 
-    const [state, action, pending] = useActionState(async (_: unknown, data: FormData) => {
-        const result = await updatePasswordAction(undefined, data);
-        if(result.success) {
-            ref.current?.click();
-        }
-        return result;
-    }, undefined);
+    const [state, action, pending] = useFormAction(updatePasswordAction, {onSuccess: () => {ref.current?.click()}});
     
     return(
         <form className="flex flex-col gap-4" action={action}>

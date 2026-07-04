@@ -10,7 +10,7 @@ export default async function resendVerificationTokenAction(_: unknown, data: Fo
 
     const user = await getUserById(userId);
     if(!user) {
-        return actionFailure({});
+        return actionFailure().build();
     }
 
     const token = await createEmailVerificationToken(userId);
@@ -22,8 +22,8 @@ export default async function resendVerificationTokenAction(_: unknown, data: Fo
         await sendVerificationToken(user.pendingEmail, token.code);
     }
     else {
-        return actionFailure();
+        return actionFailure().build();
     }
 
-    return actionSuccess();
+    return actionSuccess().build();
 }

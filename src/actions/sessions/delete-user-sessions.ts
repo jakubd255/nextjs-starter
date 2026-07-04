@@ -9,7 +9,7 @@ import { logForceLogout } from "@/db/queries/audit-logs";
 export default async function deleteUserSessionsAction(id: string) {
     const {user, session} = await validateRequest();
     if(!session || !hasPermission(user, "session:terminate")) {
-        return actionFailure({permission: ["You dont have permission to terminate sessions"]});
+        return actionFailure().message("You dont have permission to terminate sessions").build();
     }
 
     if(session.userId !== user.id) {
@@ -18,5 +18,5 @@ export default async function deleteUserSessionsAction(id: string) {
 
     await deleteSessionsByUserId(id, session.id);
 
-    return actionSuccess();
+    return actionSuccess().build();
 }

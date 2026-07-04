@@ -15,7 +15,7 @@ interface EmailSectionProps {
 export default function EmailSection({user}: EmailSectionProps) {
     const handleResetToken = async () => {
         const result = await resendVerifyUserAction(user.id);
-        handleActionResult(result, "Successfully resent verification token");
+        handleActionResult(result);
     }
 
     return(
