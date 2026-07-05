@@ -6,13 +6,12 @@ import { hasPermission } from "@/lib/auth/permissions";
 import { updateProfileSchema } from "@/lib/validation/user";
 import { revalidatePath } from "next/cache";
 import { actionFailure, actionSuccess } from "@/lib/utils/action-result";
+import { parseFormData } from "@/lib/utils/form-data-parser";
 
 export default async function updateProfileAction(_: unknown, data: FormData) {
-    const formData = Object.fromEntries(data.entries());
-    const validationResult = updateProfileSchema.safeParse(formData);
-
+    const validationResult = parseFormData(updateProfileSchema, data);
     if(!validationResult.success) {
-        return actionFailure(validationResult.error?.flatten().fieldErrors).build();
+        return actionFailure(validationResult.errors).build();
     }
 
     const {id, name, bio} = validationResult.data;

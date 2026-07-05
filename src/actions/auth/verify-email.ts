@@ -4,15 +4,14 @@ import { getTokenByCode } from "@/db/queries/tokens";
 import { getUserById, updateUser } from "@/db/queries/users";
 import { createSessionCookie } from "@/lib/auth/session";
 import { actionFailure } from "@/lib/utils/action-result";
+import { parseFormData } from "@/lib/utils/form-data-parser";
 import { verifyEmailSchema } from "@/lib/validation/auth";
 import { redirect } from "next/navigation";
 
 export default async function verifyEmailAction(_: unknown, data: FormData) {
-    const formData = Object.fromEntries(data.entries());
-    const validationResult = verifyEmailSchema.safeParse(formData);
-
+    const validationResult = parseFormData(verifyEmailSchema, data);
     if(!validationResult.success) {
-        return actionFailure(validationResult.error?.flatten().fieldErrors).build();
+        return actionFailure(validationResult.errors).build();
     }
 
     const {userId, code} = validationResult.data;

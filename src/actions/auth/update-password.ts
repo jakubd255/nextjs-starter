@@ -6,13 +6,12 @@ import { getUserById, updateUser } from "@/db/queries/users";
 import { actionFailure, actionSuccess } from "@/lib/utils/action-result";
 import { updatePasswordSchema } from "@/lib/validation/auth";
 import { logPasswordResetRequest } from "@/db/queries/audit-logs";
+import { parseFormData } from "@/lib/utils/form-data-parser";
 
 export default async function updatePasswordAction(_: unknown, data: FormData) {
-    const formData = Object.fromEntries(data.entries());
-    const validationResult = updatePasswordSchema.safeParse(formData);
-    
+    const validationResult = parseFormData(updatePasswordSchema, data);
     if(!validationResult.success) {
-        return actionFailure(validationResult.error?.flatten().fieldErrors).build();
+        return actionFailure(validationResult.errors).build();
     }
 
     const session = await validateRequest();

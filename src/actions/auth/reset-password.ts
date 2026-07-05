@@ -5,15 +5,14 @@ import { deleteSessionsByUserId } from "@/db/queries/sessions";
 import { getTokenByCode } from "@/db/queries/tokens";
 import { getUserById, updateUser } from "@/db/queries/users";
 import { actionFailure } from "@/lib/utils/action-result";
+import { parseFormData } from "@/lib/utils/form-data-parser";
 import { resetPasswordSchema } from "@/lib/validation/auth";
 import { redirect } from "next/navigation";
 
 export default async function resetPasswordAction(_: unknown, data: FormData) {
-    const formData = Object.fromEntries(data.entries());
-    const validationResult = resetPasswordSchema.safeParse(formData);
-    
+    const validationResult = parseFormData(resetPasswordSchema, data);
     if(!validationResult.success) {
-        return actionFailure(validationResult.error?.flatten().fieldErrors).build();
+        return actionFailure(validationResult.errors).build();
     }
 
     const {code, newPassword} = validationResult.data;

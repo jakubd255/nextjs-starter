@@ -4,6 +4,7 @@ import { logPasswordResetRequest } from "@/db/queries/audit-logs";
 import { createResetPasswordToken } from "@/db/queries/tokens";
 import { getUserByEmail } from "@/db/queries/users";
 import { actionFailure } from "@/lib/utils/action-result";
+import { parseFormData } from "@/lib/utils/form-data-parser";
 import { redirect } from "next/navigation";
 import { z } from "zod";
 
@@ -12,9 +13,9 @@ const schema = z.object({
 });
 
 export default async function requestResetPasswordAction(_: unknown, data: FormData) {
-    const validationResult = schema.safeParse(Object.fromEntries(data.entries()));
+    const validationResult = parseFormData(schema, data);
     if(!validationResult.success) {
-        return actionFailure(validationResult.error?.flatten().fieldErrors).build();
+        return actionFailure(validationResult.errors).build();
     }
 
     const {email} = validationResult.data;
@@ -26,5 +27,6 @@ export default async function requestResetPasswordAction(_: unknown, data: FormD
 
     const token = await createResetPasswordToken(user.id);
     await logPasswordResetRequest(user.id);
+    
     redirect(`/auth/forgot-password/${token.code}`);
 }

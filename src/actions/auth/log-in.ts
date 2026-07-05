@@ -9,13 +9,12 @@ import { sendVerificationToken } from "@/lib/email";
 import { redirect } from "next/navigation";
 import { loginSchema } from "@/lib/validation/auth";
 import { logLogInFailed, logLogInSuccess } from "@/db/queries/audit-logs";
+import { parseFormData } from "@/lib/utils/form-data-parser";
 
 export default async function logInAction(_: unknown, data: FormData) {
-    const formData = Object.fromEntries(data.entries());
-    const validationResult = loginSchema.safeParse(formData);
-
+    const validationResult = parseFormData(loginSchema, data);
     if(!validationResult.success) {
-        return actionFailure(validationResult.error.flatten().fieldErrors).build();
+        return actionFailure(validationResult.errors).build();
     }
 
     const {email, password, redirectTo} = validationResult.data;

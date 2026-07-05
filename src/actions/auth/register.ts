@@ -6,13 +6,14 @@ import { actionFailure } from "@/lib/utils/action-result";
 import { sendVerificationToken } from "@/lib/email";
 import { registerSchema } from "@/lib/validation/auth";
 import { redirect } from "next/navigation";
+import { parseFormData } from "@/lib/utils/form-data-parser";
 
 export default async function registerAction(_: unknown, data: FormData) {
-    const formData = Object.fromEntries(data.entries());
-    const validationResult = registerSchema.safeParse(formData);
+    const validationResult = parseFormData(registerSchema, data);
 
     if(!validationResult.success) {
-        return actionFailure(validationResult.error?.flatten().fieldErrors).data({formData}).build();
+        const {name, email} = validationResult.rawData;
+        return actionFailure(validationResult.errors).data({name, email}).build();
     }
 
     const {name, email, password} = validationResult.data;

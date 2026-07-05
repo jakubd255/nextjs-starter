@@ -7,13 +7,12 @@ import { validatePassword } from "@/lib/auth/password";
 import { passwordSchema } from "@/lib/validation/auth";
 import { redirect } from "next/navigation";
 import { logUserDeleted } from "@/db/queries/audit-logs";
+import { parseFormData } from "@/lib/utils/form-data-parser";
 
 export default async function deleteAccountAction(_: unknown, data: FormData) {
-    const formData = Object.fromEntries(data.entries());
-    const validationResult = passwordSchema.safeParse(formData);
-
+    const validationResult = parseFormData(passwordSchema, data);
     if(!validationResult.success) {
-        return actionFailure(validationResult.error?.flatten().fieldErrors).build();
+        return actionFailure(validationResult.errors).build();
     }
 
     const session = await validateRequest();

@@ -8,13 +8,12 @@ import { validateRequest } from "@/lib/auth/session";
 import { sendVerificationToken } from "@/lib/email";
 import { updateEmailSchema } from "@/lib/validation/auth";
 import { revalidatePath } from "next/cache";
+import { parseFormData } from "@/lib/utils/form-data-parser";
 
 export default async function updateEmailAction(_: unknown, data: FormData) {
-    const formData = Object.fromEntries(data.entries());
-    const validationResult = updateEmailSchema.safeParse(formData);
-    
+    const validationResult = parseFormData(updateEmailSchema, data);
     if(!validationResult.success) {
-        return actionFailure(validationResult.error?.flatten().fieldErrors).build();
+        return actionFailure(validationResult.errors).build();
     }
 
     const {user} = await validateRequest();
