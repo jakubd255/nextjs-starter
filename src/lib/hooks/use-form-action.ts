@@ -1,14 +1,8 @@
 import { useActionState } from "react";
 import { toast } from "sonner";
-import { handleActionResult } from "../utils/action-result";
+import { ActionResult, handleActionResult } from "../utils/action-result";
 
-interface ServerActionResponse {
-    success: boolean;
-    message?: string;
-    errors?: Record<string, string[]>;
-}
-
-export function useFormAction<ActionResponse extends ServerActionResponse>(
+export function useFormAction<ActionResponse extends ActionResult>(
     actionFn: (prevState: any, formData: FormData) => Promise<ActionResponse>,
     options?: {
         onSuccess?: (result: ActionResponse) => void;

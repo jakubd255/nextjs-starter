@@ -13,19 +13,19 @@ import { parseFormData } from "@/lib/utils/form-data-parser";
 export default async function updateEmailAction(_: unknown, data: FormData) {
     const validationResult = parseFormData(updateEmailSchema, data);
     if(!validationResult.success) {
-        return actionFailure(validationResult.errors).build();
+        return actionFailure(validationResult.errors).data(validationResult.rawData).build();
     }
 
     const {user} = await validateRequest();
     if(!user) {
-        return actionFailure().build();
+        return actionFailure(validationResult.errors).data(validationResult.rawData).build();
     }
 
     const {email} = validationResult.data;
 
     const existingUser = await getUserByEmail(email);
     if(existingUser?.verified && existingUser.id !== user.id) {
-        return actionFailure({email: ["This email is taken"]}).build();
+        return actionFailure({email: ["This email is taken"]}).data({email}).build();
     }
 
     if(existingUser?.id === user.id && existingUser.verified) {
