@@ -2,12 +2,12 @@ import { OAuthAccount } from "@/db/schema/accounts";
 import ProviderCard from "./provider-card";
 import { AVAILABLE_PROVIDERS } from "@/lib/auth/oauth";
 
-interface ProvidersListProps {
+interface Props {
     accounts: OAuthAccount[];
     canDisconnect: boolean;
 }
 
-export default function ProvidersList({accounts, canDisconnect}: ProvidersListProps) {
+export default function ProvidersList({accounts, canDisconnect}: Props) {
     const accountsMap = Object.fromEntries(accounts.map(a => [a.provider, a]));
 
     return(

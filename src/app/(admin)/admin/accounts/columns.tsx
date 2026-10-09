@@ -2,8 +2,8 @@
 
 import AccountActionsDropdown from "@/components/admin/accounts/account-actions-dropdown";
 import DataTableColumnHeader from "@/components/data-table/data-table-column-header";
+import { OAuthAccount } from "@/db/schema/accounts";
 import { formatDateTimeShort } from "@/lib/utils/date-format";
-import { OAuthAccount } from "@/lib/types";
 import { ColumnDef } from "@tanstack/react-table";
 
 export const columns: ColumnDef<OAuthAccount>[] = [

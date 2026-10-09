@@ -8,11 +8,11 @@ import { handleActionResult } from "@/lib/utils/action-result";
 import { User } from "@/db/schema/users";
 import { BadgeCheck } from "lucide-react";
 
-interface EmailSectionProps {
+interface Props {
     user: User;
 }
 
-export default function EmailSection({user}: EmailSectionProps) {
+export default function EmailSection({user}: Props) {
     const handleResetToken = async () => {
         const result = await resendVerifyUserAction(user.id);
         handleActionResult(result);

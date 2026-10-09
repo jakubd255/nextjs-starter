@@ -9,7 +9,7 @@ import { Separator } from "../ui/separator";
 import { ChevronDown } from "lucide-react";
 import useTableQuery from "@/lib/hooks/use-table-query";
 
-interface DataTableFilterSingleProps {
+interface Props {
     accessorKey: string;
     label: string;
     data: {
@@ -18,7 +18,7 @@ interface DataTableFilterSingleProps {
     }[];
 }
 
-export default function DataTableFilterSingle({accessorKey, label, data}: DataTableFilterSingleProps) {
+export default function DataTableFilterSingle({accessorKey, label, data}: Props) {
     const { filter } = useTableQuery();
     const selected = filter.get(accessorKey);
 

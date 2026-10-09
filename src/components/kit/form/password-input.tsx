@@ -1,8 +1,8 @@
 "use client";
 
 import { ChangeEventHandler, useState } from "react";
-import { Input } from "./ui/input";
 import ShowPasswordToggle from "./show-password-toggle";
+import { Input } from "@/components/ui/input";
 
 interface PasswordInputProps {
     id?: string;

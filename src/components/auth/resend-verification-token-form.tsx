@@ -4,11 +4,11 @@ import { Button } from "@/components/ui/button";
 import resendVerificationTokenAction from "@/actions/auth/resend-verification-token";
 import { useActionState } from "react";
 
-interface ResendVerificationTokenFormProps {
+interface Props {
     userId: string;
 }
 
-export default function ResendVerificationTokenForm({userId}: ResendVerificationTokenFormProps) {    
+export default function ResendVerificationTokenForm({userId}: Props) {    
     const [_, action] = useActionState(resendVerificationTokenAction, undefined);
 
     return(

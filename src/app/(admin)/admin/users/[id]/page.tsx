@@ -8,11 +8,11 @@ import { requireAuth } from "@/lib/auth/session";
 import { hasPermission } from "@/lib/auth/permissions";
 import { notFound } from "next/navigation";
 
-interface AdminUserEditPageProps {
+interface Props {
     params: Promise<{id: string}>;
 }
 
-export default async function AdminUserEditPage({params}: AdminUserEditPageProps) {
+export default async function AdminUserEditPage({params}: Props) {
     const session = await requireAuth("admin:access");
 
     const {id} = await params;

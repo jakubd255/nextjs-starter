@@ -1,5 +1,5 @@
 import { CommonSearchParams, parseBaseParams } from "@/db/filters/generic";
-import { OAuthProvider } from "@/lib/types";
+import { OAuthProvider } from "@/db/schema/accounts";
 
 export interface AccountSearchParams extends CommonSearchParams {
     userId?: string;

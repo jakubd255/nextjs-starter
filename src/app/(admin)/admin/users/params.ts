@@ -1,5 +1,5 @@
 import { CommonSearchParams, parseBaseParams } from "@/db/filters/generic";
-import { Role } from "@/lib/types";
+import { Role } from "@/lib/auth/permissions";
 
 export interface UserSearchParams extends CommonSearchParams {
     role?: Role | Role[];

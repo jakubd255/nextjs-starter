@@ -1,38 +1,25 @@
 import disconnectOAuthAccountAction from "@/actions/accounts/disconnect-account";
-import FormSubmitButton from "@/components/form-submit-button";
-import { Button } from "@/components/ui/button";
-import { DialogClose, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import ActionDialog from "@/components/kit/action-dialog";
+import { useDialogControl } from "@/components/kit/dialog-launcher";
 import { OAuthAccount } from "@/db/schema/accounts";
 import { useFormAction } from "@/lib/hooks/use-form-action";
 
-interface DisconnectAccountDialogProps {
+interface Props {
     account: OAuthAccount;
-    onSuccess?: () => void;
 }
 
-export default function DisconnectAccountDialog({account, onSuccess}: DisconnectAccountDialogProps) {
-    const [_, action, pending] = useFormAction(() => disconnectOAuthAccountAction(account.id, false), {onSuccess});
+export default function DisconnectAccountDialog({account}: Props) {
+    const {close} = useDialogControl();
+    const [_, action, pending] = useFormAction(disconnectOAuthAccountAction.bind(null, account.id, false), {onSuccess: close});
 
     return(
-        <form className="flex flex-col gap-4" action={action}>
-            <DialogHeader>
-                <DialogTitle>
-                    Disconnect account
-                </DialogTitle>
-                <DialogDescription>
-                    This action will delete user's login method. Please confirm that you want to proceed.
-                </DialogDescription>
-            </DialogHeader>
-            <DialogFooter>
-                <DialogClose asChild>
-                    <Button type="button" variant="outline">
-                        Cancel
-                    </Button>
-                </DialogClose>
-                <FormSubmitButton variant="destructive" pending={pending}>
-                    Disconnect
-                </FormSubmitButton>
-            </DialogFooter>
-        </form>
+        <ActionDialog
+            title="Disconnect account"
+            description="This action will delete user's login method. Please confirm that you want to proceed."
+            confirmText="Disconnect"
+            variant="destructive"
+            action={action}
+            pending={pending}
+        />
     );
 }

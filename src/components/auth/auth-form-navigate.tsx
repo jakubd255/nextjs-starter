@@ -3,13 +3,13 @@
 import useRedirectTo from "@/lib/hooks/use-redirect-to";
 import Link from "next/link";
 
-interface AuthFormNavigateProps {
+interface Props {
     text: string;
     href: string;
     name: string;
 }
 
-export default function AuthFormNavigate({text, href, name}: AuthFormNavigateProps) {
+export default function AuthFormNavigate({text, href, name}: Props) {
     const redirectTo = useRedirectTo();
     
     return(

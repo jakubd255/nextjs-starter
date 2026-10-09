@@ -1,20 +1,20 @@
 "use client";
 
 import { Label } from "@/components/ui/label";
-import UserAvatar from "@/components/user-avatar";
+import UserAvatar from "@/components/kit/user-avatar";
 import { useRef, useState } from "react";
 import UpdateProfileImageDropdown from "./update-profile-image-dropdown";
-import DialogLauncher from "@/components/dialog-launcher";
 import UpdateProfileImageUrlForm from "./update-profile-image-url-form";
 import updateAvatarAction from "@/actions/users/update-avatar";
 import UpdateProfileImageUpload from "./update-profile-image-upload";
 import { UserProfile } from "@/db/schema/users";
+import DialogLauncher from "@/components/kit/dialog-launcher";
 
-interface UpdateProfileImageFormProps {
+interface Props {
     user: UserProfile;
 }
 
-export default function UpdateProfileImage({user}: UpdateProfileImageFormProps) {
+export default function UpdateProfileImage({user}: Props) {
     const [isDialogOpen, setDialogOpen] = useState(false);
     const handleToggleOpen = (open: boolean) => setDialogOpen(open);
 
@@ -39,7 +39,7 @@ export default function UpdateProfileImage({user}: UpdateProfileImageFormProps) 
                 onRemove={handleDeleteImage}
             />
             <DialogLauncher open={isDialogOpen} onOpenChange={handleToggleOpen}>
-                <UpdateProfileImageUrlForm user={user} onSuccess={() => setDialogOpen(false)}/>
+                <UpdateProfileImageUrlForm user={user}/>
             </DialogLauncher>
             <UpdateProfileImageUpload user={user} inputRef={fileInputRef}/>
         </div>

@@ -1,16 +1,18 @@
+"use client";
+
 import { formatDateTimeShort } from "@/lib/utils/date-format";
 import { Session as AuthSession } from "lucia";
 import DeleteSessionDialog from "./delete-session-dialog";
-import DialogLauncher from "@/components/dialog-launcher";
 import { Trash2 } from "lucide-react";
 import { Session } from "@/db/schema/sessions";
+import DialogLauncher from "@/components/kit/dialog-launcher";
 
-interface SessionProps {
+interface Props {
     session: Session;
     currentSession: AuthSession;
 }
 
-export default function SessionCard({session, currentSession}: SessionProps) {
+export default function SessionCard({session, currentSession}: Props) {
     return(
         <div className="border p-4 rounded-md flex justify-between">
             <div className="flex gap-2 items-center">
@@ -28,7 +30,7 @@ export default function SessionCard({session, currentSession}: SessionProps) {
                     {formatDateTimeShort(session.createdAt)}
                 </span>
                 {currentSession.id !== session.id ? (
-                    <DialogLauncher variant="ghost" icon={Trash2}>
+                    <DialogLauncher trigger={{icon: Trash2, variant: "ghost"}}>
                         <DeleteSessionDialog id={session.id}/>
                     </DialogLauncher>
                 ) : (

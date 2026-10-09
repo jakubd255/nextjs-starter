@@ -4,7 +4,7 @@ import { DataTableSkeleton } from "../data-table/data-table-skeleton";
 import { DataTable } from "../data-table/data-table";
 import { PaginationWithLinks } from "../ui/pagination-with-links";
 
-interface TablePageLayoutProps<TData, TValue> {
+interface Props<TData, TValue> {
     title: string;
     toolbar: ReactNode;
     columns: ColumnDef<TData, TValue>[];
@@ -14,7 +14,7 @@ interface TablePageLayoutProps<TData, TValue> {
     pageSize: number;
 }
 
-export default function AdminTablePageLayout<TData, TValue>({title, toolbar, columns, data, totalCount, page, pageSize}: TablePageLayoutProps<TData, TValue>) {
+export default function AdminTablePageLayout<TData, TValue>({title, toolbar, columns, data, totalCount, page, pageSize}: Props<TData, TValue>) {
     return(
         <div className="flex flex-col gap-6 w-full">
             <h1 className="text-4xl font-bold">

@@ -4,11 +4,11 @@ import { AVAILABLE_PROVIDERS } from "@/lib/auth/oauth";
 import { BaseTableToolbar } from "../base-table-toolbar";
 import { User } from "@/db/schema/users";
 
-interface AccountsTableToolbarProps {
+interface Props {
     user?: User;
 }
 
-export default function AccountsTableToolbar({user}: AccountsTableToolbarProps) {
+export default function AccountsTableToolbar({user}: Props) {
     return(
         <BaseTableToolbar resetKeys={["userId", "provider", "providerUserId"]}>
             <DataTableFilterUser user={user}/>
@@ -18,6 +18,5 @@ export default function AccountsTableToolbar({user}: AccountsTableToolbarProps) 
                 data={AVAILABLE_PROVIDERS.map(provider => ({value: provider.key, label: provider.label}))}
             />
         </BaseTableToolbar>
-        
     );
 }

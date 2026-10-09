@@ -1,12 +1,12 @@
 import { UserProfile } from "@/db/schema/users";
 import Link from "next/link";
 
-interface UserEmailProps {
+interface Props {
     user: UserProfile;
     showVerify?: boolean;
 }
 
-export default function UserEmail({user, showVerify=false}: UserEmailProps) {
+export default function UserEmail({user, showVerify=false}: Props) {
     return(
         <div className="flex flex-col gap-2">
             <span>
@@ -25,5 +25,5 @@ export default function UserEmail({user, showVerify=false}: UserEmailProps) {
                 </div>
             ) : null}
         </div>
-    )
+    );
 }

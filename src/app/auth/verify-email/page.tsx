@@ -2,11 +2,11 @@ import ResendVerificationTokenForm from "@/components/auth/resend-verification-t
 import VerifyEmailForm from "@/components/auth/verify-email-form";
 import { Separator } from "@/components/ui/separator";
 
-interface VerifyEmailPageProps {
+interface Props {
     searchParams: Promise<{userId?: string}>
 }
 
-export default async function VerifyEmailPage({searchParams}: VerifyEmailPageProps) {
+export default async function VerifyEmailPage({searchParams}: Props) {
     const userId = (await searchParams).userId ?? "";
 
     return(

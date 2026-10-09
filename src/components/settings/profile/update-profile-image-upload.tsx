@@ -4,12 +4,12 @@ import updateAvatarAction from "@/actions/users/update-avatar";
 import { UserProfile } from "@/db/schema/users";
 import { RefObject, useActionState, useRef } from "react";
 
-interface UpdateProfileImageUploadProps {
+interface Props {
     user: UserProfile;
     inputRef: RefObject<HTMLInputElement | null>;
 }
 
-export default function UpdateProfileImageUpload({user, inputRef}: UpdateProfileImageUploadProps) {
+export default function UpdateProfileImageUpload({user, inputRef}: Props) {
     const [_, action] = useActionState(updateAvatarAction, undefined);
     
     const formRef = useRef<HTMLFormElement>(null);

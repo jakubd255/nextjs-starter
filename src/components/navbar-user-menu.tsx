@@ -1,55 +1,39 @@
-import { 
-    DropdownMenu, DropdownMenuContent, DropdownMenuGroup, 
-    DropdownMenuItem, DropdownMenuLabel, 
-    DropdownMenuSeparator, DropdownMenuTrigger 
-} from "./ui/dropdown-menu";
-import { LogOut, ShieldAlert, UserCog } from "lucide-react";
-import Link from "next/link";
-import logOutAction from "@/actions/auth/log-out";
-import UserAvatar from "./user-avatar";
-import { hasPermission } from "@/lib/auth/permissions";
-import { Button } from "./ui/button";
-import { requireAuth } from "@/lib/auth/session";
+"use client";
 
-export default async function NavbarUserMenu() {
-    const {user} = await requireAuth();
+import { LogOut, ShieldAlert, UserCog } from "lucide-react";
+import logOutAction from "@/actions/auth/log-out";
+import UserAvatar from "./kit/user-avatar";
+import { hasPermission } from "@/lib/auth/permissions";
+import { useSession } from "./providers/session-provider";
+import ActionsMenu from "./kit/actions-menu";
+
+export default function NavbarUserMenu() {
+    const {user} = useSession();
 
     return(
-        <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-                <Button className="rounded-full" variant="outline" size="icon">
-                    <UserAvatar user={user} hideBorder/>
-                </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent>
-                <DropdownMenuGroup>
-                    <DropdownMenuLabel>
-                        {user.name}
-                    </DropdownMenuLabel>
-                    <DropdownMenuItem className="cursor-pointer" asChild>
-                        <Link href="/settings/profile">
-                            <UserCog className="w-4 h-4"/>
-                            Account settings
-                        </Link>
-                    </DropdownMenuItem>
-                    {hasPermission(user, "admin:access") ? (
-                        <>
-                            <DropdownMenuSeparator/>
-                            <DropdownMenuItem className="cursor-pointer" asChild>
-                                <Link href="/admin">
-                                    <ShieldAlert className="w-4 h-4"/>
-                                    Admin dashboard
-                                </Link>
-                            </DropdownMenuItem>
-                        </>
-                    ) : null}
-                    <DropdownMenuSeparator/>
-                    <DropdownMenuItem onClick={logOutAction} className="cursor-pointer">
-                        <LogOut className="w-4 h-4"/>
-                        Log out
-                    </DropdownMenuItem>
-                </DropdownMenuGroup>
-            </DropdownMenuContent>
-        </DropdownMenu>
+        <ActionsMenu
+            trigger={<UserAvatar user={user} hideBorder/>}
+            triggerVariant="outline"
+            triggerClassName="rounded-full"
+            entries={[
+                {heading: user.name},
+                {
+                    label: "Account settings", 
+                    icon: UserCog, 
+                    href: "/settings/profile"
+                },
+                {
+                    label: "Admin dashboard", 
+                    icon: ShieldAlert, 
+                    href: "/admin",
+                    hidden: !hasPermission(user, "admin:access")
+                },
+                {
+                    label: "Log out", 
+                    icon: LogOut, 
+                    onSelect: logOutAction
+                }
+            ]}
+        />
     );
 }

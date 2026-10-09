@@ -3,7 +3,7 @@
 import UserActionDropdown from "@/components/admin/users/user-actions-dropdown";
 import DataTableColumnHeader from "@/components/data-table/data-table-column-header";
 import { Badge } from "@/components/ui/badge";
-import UserAvatar from "@/components/user-avatar";
+import UserAvatar from "@/components/kit/user-avatar";
 import UserEmail from "@/components/settings/account/user-email";
 import { formatDateTimeShort } from "@/lib/utils/date-format";
 import { ColumnDef } from "@tanstack/react-table";

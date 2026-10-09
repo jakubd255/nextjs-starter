@@ -1,18 +1,18 @@
 "use client";
 
-import DialogLauncher from "@/components/dialog-launcher";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Separator } from "@/components/ui/separator";
 import { Role, ROLES } from "@/lib/auth/permissions";
 import { User } from "@/db/schema/users";
 import UpdateUserRoleDialog from "./update-user-role-dialog";
 import { useState } from "react";
+import DialogLauncher from "@/components/kit/dialog-launcher";
 
-interface RoleSectionProps {
+interface Props {
     user: User;
 }
 
-export default function RoleSection({user}: RoleSectionProps) {
+export default function RoleSection({user}: Props) {
     const [pendingRole, setPendingRole] = useState<Role | null>(null);
 
     return(

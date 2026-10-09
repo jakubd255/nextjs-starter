@@ -3,12 +3,12 @@ import DataTableSearch from "../data-table/data-table-search";
 import { Separator } from "../ui/separator";
 import DataTableReset from "../data-table/data-table-reset";
 
-interface BaseTableToolbarProps {
+interface Props {
     resetKeys: string[];
     children?: ReactNode;
 }
 
-export function BaseTableToolbar({ resetKeys, children }: BaseTableToolbarProps) {
+export function BaseTableToolbar({ resetKeys, children }: Props) {
     const allResetKeys = ["search", ...resetKeys];
     const hasFilters = !!children;
 

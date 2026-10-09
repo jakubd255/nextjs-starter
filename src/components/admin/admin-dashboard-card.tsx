@@ -2,13 +2,13 @@ import { LucideProps } from "lucide-react";
 import Link from "next/link";
 import { ForwardRefExoticComponent, RefAttributes } from "react";
 
-interface AdminDashboardCardProps {
+interface Props {
     label: string;
     icon: ForwardRefExoticComponent<Omit<LucideProps, "ref"> & RefAttributes<SVGSVGElement>>;
     href: string;
 }
 
-export default function AdminDashboardCard(props: AdminDashboardCardProps) {
+export default function AdminDashboardCard(props: Props) {
     return(
         <Link href={props.href}>
             <div className="p-3 flex flex-col gap-2 items-center rounded-lg border">

@@ -1,29 +1,27 @@
 "use client";
 
 import updateAvatarAction from "@/actions/users/update-avatar";
-import FormSubmitButton from "@/components/form-submit-button";
-import { Button } from "@/components/ui/button";
-import { DialogClose, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import ActionDialog from "@/components/kit/action-dialog";
+import { useDialogControl } from "@/components/kit/dialog-launcher";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { UserProfile } from "@/db/schema/users";
 import { useFormAction } from "@/lib/hooks/use-form-action";
 
-interface UpdateProfileImageUrlFormProps {
+interface Props {
     user: UserProfile;
-    onSuccess: () => void;
 }
 
-export default function UpdateProfileImageUrlForm({user, onSuccess}: UpdateProfileImageUrlFormProps) {
-    const [_, action, pending] = useFormAction(updateAvatarAction, {onSuccess});
+export default function UpdateProfileImageUrlForm({user}: Props) {
+    const {close} = useDialogControl();
+    const [_, action, pending] = useFormAction(updateAvatarAction, {onSuccess: close});
 
     return(
-        <form className="flex flex-col gap-4" action={action}>
-            <DialogHeader>
-                <DialogTitle>
-                    Set image from URL
-                </DialogTitle>
-            </DialogHeader>
+        <ActionDialog
+            title="Set image from URL"
+            action={action}
+            pending={pending}
+        >
             <div>
                 <Label htmlFor="url">
                     URL
@@ -31,16 +29,6 @@ export default function UpdateProfileImageUrlForm({user, onSuccess}: UpdateProfi
                 <Input type="url" name="url" id="url"/>
             </div>
             <input type="hidden" name="id" defaultValue={user.id} hidden/>
-            <DialogFooter>
-                <DialogClose asChild>
-                    <Button type="button" variant="outline">
-                        Close
-                    </Button>
-                </DialogClose>
-                <FormSubmitButton pending={pending}>
-                    Confirm
-                </FormSubmitButton>
-            </DialogFooter>
-        </form>
+        </ActionDialog>
     );
 }

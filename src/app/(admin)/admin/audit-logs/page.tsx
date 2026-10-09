@@ -5,11 +5,11 @@ import { columns } from "./columns";
 import AuditLogsTableToolbar from "@/components/admin/audit-logs/audit-logs-table-toolbar";
 import AdminTablePageLayout from "@/components/admin/table-page-layout";
 
-interface AdminAuditLogsPageProps {
+interface Props {
     searchParams: Promise<AuditLogSearchParams>;
 };
 
-export default async function AdminAuditLogsPage({searchParams}: AdminAuditLogsPageProps) {
+export default async function AdminAuditLogsPage({searchParams}: Props) {
     await requireAuth("audit:read");
 
     const params = await searchParams;

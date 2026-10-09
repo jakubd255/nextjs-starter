@@ -1,8 +1,8 @@
 "use client";
 
 import { Ref } from "react";
-import { Button } from "./ui/button";
 import { LoaderCircle } from "lucide-react";
+import { Button } from "@/components/ui/button";
 
 interface FormSubmitButtonProps {
     children: React.ReactNode;

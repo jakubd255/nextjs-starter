@@ -1,48 +1,29 @@
 "use client";
 
 import updateEmailAction from "@/actions/auth/update-email";
-import FormSubmitButton from "@/components/form-submit-button";
-import FormSubmitError from "@/components/form-submit-error";
-import { Button } from "@/components/ui/button";
-import { DialogClose, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
+import ActionDialog from "@/components/kit/action-dialog";
+import { useDialogControl } from "@/components/kit/dialog-launcher";
+import { TextField } from "@/components/kit/form/fields";
 import { useFormAction } from "@/lib/hooks/use-form-action";
-import { useRef } from "react";
 
 export default function UpdateEmailForm() {
-    const ref = useRef<HTMLButtonElement>(null);
-
-    const [state, action, pending] = useFormAction(updateEmailAction, {onSuccess: () => {ref.current?.click();}})
+    const {close} = useDialogControl();
+    const [state, action, pending] = useFormAction(updateEmailAction, {onSuccess: close});
 
     return(
-        <form className="flex flex-col gap-4" action={action}>
-            <DialogHeader>
-                <DialogTitle>
-                    Change e-mail
-                </DialogTitle>
-                <DialogDescription>
-                    Update your e-mail address.
-                    New e-mail will be active after verification.
-                </DialogDescription>
-            </DialogHeader>
-            <div>
-                <Label htmlFor="email">
-                    Email
-                </Label>
-                <Input type="email" name="email" id="email" defaultValue={state?.email}/>
-                <FormSubmitError errors={state?.errors?.email}/>
-            </div>
-            <DialogFooter>
-                <DialogClose asChild>
-                    <Button type="button" variant="outline" ref={ref}>
-                        Cancel
-                    </Button>
-                </DialogClose>
-                <FormSubmitButton pending={pending}>
-                    Change email
-                </FormSubmitButton>
-            </DialogFooter>
-        </form>
+        <ActionDialog 
+            title="Update email"
+            description="Update your e-mail address. New e-mail will be active after verification."
+            action={action} 
+            pending={pending}
+        >
+            <TextField 
+                type="email" 
+                name="email" 
+                label="Email" 
+                defaultValue={state?.email}
+                errors={state?.errors?.email}
+            />
+        </ActionDialog>
     );
 }

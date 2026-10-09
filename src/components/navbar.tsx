@@ -2,11 +2,11 @@ import Link from "next/link";
 import { DarkModeToggle } from "./dark-mode-toggle";
 import NavbarUserMenu from "./navbar-user-menu";
 
-interface NavbarProps {
+interface Props {
     showUser?: boolean;
 }
 
-export default function Navbar({showUser=false}: NavbarProps) {
+export default function Navbar({showUser=false}: Props) {
     return(
         <header className="w-full px-4 py-2 z-10 flex justify-between items-center border-b sticky top-0 backdrop-blur bg-background/90">
             <Link href="/">

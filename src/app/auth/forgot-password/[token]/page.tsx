@@ -1,10 +1,10 @@
 import ResetPassword from "@/components/auth/reset-password";
 
-interface ResetPasswordPageProps {
+interface Props {
     params: Promise<{token: string}>;
 }
 
-export default async function ResetPasswordPage({params}: ResetPasswordPageProps) {
+export default async function ResetPasswordPage({params}: Props) {
     const {token} = await params;
 
     return(

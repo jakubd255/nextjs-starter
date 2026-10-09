@@ -1,41 +1,36 @@
 "use client";
 
 import { useActionState } from "react";
-import FormSubmitButton from "../form-submit-button";
-import FormSubmitError from "../form-submit-error";
-import PasswordInput from "../password-input";
-import { Label } from "../ui/label";
+import FormSubmitButton from "../kit/form/form-submit-button";
 import resetPasswordAction from "@/actions/auth/reset-password";
+import { FieldGroup, Form } from "../kit/form/form";
+import { PasswordField } from "../kit/form/fields";
 
-interface ResetPasswordProps {
+interface Props {
     code: string;
 }
 
-export default function ResetPassword({code}: ResetPasswordProps) {
+export default function ResetPassword({code}: Props) {
     const [state, action, pending] = useActionState(resetPasswordAction, undefined);
 
     return(
-        <form className="flex flex-col gap-6" action={action}>
-            <div className="flex flex-col gap-3">
-                <div>
-                    <Label htmlFor="newPassword">
-                        New password
-                    </Label>
-                    <PasswordInput name="newPassword" id="newPassword"/>
-                    <FormSubmitError errors={state?.errors?.newPassword}/>
-                </div>
-                <div>
-                    <Label htmlFor="confirmNewPassword">
-                        Confirm new password
-                    </Label>
-                    <PasswordInput name="confirmNewPassword" id="confirmNewPassword"/>
-                    <FormSubmitError errors={state?.errors?.confirmNewPassword}/>
-                </div>
-            </div>
-            <input type="hidden" name="code" defaultValue={code} hidden/>
+        <Form action={action}>
+            <FieldGroup>
+                <PasswordField
+                    label="New paswword"
+                    name="newPassword"
+                    errors={state?.errors?.newPassword}
+                />
+                <PasswordField
+                    label="Confirm mew paswword"
+                    name="confirmNewPassword"
+                    errors={state?.errors?.confirmNewPassword}
+                />
+                <input type="hidden" name="code" defaultValue={code} hidden/>
+            </FieldGroup>
             <FormSubmitButton pending={pending}>
                 Reset password
             </FormSubmitButton>
-        </form>
-    )
+        </Form>
+    );
 }

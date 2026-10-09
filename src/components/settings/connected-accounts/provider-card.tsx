@@ -5,7 +5,7 @@ import Link from "next/link";
 import { CircleCheckBig } from "lucide-react";
 import { OAuthAccount } from "@/db/schema/accounts";
 
-interface ProviderCardProps {
+interface Props {
 	provider: {
         label: string;
         iconLight: string;
@@ -17,7 +17,7 @@ interface ProviderCardProps {
     canDisconnect: boolean;
 }
 
-export default function ProviderCard({provider, account, canDisconnect}: ProviderCardProps) {
+export default function ProviderCard({provider, account, canDisconnect}: Props) {
     return(
         <div className="flex flex-col gap-2 p-4 rounded-md border max-w-115">
             <div className="flex justify-between">

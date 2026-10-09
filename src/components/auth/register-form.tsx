@@ -1,51 +1,45 @@
 "use client";
 
 import { useActionState } from "react";
-import { Input } from "../ui/input";
-import { Label } from "../ui/label";
 import registerAction from "@/actions/auth/register";
-import PasswordInput from "../password-input";
-import FormSubmitError from "../form-submit-error";
-import FormSubmitButton from "../form-submit-button";
+import FormSubmitButton from "../kit/form/form-submit-button";
+import { FieldGroup, Form } from "../kit/form/form";
+import { PasswordField, TextField } from "../kit/form/fields";
 
 export default function RegisterForm() {
     const [state, action, pending] = useActionState(registerAction, undefined);
     
     return(
-        <form className="flex flex-col gap-6" action={action}>
-            <div className="flex flex-col gap-3">
-                <div>
-                    <Label htmlFor="name">
-                        Name
-                    </Label>
-                    <Input type="text" name="name" id="name" defaultValue={state?.name}/>
-                    <FormSubmitError errors={state?.errors?.name}/>
-                </div>
-                <div>
-                    <Label htmlFor="email">
-                        E-mail
-                    </Label>
-                    <Input type="email" name="email" id="email" defaultValue={state?.email}/>
-                    <FormSubmitError errors={state?.errors?.email}/>
-                </div>
-                <div>
-                    <Label htmlFor="password">
-                        Password
-                    </Label>
-                    <PasswordInput name="password" id="password"/>
-                    <FormSubmitError errors={state?.errors?.password}/>
-                </div>
-                <div>
-                    <Label htmlFor="confirmPassword">
-                        Confirm password
-                    </Label>
-                    <PasswordInput name="confirmPassword" id="confirmPassword"/>
-                    <FormSubmitError errors={state?.errors?.confirmPassword}/>
-                </div>
-            </div>
+        <Form action={action}>
+            <FieldGroup>
+                <TextField
+                    label="Name"
+                    name="name"
+                    defaultValue={state?.name}
+                    errors={state?.errors?.name}
+                />
+                <TextField 
+                    label="E-mail" 
+                    type="email" 
+                    name="email" 
+                    defaultValue={state?.email} 
+                    errors={state?.errors?.email}
+                />
+                <PasswordField
+                    label="Password"
+                    name="password"
+                    errors={state?.errors?.password}
+                    forgotPassword
+                />
+                <PasswordField
+                    label="Confirm password"
+                    name="confirmPassword"
+                    errors={state?.errors?.confirmPassword}
+                />
+            </FieldGroup>
             <FormSubmitButton pending={pending}>
                 Register
             </FormSubmitButton>
-        </form>
+        </Form>
     );
 }

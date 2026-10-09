@@ -4,11 +4,11 @@ import UpdateProfileForm from "@/components/settings/profile/update-profile-form
 import UpdateProfileImage from "@/components/settings/profile/update-profile-image";
 import { User } from "@/db/schema/users";
 
-interface ProfileSectionProps {
+interface Props {
     user: User;
 }
 
-export default function ProfileSection({user}: ProfileSectionProps) {
+export default function ProfileSection({user}: Props) {
     return(
         <section className="flex flex-col gap-2">
             <h2 className="text-2xl font-bold">

@@ -1,19 +1,16 @@
 "use client";
 
-import DialogLauncher from "@/components/dialog-launcher";
 import DeleteUserDialog from "./delete-user-dialog";
 import { User } from "@/db/schema/users";
-import { useState } from "react";
 import { Separator } from "@/components/ui/separator";
+import DialogLauncher from "@/components/kit/dialog-launcher";
 
-interface DeleteUserSectionProps {
+interface Props {
     user: User;
     disabled?: boolean;
 }
 
-export default function DeleteUserSection({user, disabled=true}: DeleteUserSectionProps) {
-    const [open, setOpen] = useState(false);
-
+export default function DeleteUserSection({user, disabled=true}: Props) {
     return(
         <>
             <Separator/>
@@ -26,10 +23,7 @@ export default function DeleteUserSection({user, disabled=true}: DeleteUserSecti
                 </span>
                 <div>
                     <DialogLauncher 
-                        text="Delete user" 
-                        variant="destructive" 
-                        open={open} 
-                        onOpenChange={setOpen} 
+                        trigger={{text: "Delete user", variant: "destructive"}}
                         disabled={disabled}
                     >
                         <DeleteUserDialog user={user} redirect/>

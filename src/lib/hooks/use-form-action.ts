@@ -5,12 +5,15 @@ import { ActionResult, handleActionResult } from "../utils/action-result";
 export function useFormAction<ActionResponse extends ActionResult>(
     actionFn: (prevState: any, formData: FormData) => Promise<ActionResponse>,
     options?: {
+        onTrigger?: () => void;
         onSuccess?: (result: ActionResponse) => void;
         onError?: (result: ActionResponse) => void;
     }
 ) {
     return useActionState(async (prevState: any, formData: FormData) => {
         try {
+            options?.onTrigger?.();
+            
             const result = await actionFn(prevState, formData);
 
             handleActionResult(result);

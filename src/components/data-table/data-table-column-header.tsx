@@ -8,12 +8,12 @@ import {
 import { Button } from "../ui/button";
 import useTableQuery from "@/lib/hooks/use-table-query";
 
-interface DataTableColumnHeaderProps {
+interface Props {
     accessorKey: string;
     label: string;
 }
 
-export default function DataTableColumnHader({accessorKey, label}: DataTableColumnHeaderProps) {
+export default function DataTableColumnHader({accessorKey, label}: Props) {
     const {sort} = useTableQuery();
 
     const isChecked = (order?: string | null) => {

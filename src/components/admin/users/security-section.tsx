@@ -6,11 +6,11 @@ import { Separator } from "@/components/ui/separator";
 import { handleActionResult } from "@/lib/utils/action-result";
 import { User } from "@/db/schema/users";
 
-interface SecuritySectionProps {
+interface Props {
     user: User;
 }
 
-export default function SecuritySection({user}: SecuritySectionProps) {
+export default function SecuritySection({user}: Props) {
     const handleToggleBlocked = async () => {
         const result = await blockUserAction(user.id);
         handleActionResult(result);

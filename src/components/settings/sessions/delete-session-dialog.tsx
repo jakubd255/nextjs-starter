@@ -1,43 +1,25 @@
 "use client";
 
 import deleteSessionAction from "@/actions/sessions/delete-session";
-import { Button } from "@/components/ui/button";
-import { DialogClose, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-import { useRef } from "react";
+import ActionDialog from "@/components/kit/action-dialog";
+import { useDialogControl } from "@/components/kit/dialog-launcher";
+import { useFormAction } from "@/lib/hooks/use-form-action";
 
-interface DeleteSessionDialogProps {
+interface Props {
     id: string;
 }
 
-export default function DeleteSessionDialog({id}: DeleteSessionDialogProps) {
-    const ref = useRef<HTMLButtonElement>(null);
-
-    const handleDeleteSession = async () => {
-        const result = await deleteSessionAction(id);
-        if(result.success) {
-            ref.current?.click();
-        }
-    }
+export default function DeleteSessionDialog({id}: Props) {
+    const {close} = useDialogControl();
+    const [_, action] = useFormAction(deleteSessionAction.bind(null, id), {onTrigger: close});
 
     return(
-        <DialogHeader>
-            <DialogTitle>
-                Delete session
-            </DialogTitle>
-            <DialogDescription>
-                This is the session for the device you are using now.
-                Once deleted you will be logged out.
-            </DialogDescription>
-            <DialogFooter>
-                <DialogClose asChild>
-                    <Button type="button" variant="outline" ref={ref}>
-                        Cancel
-                    </Button>
-                </DialogClose>
-                <Button variant="destructive" onClick={handleDeleteSession}>
-                    Delete
-                </Button>
-            </DialogFooter>
-        </DialogHeader>
+        <ActionDialog
+            title="Delete session"
+            description="This is the session for the device you are using now. Once deleted you will be logged out."
+            confirmText="Delete"
+            variant="destructive"
+            action={action}
+        />
     );
 }

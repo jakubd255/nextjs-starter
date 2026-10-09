@@ -6,11 +6,11 @@ import { countOAuthAccountsAdmin, getOAuthAccountsAdmin } from "@/db/queries/acc
 import { AccountSearchParams, parseAccountsParams } from "./params";
 import AdminTablePageLayout from "@/components/admin/table-page-layout";
 
-interface AdminOAuthProvidersPageProps {
+interface Props {
     searchParams: Promise<AccountSearchParams>;
 };
 
-export default async function AdminOAuthAccountsPage({searchParams}: AdminOAuthProvidersPageProps) {
+export default async function AdminOAuthAccountsPage({searchParams}: Props) {
     await requireAuth("oauth:read");
 
     const params = await searchParams;

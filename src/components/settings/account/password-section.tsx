@@ -1,12 +1,12 @@
-import DialogLauncher from "@/components/dialog-launcher";
 import UpdatePasswordForm from "./update-password-form";
 import SetPasswordForm from "./set-password-form";
+import DialogLauncher from "@/components/kit/dialog-launcher";
 
-interface PasswordSectionProps {
+interface Props {
     hasPassword: boolean;
 }
 
-export default function PasswordSection({hasPassword}: PasswordSectionProps) {
+export default function PasswordSection({hasPassword}: Props) {
     return(
         <section className="flex flex-col gap-2">
             <h2 className="text-2xl font-bold">
@@ -14,11 +14,11 @@ export default function PasswordSection({hasPassword}: PasswordSectionProps) {
             </h2>
             <div>
                 {hasPassword ? (
-                    <DialogLauncher variant="outline" text="Change password">
+                    <DialogLauncher trigger={{variant: "outline", text: "Update password"}}>
                         <UpdatePasswordForm/>
                     </DialogLauncher>
                 ) : (
-                    <DialogLauncher variant="outline" text="Set password">
+                    <DialogLauncher trigger={{variant: "outline", text: "Set password"}}>
                         <SetPasswordForm/>
                     </DialogLauncher>
                 )}

@@ -1,4 +1,4 @@
-import DialogLauncher from "@/components/dialog-launcher";
+import DialogLauncher from "@/components/kit/dialog-launcher";
 import DeleteAccountForm from "./delete-account-form";
 
 export default function DeleteAccountSection() {
@@ -11,7 +11,7 @@ export default function DeleteAccountSection() {
                 Deleting your account is permanent. All your data will be lost.
             </span>
             <div>
-                <DialogLauncher text="Delete account" variant="destructive">
+                <DialogLauncher trigger={{text: "Delete account", variant: "destructive"}}>
                     <DeleteAccountForm/>
                 </DialogLauncher>
             </div>

@@ -5,12 +5,12 @@ import { X } from "lucide-react";
 import { Separator } from "../ui/separator";
 import useTableQuery from "@/lib/hooks/use-table-query";
 
-interface DataTableResetProps {
+interface Props {
     keys: string[];
     showSeparator?: boolean;
 }
 
-export default function DataTableReset({keys = [], showSeparator=false}: DataTableResetProps) {
+export default function DataTableReset({keys = [], showSeparator=false}: Props) {
     const { params, filter } = useTableQuery();
 
     const values = keys.map((key) => params[key]);

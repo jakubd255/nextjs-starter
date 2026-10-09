@@ -4,13 +4,13 @@ import { Button } from "@/components/ui/button";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { Pencil } from "lucide-react";
 
-interface UpdateProfileImageDropdownProps {
+interface Props {
     onUpload: () => void;
     onSetFromUrl: () => void;
     onRemove: () => void;
 }
 
-export default function UpdateProfileImageDropdown({onUpload, onSetFromUrl, onRemove}: UpdateProfileImageDropdownProps) {
+export default function UpdateProfileImageDropdown({onUpload, onSetFromUrl, onRemove}: Props) {
     return(
         <div className="absolute left-0 bottom-0">
             <DropdownMenu>

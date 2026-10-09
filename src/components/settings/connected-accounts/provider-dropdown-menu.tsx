@@ -1,39 +1,32 @@
 "use client";
 
 import disconnectOAuthAccountAction from "@/actions/accounts/disconnect-account";
-import { Button } from "@/components/ui/button";
-import { DropdownMenu, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
+import ActionsMenu from "@/components/kit/actions-menu";
 import { OAuthAccount } from "@/db/schema/accounts";
 import { Ellipsis } from "lucide-react";
 
-interface ProviderDropdownMenuProps {
+interface Props {
     provider: OAuthAccount;
     disabled?: boolean;
 }
 
-export default function ProviderDropdownMenu({provider, disabled=false}: ProviderDropdownMenuProps) {
+export default function ProviderDropdownMenu({provider, disabled=false}: Props) {
     const handleDisconnect = async () => {
         await disconnectOAuthAccountAction(provider.id, true);
     }
 
     return(
-        <DropdownMenu>
-            <DropdownMenuTrigger disabled={disabled} asChild>
-                <Button variant="ghost" size="icon">
-                    <Ellipsis className="w-4 h-4"/>
-                </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent>
-                <DropdownMenuGroup>
-                    <DropdownMenuItem 
-                        variant="destructive" 
-                        disabled={disabled} 
-                        onClick={handleDisconnect}
-                    >
-                        Disconnect
-                    </DropdownMenuItem>
-                </DropdownMenuGroup>
-            </DropdownMenuContent>
-        </DropdownMenu>
-    )
+        <ActionsMenu 
+            trigger={<Ellipsis className="w-4 h-4"/>} 
+            triggerVariant="default"
+            entries={[
+                {
+                    label: "Disconnect",
+                    destructive: true,
+                    disabled: disabled,
+                    onSelect: handleDisconnect,
+                }
+            ]}
+        />
+    );
 }

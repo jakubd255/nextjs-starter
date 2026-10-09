@@ -1,4 +1,4 @@
-import UserAvatar from "@/components/user-avatar";
+import UserAvatar from "@/components/kit/user-avatar";
 import { requireAuth } from "@/lib/auth/session";
 
 export default async function Home() {

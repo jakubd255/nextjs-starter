@@ -4,7 +4,7 @@ import { User } from "@/db/schema/users";
 import { DialogClose, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import updateRoleAction from "@/actions/users/update-role";
 import { Button } from "@/components/ui/button";
-import FormSubmitButton from "@/components/form-submit-button";
+import FormSubmitButton from "@/components/kit/form/form-submit-button";
 import { Role } from "@/lib/auth/permissions";
 import { useFormAction } from "@/lib/hooks/use-form-action";
 

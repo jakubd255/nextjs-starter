@@ -10,7 +10,7 @@ import { useEffect, useState } from "react";
 import { ChevronDown } from "lucide-react";
 import useTableQuery from "@/lib/hooks/use-table-query";
 
-interface DataTableFilterProps {
+interface Props {
     accessorKey: string;
     label: string;
     data: {
@@ -19,7 +19,7 @@ interface DataTableFilterProps {
     }[];
 }
 
-export default function DataTableFilterMulti({accessorKey, label, data}: DataTableFilterProps) {
+export default function DataTableFilterMulti({accessorKey, label, data}: Props) {
     const {filter} = useTableQuery();
 
     const selected = filter.getAll(accessorKey);

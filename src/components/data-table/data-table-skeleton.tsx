@@ -4,7 +4,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { PAGE_SIZE } from "@/lib/constants";
 import { cn } from "@/lib/utils/cn";
 
-interface DataTableSkeletonProps extends React.ComponentProps<"div"> {
+interface Props extends React.ComponentProps<"div"> {
     columnCount: number;
     rowCount?: number;
     filterCount?: number;
@@ -24,7 +24,7 @@ export function DataTableSkeleton({
     shrinkZero = false,
     className,
     ...props
-}: DataTableSkeletonProps) {
+}: Props) {
     const cozyCellWidths = Array.from(
         {length: columnCount},
         (_, index) => cellWidths[index % cellWidths.length] ?? "auto",

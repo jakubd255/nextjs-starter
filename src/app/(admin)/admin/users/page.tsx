@@ -5,11 +5,11 @@ import UsersTableToolbar from "@/components/admin/users/users-table-toolbar";
 import { parseUserParams, UserSearchParams } from "./params";
 import AdminTablePageLayout from "@/components/admin/table-page-layout";
 
-interface AdminUsersPageProps {
+interface Props {
     searchParams: Promise<UserSearchParams>;
 };
 
-export default async function AdminUsersPage({searchParams}: AdminUsersPageProps) {
+export default async function AdminUsersPage({searchParams}: Props) {
     await requireAuth("user:read");
 
     const params = await searchParams;
