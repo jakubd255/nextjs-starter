@@ -4,8 +4,8 @@ import { getUserById, updateUser } from "@/db/queries/users";
 import { actionFailure, actionSuccess } from "@/lib/utils/action-result";
 import { validateRequest } from "@/lib/auth/session";
 import { hasPermission } from "@/lib/auth/permissions";
-import { deleteFile, extractFilenameFromUrl, isUploaded, uploadFile } from "@/lib/utils/file-handler";
 import { revalidatePath } from "next/cache";
+import { storage } from "@/lib/storage";
 
 type AvatarAction = | {type: "upload"; file: File} | {type: "url"; url: string} | {type: "remove"};
 
@@ -47,16 +47,12 @@ export default async function updateAvatarAction(_: unknown, data: FormData) {
         return actionFailure().message("You dont have permission to update user's profile").build();
     }
 
-    if(user.profileImage && isUploaded(user.profileImage)) {
-        const path = extractFilenameFromUrl(user.profileImage);
-        deleteFile(path);
-    }
+    const oldImage = user.profileImage;
 
     switch(action.type) {
         case "upload": {
-            const filename = await uploadFile(action.file);
-            const profileImage = `${process.env.NEXT_PUBLIC_SITE_URL}/api/download/${filename}`;
-            await updateUser(id, {profileImage});
+            const {url} = await storage.upload(action.file);
+            await updateUser(id, {profileImage: url});
             break;
         }
 
@@ -71,7 +67,11 @@ export default async function updateAvatarAction(_: unknown, data: FormData) {
         }
     }
 
-    revalidatePath("/")
+    if(oldImage && storage.owns(oldImage)) {
+        await storage.delete(oldImage);
+    }
+
+    revalidatePath("/");
     
     return actionSuccess().build();
 }

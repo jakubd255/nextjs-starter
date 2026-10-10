@@ -2,7 +2,7 @@ import { generateIdFromEntropySize } from "lucia";
 import db from "..";
 import { tokens } from "../schema";
 import { eq } from "drizzle-orm";
-import { Token, TokenType } from "../schema/tokens";
+import { TokenType } from "../schema/tokens";
 
 export const createToken = async (userId: string, type: TokenType) => {
     const id = generateIdFromEntropySize(10);

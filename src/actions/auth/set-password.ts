@@ -1,7 +1,7 @@
 "use server";
 
 import { logPasswordResetRequest } from "@/db/queries/audit-logs";
-import { getUserById, updateUser } from "@/db/queries/users";
+import { getUserById, updateUserPassword } from "@/db/queries/users";
 import { actionFailure } from "@/lib/utils/action-result";
 import { validateRequest } from "@/lib/auth/session";
 import { passwordSchema } from "@/lib/validation/auth";
@@ -26,7 +26,7 @@ export default async function setPasswordAction(_: unknown, data: FormData) {
 
     const {password} = validationResult.data;
 
-    await updateUser(user.id, {password});
+    await updateUserPassword(user.id, password);
     await logPasswordResetRequest(user.id);
 
     redirect("/settings/account");

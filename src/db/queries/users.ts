@@ -9,6 +9,8 @@ import { countTableRows } from "../filters/generic";
 import { Role } from "@/lib/auth/permissions";
 import { User } from "../schema/users";
 
+type UserUpdate = Partial<Omit<User, "id" | "createdAt" | "password">>;
+
 export const createUser = async (name: string, email: string, rawPassword?: string | null, role: Role = "USER", verified = false) => {
     const id = generateIdFromEntropySize(10);
     const password = rawPassword ? hashPassword(rawPassword) : null;
@@ -49,16 +51,22 @@ export const getIsUserEmailTaken = async (email: string) => {
     return !!res;
 }
 
-export const updateUser = async (id: string, data: Partial<User>) => {
-    if(data.password) {
-        data.password = hashPassword(data.password);
-    }
-
+export const updateUser = async (id: string, data: UserUpdate) => {
     await db
         .update(users)
         .set(data)
         .where(eq(users.id, id));
 }
+
+export const updateUserPassword = async (id: string, rawPassword: string) => {
+    const password = hashPassword(rawPassword);
+    const res = await db
+        .update(users)
+        .set({ password })
+        .where(eq(users.id, id))
+        .returning({ id: users.id });
+    return res.length > 0;
+};
 
 export const deleteUserById = async (id: string) => {
     const res = await db

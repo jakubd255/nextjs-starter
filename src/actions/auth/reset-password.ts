@@ -3,7 +3,7 @@
 import { logPasswordResetSuccess } from "@/db/queries/audit-logs";
 import { deleteSessionsByUserId } from "@/db/queries/sessions";
 import { getTokenByCode } from "@/db/queries/tokens";
-import { getUserById, updateUser } from "@/db/queries/users";
+import { getUserById, updateUserPassword } from "@/db/queries/users";
 import { actionFailure } from "@/lib/utils/action-result";
 import { parseFormData } from "@/lib/utils/form-data-parser";
 import { resetPasswordSchema } from "@/lib/validation/auth";
@@ -27,7 +27,7 @@ export default async function resetPasswordAction(_: unknown, data: FormData) {
         return actionFailure().build();
     }
 
-    await updateUser(token.userId, {password: newPassword});
+    await updateUserPassword(token.userId, newPassword);
     await deleteSessionsByUserId(token.userId);
     await logPasswordResetSuccess(user.id);
 

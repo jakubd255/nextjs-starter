@@ -1,7 +1,7 @@
 import { generateIdFromEntropySize } from "lucia";
 import db from ".."
 import { accounts } from "../schema"
-import { and, count, eq } from "drizzle-orm";
+import { and, eq } from "drizzle-orm";
 import { buildAccountSearchWhere, getAccountOrderBy } from "../filters/accounts";
 import { parseAccountsParams } from "@/app/(admin)/admin/accounts/params";
 import { countTableRows } from "../filters/generic";

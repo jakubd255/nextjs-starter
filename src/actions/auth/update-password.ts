@@ -2,7 +2,7 @@
 
 import { validateRequest } from "@/lib/auth/session";
 import { validatePassword } from "@/lib/auth/password";
-import { getUserById, updateUser } from "@/db/queries/users";
+import { getUserById, updateUserPassword } from "@/db/queries/users";
 import { actionFailure, actionSuccess } from "@/lib/utils/action-result";
 import { updatePasswordSchema } from "@/lib/validation/auth";
 import { logPasswordResetRequest } from "@/db/queries/audit-logs";
@@ -30,7 +30,7 @@ export default async function updatePasswordAction(_: unknown, data: FormData) {
         return  actionFailure({currentPassword: ["Invalid password"]}).build();
     }
 
-    await updateUser(user.id, {password: newPassword});
+    await updateUserPassword(user.id, newPassword);
     await logPasswordResetRequest(user.id);
 
     return actionSuccess().build();

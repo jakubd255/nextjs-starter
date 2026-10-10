@@ -20,6 +20,6 @@ export const deleteSessionsByUserId = async (userId: string, excludedId?: string
         .where(and(
             eq(sessions.userId, userId),
             excludedId ? ne(sessions.id, excludedId) : undefined
-        )).returning;
+        )).returning();
     return !!res.length;
 }
