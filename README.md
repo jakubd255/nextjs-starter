@@ -6,7 +6,7 @@ Starter NextJS application providing login/registration system, account manageme
 - OAuth2 with GitHub and Google
 - Email verification (verification code in console.log)
 - Account management
-- Profile image upload
+- Profile image upload (local disk or Vercel Blob)
 - Admin dashboard with URL-state pagination, sorting and search params (deep linking)
 
 ## Tech Stack
