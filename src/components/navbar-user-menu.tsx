@@ -4,12 +4,14 @@ import { LogOut, ShieldAlert, UserCog } from "lucide-react";
 import logOutAction from "@/actions/auth/log-out";
 import UserAvatar from "./kit/user-avatar";
 import { hasPermission } from "@/lib/auth/permissions";
-import { useSession } from "./providers/session-provider";
 import ActionsMenu from "./kit/actions-menu";
+import { User } from "lucia";
 
-export default function NavbarUserMenu() {
-    const {user} = useSession();
+interface Props {
+    user: User;
+}
 
+export default function NavbarUserMenu({user}: Props) {
     return(
         <ActionsMenu
             trigger={<UserAvatar user={user} hideBorder/>}

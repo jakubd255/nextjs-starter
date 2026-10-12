@@ -2,30 +2,26 @@
 
 import { Label } from "@/components/ui/label";
 import UserAvatar from "@/components/kit/user-avatar";
-import { useRef, useState } from "react";
-import UpdateProfileImageDropdown from "./update-profile-image-dropdown";
-import UpdateProfileImageUrlForm from "./update-profile-image-url-form";
+import { useTransition } from "react";
 import updateAvatarAction from "@/actions/users/update-avatar";
-import UpdateProfileImageUpload from "./update-profile-image-upload";
 import { UserProfile } from "@/db/schema/users";
-import DialogLauncher from "@/components/kit/dialog-launcher";
+import InstantImageInput from "@/components/kit/image-input/instant-image-input";
+import { handleActionResult } from "@/lib/utils/action-result";
 
 interface Props {
     user: UserProfile;
 }
 
 export default function UpdateProfileImage({user}: Props) {
-    const [isDialogOpen, setDialogOpen] = useState(false);
-    const handleToggleOpen = (open: boolean) => setDialogOpen(open);
+    const [pending, startTransition] = useTransition();
 
-    const handleDeleteImage = async () => {
-        const formData = new FormData();
-        formData.append("id", user.id);
-        formData.append("remove", "true");
-        await updateAvatarAction(null, formData);
-    }
-
-    const fileInputRef = useRef<HTMLInputElement>(null);
+    const submit = (fd: FormData) => {
+        fd.set("id", user.id);
+        startTransition(async () => {
+            const result = await updateAvatarAction(undefined, fd);
+            handleActionResult(result);
+        });
+    };
 
     return(
         <div className="relative w-min h-min">
@@ -33,15 +29,12 @@ export default function UpdateProfileImage({user}: Props) {
                 Profile image
             </Label>
             <UserAvatar user={user} size="xl"/>
-            <UpdateProfileImageDropdown 
-                onUpload={() => fileInputRef.current?.click()} 
-                onSetFromUrl={() => setDialogOpen(true)} 
-                onRemove={handleDeleteImage}
+            <InstantImageInput
+                className="absolute bottom-0 left-0"
+                hasImage={!!user.profileImage}
+                onSubmit={submit}
+                disabled={pending}
             />
-            <DialogLauncher open={isDialogOpen} onOpenChange={handleToggleOpen}>
-                <UpdateProfileImageUrlForm user={user}/>
-            </DialogLauncher>
-            <UpdateProfileImageUpload user={user} inputRef={fileInputRef}/>
         </div>
     );
 }

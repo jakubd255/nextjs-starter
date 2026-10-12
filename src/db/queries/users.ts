@@ -7,9 +7,7 @@ import { buildUserSearchWhere, getUserOrderBy } from "../filters/users";
 import { parseUserParams } from "@/app/(admin)/admin/users/params";
 import { countTableRows } from "../filters/generic";
 import { Role } from "@/lib/auth/permissions";
-import { User } from "../schema/users";
-
-type UserUpdate = Partial<Omit<User, "id" | "createdAt" | "password">>;
+import { UserUpdate } from "../schema/users";
 
 export const createUser = async (name: string, email: string, rawPassword?: string | null, role: Role = "USER", verified = false) => {
     const id = generateIdFromEntropySize(10);

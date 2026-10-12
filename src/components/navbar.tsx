@@ -1,12 +1,13 @@
 import Link from "next/link";
 import { DarkModeToggle } from "./dark-mode-toggle";
 import NavbarUserMenu from "./navbar-user-menu";
+import { User } from "lucia";
 
 interface Props {
-    showUser?: boolean;
+    user?: User;
 }
 
-export default function Navbar({showUser=false}: Props) {
+export default function Navbar({user}: Props) {
     return(
         <header className="w-full px-4 py-2 z-10 flex justify-between items-center border-b sticky top-0 backdrop-blur bg-background/90">
             <Link href="/">
@@ -16,9 +17,7 @@ export default function Navbar({showUser=false}: Props) {
             </Link>
             <div className="flex gap-2">
                 <DarkModeToggle/>
-                {showUser && (
-                    <NavbarUserMenu/>
-                )}
+                {user && <NavbarUserMenu user={user}/>}
             </div>
         </header>
     );

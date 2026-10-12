@@ -11,7 +11,7 @@ interface Props {
 
 export default function DeleteSessionDialog({id}: Props) {
     const {close} = useDialogControl();
-    const [_, action] = useFormAction(deleteSessionAction.bind(null, id), {onTrigger: close});
+    const [_, action] = useFormAction(deleteSessionAction.bind(null, id), {onStart: close});
 
     return(
         <ActionDialog

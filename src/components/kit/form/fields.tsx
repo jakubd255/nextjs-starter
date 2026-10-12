@@ -82,6 +82,23 @@ export function PasswordField({name, label, errors, description, value, onValueC
     );
 }
 
+type UrlInputProps = Omit<InputProps, "type">;
+
+export function UrlField({name, label, errors, description, value, onValueChange, ...props}: Base & UrlInputProps) {
+    return(
+        <Field name={name} label={label} errors={errors} description={description}>
+            <Input
+                id={name}
+                name={name}
+                type="url"
+                value={value}
+                onChange={e => onValueChange?.(e.target.value)}
+                {...props}
+            />
+        </Field>
+    );
+}
+
 type TextareaProps = Omit<React.ComponentProps<typeof Textarea>, "name" | "value" | "onChange">;
 
 export function TextareaField({name, label, errors, description, value, onValueChange, ...props}: Base & TextareaProps) {

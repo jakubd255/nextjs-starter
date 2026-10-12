@@ -21,6 +21,7 @@ export const users = pgTable("users", {
 });
 
 export type User = typeof users.$inferSelect;
+export type UserUpdate = Partial<Omit<User, "id" | "createdAt" | "password">>;
 
 export interface UserProfile {
     id: string;

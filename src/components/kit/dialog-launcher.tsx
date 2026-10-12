@@ -20,7 +20,7 @@ export const useDialogControl = () => {
     return ctx;
 }
 
-interface DialogLauncherProps {
+interface Props {
     trigger?: TriggerProps;
     open?: boolean;
     onOpenChange?: (open: boolean) => void;
@@ -29,7 +29,7 @@ interface DialogLauncherProps {
     children: React.ReactNode;
 }
 
-export default function DialogLauncher({trigger, open: openProp, onOpenChange, className, disabled, children}: DialogLauncherProps) {
+export default function DialogLauncher({trigger, open: openProp, onOpenChange, className, disabled, children}: Props) {
     const [innerOpen, setInnerOpen] = useState(false);
     const controlled = openProp !== undefined;
     const open = controlled ? openProp : innerOpen;

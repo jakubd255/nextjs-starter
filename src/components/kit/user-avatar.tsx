@@ -4,7 +4,7 @@ import { UserProfile } from "@/db/schema/users";
 
 type Size = "xs" | "sm" | "md" | "lg" | "xl";
 
-interface UserAvatarProps {
+interface Props {
     user: UserProfile;
     size?: Size;
     url?: string | null;
@@ -30,7 +30,7 @@ const getTextSize = (size: Size) => {
     }
 }
 
-export default function UserAvatar({user, size="sm", url, hideBorder}: UserAvatarProps) {
+export default function UserAvatar({user, size="sm", url, hideBorder}: Props) {
     const source = url ? url : user.profileImage ?? undefined;
     
     return(

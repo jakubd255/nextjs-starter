@@ -36,18 +36,19 @@ const tidy = (entries: MenuEntry[]) => {
     return out;
 }
 
-interface ActionsMenuProps {
+interface Props {
     entries: MenuEntry[];
     trigger?: React.ReactNode;
     triggerVariant?: React.ComponentProps<typeof Button>["variant"];
     triggerClassName?: string;
     label?: string;
     align?: "start" | "center" | "end";
+    bare?: boolean;
 }
 
-const TRIGGER_ICON = <Ellipsis className="w-4 h-4"/>, triggerVariant = "ghost";
+const TRIGGER_ICON = <Ellipsis className="w-4 h-4"/>;
 
-export default function ActionsMenu({entries, trigger = TRIGGER_ICON, triggerClassName, label = "Actions", align}: ActionsMenuProps) {
+export default function ActionsMenu({entries, trigger = TRIGGER_ICON, triggerVariant = "ghost", triggerClassName, label = "Actions", align, bare}: Props) {
     const [dialog, setDialog] = useState<{node: React.ReactNode; open: boolean}>();
 
     const visible = tidy(entries);
@@ -57,9 +58,11 @@ export default function ActionsMenu({entries, trigger = TRIGGER_ICON, triggerCla
         <>
             <DropdownMenu>
                 <DropdownMenuTrigger asChild>
-                    <Button variant={triggerVariant} size="icon" className={triggerClassName} aria-label={label}>
-                        {trigger}
-                    </Button>
+                    {bare ? trigger : (
+                        <Button variant={triggerVariant} size="icon" className={triggerClassName} aria-label={label}>
+                            {trigger}
+                        </Button>
+                    )}
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align={align}>
                     {visible.map((entry, i) => {
@@ -78,8 +81,7 @@ export default function ActionsMenu({entries, trigger = TRIGGER_ICON, triggerCla
                         );
                         const itemProps = {
                             disabled: entry.disabled,
-                            variant: entry.destructive ? ("destructive" as const) : undefined,
-                            className: "cursor-pointer",
+                            variant: entry.destructive ? ("destructive" as const) : undefined
                         };
 
                         if("href" in entry) {
