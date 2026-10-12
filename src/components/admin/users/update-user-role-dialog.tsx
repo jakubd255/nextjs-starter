@@ -1,12 +1,11 @@
 "use client";
 
 import { User } from "@/db/schema/users";
-import { DialogClose, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import updateRoleAction from "@/actions/users/update-role";
-import { Button } from "@/components/ui/button";
-import FormSubmitButton from "@/components/kit/form/form-submit-button";
 import { Role } from "@/lib/auth/permissions";
 import { useFormAction } from "@/lib/hooks/use-form-action";
+import ActionDialog from "@/components/kit/action-dialog";
+import { useDialogControl } from "@/components/kit/dialog-launcher";
 
 const getRoleWarning = (current: Role, next: Role) => {
     if(current !== "ADMIN" && next === "ADMIN") {
@@ -18,7 +17,7 @@ const getRoleWarning = (current: Role, next: Role) => {
 
     if(current === "ADMIN" && next !== "ADMIN") {
         return {
-            title: "Revoke administrator Access",
+            title: "Revoke administrator access",
             description:"This will remove administrative privileges from this user. They will no longer have access to admin features.",
         };
     }
@@ -29,36 +28,22 @@ const getRoleWarning = (current: Role, next: Role) => {
     };
 }
 
-interface UpdateUserRoleProps {
+interface Props {
     user: User;
     role: Role;
-    onSuccess: () => void;
 }
 
-export default function UpdateUserRoleDialog({user, role, onSuccess}: UpdateUserRoleProps) {
-    const [_, action, pending] = useFormAction(() => updateRoleAction(user.id, role), {onSuccess});
+export default function UpdateUserRoleDialog({user, role}: Props) {
+    const {close} = useDialogControl();
+    const [_, action, pending] = useFormAction(() => updateRoleAction(user.id, role), {onSuccess: close});
     const warning = getRoleWarning(user.role, role);
 
     return(
-        <form className="flex flex-col gap-4" action={action}>
-            <DialogHeader>
-                <DialogTitle>
-                    {warning.title}
-                </DialogTitle>
-                <DialogDescription>
-                    {warning.description}
-                </DialogDescription>
-            </DialogHeader>
-            <DialogFooter>
-                <DialogClose asChild>
-                    <Button type="button" variant="outline">
-                        Cancel
-                    </Button>
-                </DialogClose>
-                <FormSubmitButton pending={pending}>
-                    Confirm
-                </FormSubmitButton>
-            </DialogFooter>
-        </form>
+        <ActionDialog
+            title={warning.title}
+            description={warning.description}
+            action={action}
+            pending={pending}
+        />
     );
 }

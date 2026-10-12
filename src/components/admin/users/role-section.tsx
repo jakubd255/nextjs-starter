@@ -7,10 +7,14 @@ import { User } from "@/db/schema/users";
 import UpdateUserRoleDialog from "./update-user-role-dialog";
 import { useState } from "react";
 import DialogLauncher from "@/components/kit/dialog-launcher";
+import SelectInput, { SelectOption } from "@/components/kit/form/select-input";
 
 interface Props {
     user: User;
 }
+
+const ROLE_OPTIONS = (current: Role): SelectOption[] => 
+    ROLES.map(role => ({value: role, label: role, disabled: role === current}));
 
 export default function RoleSection({user}: Props) {
     const [pendingRole, setPendingRole] = useState<Role | null>(null);
@@ -22,20 +26,12 @@ export default function RoleSection({user}: Props) {
                 <h2 className="text-2xl font-bold">
                     Role
                 </h2>
-                <div>
-                    <Select value={user.role} onValueChange={value => setPendingRole(value as Role)}>
-                        <SelectTrigger>
-                            <SelectValue placeholder="Selct role"/>
-                        </SelectTrigger>
-                        <SelectContent>
-                            {ROLES.map(role => (
-                                <SelectItem key={role} value={role} disabled={role === user.role}>
-                                    {role}
-                                </SelectItem>
-                            ))}
-                        </SelectContent>
-                    </Select>
-                </div>
+                <SelectInput
+                    options={ROLE_OPTIONS(user.role)}
+                    value={user.role}
+                    onValueChange={value => setPendingRole(value as Role)}
+                    placeholder="Select role"
+                />
             </section>
             {!!pendingRole ? (
                 <DialogLauncher 
@@ -45,7 +41,6 @@ export default function RoleSection({user}: Props) {
                     <UpdateUserRoleDialog 
                         user={user} 
                         role={pendingRole} 
-                        onSuccess={() => setPendingRole(null)}
                     />
                 </DialogLauncher>
             ) : null}

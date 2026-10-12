@@ -26,14 +26,14 @@ export interface SelectInputProps {
     selectFirst?: boolean;
 }
 
-export function getInitialValue({options, defaultValue, selectFirst, emptyLabel}: Pick<SelectInputProps, "options" | "defaultValue" | "selectFirst" | "emptyLabel">) {
+export const getInitialValue = ({options, defaultValue, selectFirst, emptyLabel}: Pick<SelectInputProps, "options" | "defaultValue" | "selectFirst" | "emptyLabel">) => {
     if(defaultValue != null) return defaultValue;
     if(selectFirst) return options.find(o => !o.disabled)?.value;
     if(emptyLabel) return NONE;
     return undefined;
 }
 
-export function SelectInput(props: SelectInputProps) {
+export default function SelectInput(props: SelectInputProps) {
     const {options, id, name, value, onValueChange, placeholder, emptyLabel, groupLabel, disabled, className} = props;
 
     const items = options.map(o => (
@@ -50,7 +50,7 @@ export function SelectInput(props: SelectInputProps) {
             defaultValue={value === undefined ? getInitialValue(props) : undefined}
             disabled={disabled}
         >
-            <SelectTrigger id={id ?? name} className={className ?? "w-full"}>
+            <SelectTrigger id={id ?? name} className={className}>
                 <SelectValue placeholder={placeholder}/>
             </SelectTrigger>
             <SelectContent>

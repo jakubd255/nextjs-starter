@@ -5,7 +5,7 @@ import FormSubmitError from "./form-submit-error";
 import { Input } from "../../ui/input";
 import { Label } from "../../ui/label";
 import PasswordInput from "./password-input";
-import { SelectInput, SelectInputProps } from "./select-input";
+import SelectInput, { SelectInputProps } from "./select-input";
 import { Textarea } from "@/components/ui/textarea";
 
 interface FieldProps {
