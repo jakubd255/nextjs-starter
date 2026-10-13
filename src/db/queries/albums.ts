@@ -1,6 +1,7 @@
 import db from "..";
 import { eq} from "drizzle-orm"
 import { albums } from "../schema";
+import { StoredFile } from "@/lib/upload/manifest";
 
 export const getAlbumByUserId = async (userId: string) => {
     const res = await db
@@ -11,12 +12,12 @@ export const getAlbumByUserId = async (userId: string) => {
     return res[0] ?? null;
 }
 
-export const upsertAlbumImages = async (userId: string, images: string[]) => {
+export const upsertAlbumImages = async (userId: string, files: StoredFile[]) => {
     await db
         .insert(albums)
-        .values({userId, images})
+        .values({userId, files})
         .onConflictDoUpdate({
             target: albums.userId,
-            set: {images}
+            set: {files}
         });
 };

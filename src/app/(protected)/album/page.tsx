@@ -11,7 +11,7 @@ export default async function AlbumPage() {
             <h1 className="text-4xl font-bold">
                 Album
             </h1>
-            <AlbumImagesForm images={album?.images ?? []}/>
+            <AlbumImagesForm files={album?.files ?? []}/>
         </div>
     );
 }

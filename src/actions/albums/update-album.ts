@@ -2,7 +2,8 @@
 
 import { getAlbumByUserId, upsertAlbumImages } from "@/db/queries/albums";
 import { validateRequest } from "@/lib/auth/session";
-import { syncImages } from "@/lib/storage/sync-images";
+import { definePolicy, FILE_POLICIES } from "@/lib/upload/policy";
+import { syncFiles } from "@/lib/upload/sync-files";
 import { actionFailure, actionSuccess } from "@/lib/utils/action-result";
 import { revalidatePath } from "next/cache";
 
@@ -12,14 +13,15 @@ export default async function updateAlbumAction(_: unknown, data: FormData) {
 
     const album = await getAlbumByUserId(user.id);
 
-    const result = await syncImages({
+    const result = await syncFiles({
         data,
-        current: album?.images ?? [],
-        persist: (images) => upsertAlbumImages(user.id, images)
+        policy: definePolicy(FILE_POLICIES.images, {maxFiles: 10}),
+        current: album?.files ?? [],
+        persist: (files) => upsertAlbumImages(user.id, files)
     });
 
     if(!result.ok) return actionFailure().message(result.message).build();
 
     revalidatePath("/");
-    return actionSuccess().data({images: result.images}).build();
+    return actionSuccess().data({files: result.files}).build();
 }

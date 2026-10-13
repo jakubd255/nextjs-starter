@@ -5,7 +5,8 @@ import { actionFailure, actionSuccess } from "@/lib/utils/action-result";
 import { validateRequest } from "@/lib/auth/session";
 import { hasPermission } from "@/lib/auth/permissions";
 import { revalidatePath } from "next/cache";
-import { syncImages } from "@/lib/storage/sync-images";
+import { syncFiles } from "@/lib/upload/sync-files";
+import { definePolicy, FILE_POLICIES } from "@/lib/upload/policy";
 
 export default async function updateAvatarAction(_: unknown, data: FormData) {
     const id = data.get("id") as string;
@@ -18,15 +19,15 @@ export default async function updateAvatarAction(_: unknown, data: FormData) {
         return actionFailure().message("You don't have permission to update user's profile").build();
     }
 
-    const result = await syncImages({
+    const result = await syncFiles({
         data,
-        maxFiles: 1,
-        current: user.profileImage ? [user.profileImage] : [],
-        persist: (images) => updateUser(id, {profileImage: images[0] ?? null})
+        policy: definePolicy(FILE_POLICIES.images, {maxFiles: 1}),
+        current: user.profileImage ? [{url: user.profileImage, name: ""}] : [],
+        persist: (files) => updateUser(id, {profileImage: files[0]?.url ?? null})
     });
 
     if(!result.ok) return actionFailure().message(result.message).build();
 
     revalidatePath("/");
-    return actionSuccess().data({images: result.images}).build();
+    return actionSuccess().data({images: result.urls}).build();
 }
