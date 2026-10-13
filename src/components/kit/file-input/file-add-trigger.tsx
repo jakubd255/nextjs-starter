@@ -6,10 +6,11 @@ interface Props extends ComponentProps<"button"> {
     label?: string;
 }
 
-export default function FileAddTrigger({label = "Add", className, ...props}: Props) {
+export default function FileAddTrigger({label = "Add", className, disabled, ...props}: Props) {
     return(
         <button
             type="button"
+            disabled={disabled}
             className={cn(
                 "flex size-full flex-col items-center justify-center gap-2 rounded-lg border border-dashed",
                 "text-sm text-muted-foreground transition-colors",

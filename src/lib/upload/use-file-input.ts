@@ -1,117 +1,100 @@
 "use client";
 
-import { useRef, useState } from "react";
-import {
-    buildManifest, checkUrlLoads, createNewItem, createUrlItem, dropActive,
-    isActive, moveItem, removeItem, restoreItem, FileItem
-} from "./file-items";
-import { validateFiles, validateUrl, FilePolicy } from "./policy";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { StoredFile } from "./manifest";
+import { FilePolicy, validateFiles, validateUrl } from "./policy";
+import { buildManifest, checkUrlLoads, createExistingItem, createNewItem, createUrlItem, dropActive, FileItem, isActive, moveItem, removeItem, restoreItem, revokePreview } from "./file-items";
 
-export type FileItemRenderProps = {
-    item: FileItem;
-    index: number;
-    total: number;
-    deleted: boolean;
-    disabled: boolean;
-    canMoveBack: boolean;
-    canMoveForward: boolean;
-    move: (dir: -1 | 1) => void;
-    remove: () => void;
-    restore: () => void;
-    reorderable?: boolean;
-};
-
-interface Options {
-    value: FileItem[];
-    onChange: (items: FileItem[]) => void;
-    policy: FilePolicy;
-    disabled?: boolean;
-    manifestName?: string;
-    filesName?: string;
-};
-
-export function useFileInput({
-    value, 
-    onChange, 
-    policy, 
-    disabled = false,
-    manifestName = "manifest", 
-    filesName = "files"
-}: Options) {
-    const latest = useRef(value);
-    latest.current = value;
-
+export default function useFileInput(initialFiles: StoredFile[], policy: FilePolicy, disabled = false) {
+    const [saved, setSaved] = useState(initialFiles);
+    const [items, setItemsState] = useState<FileItem[]>(() => initialFiles.map(createExistingItem));
     const [error, setError] = useState<string | null>(null);
 
-    const single = policy.maxFiles === 1;
-    const activeCount = value.filter(isActive).length;
-    const canAdd = !disabled && (single || activeCount < policy.maxFiles);
-
-    const commit = (next: FileItem[]) => {
-        latest.current = next;
-        onChange(next);
+    const ref = useRef(items);
+    const setItems = (next: FileItem[]) => {
+        ref.current = next;
+        setItemsState(next);
     };
-    const base = () => (single ? dropActive(latest.current) : latest.current);
+    
+    useEffect(() => () => ref.current.forEach(revokePreview), []);
+
+    const single = policy.maxFiles === 1;
+    const activeCount = items.filter(isActive).length;
+    const canAdd = !disabled && (single || activeCount < policy.maxFiles);
+    const base = () => (single ? dropActive(ref.current) : ref.current);
 
     const addFiles = (files: File[]) => {
-        if(files.length === 0) return;
         const incoming = single ? files.slice(0, 1) : files;
-        const current = latest.current;
-
-        if(!single && current.filter(isActive).length + incoming.length > policy.maxFiles) {
+        if(incoming.length === 0) return;
+        if(!single && ref.current.filter(isActive).length + incoming.length > policy.maxFiles) {
             return setError(`You can add up to ${policy.maxFiles} files`);
         }
-        const already = single ? [] : current.flatMap((i) => (i.kind === "new" ? [i.file] : []));
+        const already = single ? [] : ref.current.flatMap((i) => (i.kind === "new" ? [i.file] : []));
         const message = validateFiles([...already, ...incoming], policy);
-        if(message) return setError(message);
+        if (message) return setError(message);
 
         setError(null);
-        commit([...base(), ...incoming.map(createNewItem)]);
-    };
+        setItems([...base(), ...incoming.map(createNewItem)]);
+    }
 
     const addUrl = async (raw: string): Promise<string | null> => {
         const url = raw.trim();
         const invalid = validateUrl(url);
         if(invalid) return invalid;
-
-        const current = latest.current;
-        if(!single && current.filter(isActive).length >= policy.maxFiles) {
+        if(!single && ref.current.filter(isActive).length >= policy.maxFiles) {
             return `You can add up to ${policy.maxFiles} files`;
         }
-        if(current.some((i) => isActive(i) && i.kind !== "new" && i.url === url)) {
+        if(ref.current.some((i) => isActive(i) && i.kind !== "new" && i.url === url)) {
             return "This file is already on the list";
         }
         if(!(await checkUrlLoads(url, policy.media))) return "Could not load a file from this URL";
 
         setError(null);
-        commit([...base(), createUrlItem(url)]);
+        setItems([...base(), createUrlItem(url)]);
         return null;
-    };
+    }
 
-    const itemProps = (item: FileItem, index: number): FileItemRenderProps => {
-        const deleted = item.kind === "existing" && item.deleted;
-        return {
-            item, index, total: value.length, deleted, disabled,
-            canMoveBack: !disabled && !single && !deleted && index > 0,
-            canMoveForward: !disabled && !single && !deleted && index < value.length - 1,
-            move: (dir) => commit(moveItem(latest.current, index, dir)),
-            remove: () => { setError(null); commit(removeItem(latest.current, item)); },
-            restore: () => commit(restoreItem(single ? dropActive(latest.current) : latest.current, item)),
-            reorderable: !single
-        };
-    };
+    const remove = (item: FileItem) => { setError(null); setItems(removeItem(ref.current, item)); };
+    const restore = (item: FileItem) => setItems(restoreItem(single ? dropActive(ref.current) : ref.current, item));
+    const move = (index: number, dir: -1 | 1) => setItems(moveItem(ref.current, index, dir));
+
+    const reset = useCallback((files: StoredFile[]) => {
+        ref.current.forEach(revokePreview);
+        setSaved(files);
+        const next = files.map(createExistingItem);
+        ref.current = next;
+        setItemsState(next);
+        setError(null);
+    }, []);
+
+    const isDirty = useMemo(() => {
+        const active = items.filter(isActive);
+        return active.length !== saved.length || active.some((i, idx) => i.kind !== "existing" || i.url !== saved[idx]?.url);
+    }, [items, saved]);
 
     return {
-        policy, items: value, single, activeCount, canAdd, disabled, error,
-        itemProps,
-        addFiles, addUrl,
-        source: { policy, multiple: !single, onFiles: addFiles, onUrl: addUrl },
-        fields: {
-            manifestName, filesName,
-            manifest: JSON.stringify(buildManifest(value)),
-            files: value.flatMap((i) => (i.kind === "new" ? [i.file] : []))
-        }
-    };
+        policy, 
+        items, 
+        error, 
+        single, 
+        canAdd, 
+        activeCount, 
+        disabled, 
+        isDirty,
+        addFiles, 
+        addUrl, 
+        remove, 
+        restore, 
+        move, 
+        reset,
+        source: {
+            policy, 
+            multiple: !single, 
+            onFiles: addFiles, 
+            onUrl: addUrl
+        },
+        manifest: JSON.stringify(buildManifest(items))
+    }
 }
 
-export type FileInputController = ReturnType<typeof useFileInput>;
+export type FileInput = ReturnType<typeof useFileInput>;

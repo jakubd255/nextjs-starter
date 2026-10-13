@@ -1,39 +1,41 @@
-import { FilePolicy } from "@/lib/upload/policy";
-import { FileItemRenderProps } from "@/lib/upload/use-file-input";
 import { cn } from "@/lib/utils/cn";
 import FilePreview from "./file-preview";
 import { Badge } from "@/components/ui/badge";
 import FileItemActions from "./file-item-actions";
+import { FileInput } from "@/lib/upload/use-file-input";
+import { FileItem } from "@/lib/upload/file-items";
 
 interface Props {
-    p: FileItemRenderProps;
-    policy: FilePolicy;
+    input: FileInput;
+    item: FileItem;
+    index: number;
     className?: string;
+    disabled?: boolean;
 }
 
-export default function FileCard({ p, policy, className }: Props) {
+export default function FileCard({input, item, index, className, disabled}: Props) {
+    const deleted = item.kind === "existing" && item.deleted;
+
     return(
         <li
-            title={p.item.name}
+            title={item.name}
             className={cn(
                 "relative overflow-hidden rounded-lg border bg-muted",
-                p.deleted && "border-destructive/50",
-                className,
+                deleted && "border-destructive/50",
+                className
             )}
         >
             <FilePreview
-                item={p.item}
-                policy={policy}
-                className={cn("transition", p.deleted && "opacity-40 grayscale")}
+                item={item}
+                policy={input.policy}
+                className={cn("transition", deleted && "opacity-40 grayscale")}
             />
-
             <div className="absolute left-2 top-2 flex gap-1">
-                {p.item.kind !== "existing" && <Badge>New</Badge>}
-                {p.deleted && <Badge variant="destructive">Will be removed</Badge>}
+                {item.kind !== "existing" && <Badge>New</Badge>}
+                {deleted && <Badge variant="destructive">Will be removed</Badge>}
             </div>
-
             <div className="absolute inset-x-0 bottom-0 bg-linear-to-t from-black/60 to-transparent p-2">
-                <FileItemActions p={p} />
+                <FileItemActions input={input} item={item} index={index} disabled={disabled}/>
             </div>
         </li>
     );

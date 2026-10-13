@@ -5,10 +5,11 @@ import FileAddTrigger from "./file-add-trigger";
 import FileCard from "./file-card";
 import FileFormFields from "./file-form-fields";
 import FileSourceMenu from "./file-source-menu";
-import { FileInputController } from "@/lib/upload/use-file-input";
+import { FileInput } from "@/lib/upload/use-file-input";
 
 interface Props {
-    input: FileInputController;
+    input: FileInput;
+    disabled?: boolean;
     manifestName?: string;
     filesName?: string;
     tileClassName?: string;
@@ -19,11 +20,12 @@ interface Props {
 const DEFAULT_TILE = "size-24 sm:size-32 lg:size-48";
 
 export default function FileGallery({
-    input, 
-    manifestName = "manifest", 
+    input,
+    disabled,
+    manifestName = "manifest",
     filesName = "files",
-    tileClassName = DEFAULT_TILE, 
-    listClassName, 
+    tileClassName = DEFAULT_TILE,
+    listClassName,
     className
 }: Props) {
     return(
@@ -32,16 +34,18 @@ export default function FileGallery({
                 {input.items.map((item, index) => (
                     <FileCard
                         key={item.id}
-                        p={input.itemProps(item, index)}
-                        policy={input.policy}
+                        input={input}
+                        item={item}
+                        index={index}
                         className={tileClassName}
+                        disabled={disabled}
                     />
                 ))}
                 {input.canAdd && (
                     <li className={tileClassName}>
                         <FileSourceMenu
                             {...input.source}
-                            trigger={<FileAddTrigger/>}
+                            trigger={<FileAddTrigger disabled={disabled}/>}
                         />
                     </li>
                 )}
