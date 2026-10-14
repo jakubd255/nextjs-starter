@@ -3,18 +3,21 @@
 import { Button } from "@/components/ui/button";
 import { useFormAction } from "@/lib/hooks/use-form-action";
 import updateAlbumAction from "@/actions/albums/update-album";
-import { FILE_POLICIES } from "@/lib/upload/policy";
+import { definePolicy, FILE_POLICIES } from "@/lib/upload/policy";
 import { StoredFile } from "@/lib/upload/manifest";
 import FileGallery from "./kit/file-input/file-gallery";
 import useFileInput from "@/lib/upload/use-file-input";
+import { useSession } from "./providers/session-provider";
 
 interface Props {
     files: StoredFile[];
 }
 
 export function AlbumImagesForm({files}: Props) {
-    const policy = FILE_POLICIES.images;
-    const input = useFileInput(files, policy);
+    const {user} = useSession();
+
+    const policy = definePolicy(FILE_POLICIES.any, {transport: "action"});
+    const input = useFileInput(files, policy, {scope: user.id});
 
     const [state, action, pending] = useFormAction(updateAlbumAction, {
         onSuccess: ({files}) => input.reset(files)

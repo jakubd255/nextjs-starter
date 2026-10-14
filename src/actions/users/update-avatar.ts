@@ -23,11 +23,12 @@ export default async function updateAvatarAction(_: unknown, data: FormData) {
         data,
         policy: definePolicy(FILE_POLICIES.images, {maxFiles: 1}),
         current: user.profileImage ? [{url: user.profileImage, name: ""}] : [],
-        persist: (files) => updateUser(id, {profileImage: files[0]?.url ?? null})
+        persist: (files) => updateUser(id, {profileImage: files[0]?.url ?? null}),
+        scope: user.id
     });
 
     if(!result.ok) return actionFailure().message(result.message).build();
 
     revalidatePath("/");
-    return actionSuccess().data({images: result.urls}).build();
+    return actionSuccess().data({images: result}).build();
 }

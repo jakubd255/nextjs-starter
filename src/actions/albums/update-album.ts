@@ -15,9 +15,10 @@ export default async function updateAlbumAction(_: unknown, data: FormData) {
 
     const result = await syncFiles({
         data,
-        policy: definePolicy(FILE_POLICIES.images, {maxFiles: 10}),
+        policy: definePolicy(FILE_POLICIES.any, {maxFiles: 10}),
         current: album?.files ?? [],
-        persist: (files) => upsertAlbumImages(user.id, files)
+        persist: (files) => upsertAlbumImages(user.id, files),
+        scope: user.id
     });
 
     if(!result.ok) return actionFailure().message(result.message).build();

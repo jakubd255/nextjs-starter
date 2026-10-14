@@ -5,34 +5,46 @@ export type FilePolicy = {
     maxSize: number;
     maxTotalSize?: number;
     media: "image" | "video" | "file";
+    key?: string;
+    transport?: "action" | "direct" | "auto";
+    directThreshold?: number; 
 }
 
 const BLOCKED = [".html", ".htm", ".svg", ".js", ".exe", ".bat", ".sh", "text/html", "image/svg+xml"];
+
+export const MB = 1024 * 1024;
 
 export const FILE_POLICIES = {
     images: {
         accept: ["image/png", "image/jpeg", "image/webp"], 
         maxFiles: 10, 
-        maxSize: 10 * 1024 ** 2, 
-        media: "image" 
+        maxSize: 10 * MB, 
+        media: "image",
+        key: "images",
+        transport: "action",
     },
     videos: {
         accept: ["video/mp4", "video/webm"], 
         maxFiles: 3, 
-        maxSize: 100 * 1024 ** 2, 
-        media: "video"
+        maxSize: 1024 * MB, 
+        media: "video",
+        key: "videos",
+        transport: "direct",
     },
     any: {
         accept: ["*"], 
         block: BLOCKED, 
         maxFiles: 10, 
-        maxSize: 10 * 1024 ** 2, 
-        media: "file"
+        maxSize: 1024 * MB, 
+        media: "file",
+        key: "any", 
+        transport: "auto", 
+        directThreshold: 4 * MB
     }
 } satisfies Record<string, FilePolicy>;
 
+export const policyByKey = (key: string | null): FilePolicy | undefined => Object.values<FilePolicy>(FILE_POLICIES).find((p) => p.key === key);
 export const acceptAttr = (policy: FilePolicy) => policy.accept.includes("*") ? undefined : policy.accept.join(",");
-
 export const definePolicy = (base: FilePolicy, override: Partial<FilePolicy> = {}): FilePolicy => ({...base, ...override});
 
 const matchesToken = (file: {name: string; type: string}, token: string) => {

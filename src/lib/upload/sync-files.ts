@@ -1,7 +1,8 @@
 import "server-only";
 import { storage } from "../storage";
 import { parseManifest, StoredFile } from "./manifest";
-import { FilePolicy, validateFiles, validateUrl } from "./policy";
+import { FilePolicy, matchesAccept, validateFiles, validateUrl } from "./policy";
+import { directKey, isOwnedBy, sanitizeFileName } from "./names";
 
 export type SyncFilesResult =
     | {ok: true; files: StoredFile[]}
@@ -14,6 +15,7 @@ interface Options {
     persist: (images: StoredFile[]) => Promise<void>;
     manifestName?: string;
     filesName?: string;
+    scope: string
 }
 
 const fail = (message: string): SyncFilesResult => ({ok: false, message});
@@ -28,7 +30,7 @@ const nameFromUrl = (url: string) => {
     catch {
         return "file";
     }
-};
+}
 
 export const syncFiles = async ({
     data, 
@@ -36,7 +38,8 @@ export const syncFiles = async ({
     current, 
     persist,
     manifestName = "manifest", 
-    filesName = "files"
+    filesName = "files",
+    scope
 }: Options): Promise<SyncFilesResult> => {
     const manifest = parseManifest(data.get(manifestName));
     if(!manifest) return fail("Invalid file list");
@@ -52,7 +55,6 @@ export const syncFiles = async ({
 
     const byUrl = new Map(current.map((f) => [f.url, f]));
     if(manifest.some((m) => m.kind === "existing" && !byUrl.has(m.url))) {
-        console.log("XD");
         return fail("Invalid file list");
     }
 
@@ -62,11 +64,31 @@ export const syncFiles = async ({
 
     const urls = manifest.flatMap((m) => ("url" in m ? [m.url] : []));
     if(new Set(urls).size !== urls.length) {
-        console.log("XD");
         return fail("Invalid file list");
     }
 
-    const results = await Promise.allSettled(files.map((f) => storage.upload(f)));
+    const direct = manifest.flatMap((m) => (m.kind === "uploaded" ? [m.url] : []));
+    if (direct.length > 0) {
+        if(!scope) return fail("Invalid file list");
+
+        if(direct.some((u) => !storage.owns(u) || !isOwnedBy(u, scope))) return fail("Invalid file list");
+
+        const metas = await Promise.all(direct.map((u) => storage.head(u)));
+        const bad = direct.filter((u, i) => {
+            const meta = metas[i];
+            return !meta || meta.size > policy.maxSize
+                || !matchesAccept({name: nameFromUrl(u), type: meta.contentType ?? ""}, policy);
+        });
+        if(bad.length > 0) {
+            await Promise.allSettled(bad.map((u) => storage.delete(u)));
+            return fail("Uploaded file is invalid");
+        }
+    }
+
+    const results = await Promise.allSettled(
+        files.map((f) => storage.upload(f, directKey(scope, f.name))),
+    );
+
     const uploaded = results.flatMap((r) => (r.status === "fulfilled" ? [r.value.url] : []));
     if(uploaded.length !== files.length) {
         await Promise.allSettled(uploaded.map((u) => storage.delete(u)));
@@ -77,9 +99,10 @@ export const syncFiles = async ({
     const finalFiles: StoredFile[] = manifest.map((m) => {
         if(m.kind === "new") {
             const i = next++;
-            return { url: uploaded[i], name: sanitizeName(files[i].name) };
+            return {url: uploaded[i], name: sanitizeFileName(files[i].name)};
         }
         if(m.kind === "existing") return byUrl.get(m.url)!;
+        if(m.kind === "uploaded") return { url: m.url, name: sanitizeFileName(m.name)};
         return {url: m.url, name: nameFromUrl(m.url)};
     });
 

@@ -1,24 +1,59 @@
-import { mkdir, unlink, writeFile } from "fs/promises";
-import { extname, join, basename } from "path";
-import { randomUUID } from "crypto";
+import { mkdir, rm, stat, writeFile } from "fs/promises";
+import { dirname, join, resolve, sep } from "path";
 import type { StorageProvider } from "./types";
+import { lookup } from "mime-types";
 
 const uploadDir = join(process.cwd(), "uploads");
-const baseUrl = process.env.NEXT_PUBLIC_SITE_URL!;
+
+const DOWNLOAD_PREFIX = "/api/download/";
+
+export const localUrl = (rel: string) => `${DOWNLOAD_PREFIX}${rel.split("/").map(encodeURIComponent).join("/")}`;
+
+export const resolveUploadPath = (rel: string) => {
+    const full = resolve(uploadDir, rel);
+    if(!full.startsWith(uploadDir + sep)) throw new Error("Invalid path");
+    return full;
+}
+
+const relFromUrl = (url: string) => decodeURIComponent((pathnameOf(url) ?? "").slice(DOWNLOAD_PREFIX.length));
+
+const pathnameOf = (url: string): string | null => {
+    try {
+        const u = new URL(url, "http://local");
+        if(u.origin !== "http://local") {
+            const site = process.env.NEXT_PUBLIC_SITE_URL;
+            if (!site || u.origin !== new URL(site).origin) return null;
+        }
+        return u.pathname;
+    } 
+    catch {
+        return null;
+    }
+}
 
 export const localStorageProvider: StorageProvider = {
-    async upload(file) {
-        await mkdir(uploadDir, {recursive: true});
-        const key = randomUUID() + extname(file.name);
-        await writeFile(join(uploadDir, key), new Uint8Array(await file.arrayBuffer()));
-        return {url: `${baseUrl}/api/download/${key}`};
+    async upload(file, key) {
+        const rel = key.slice("uploads/".length);
+        const target = resolveUploadPath(rel);
+        await mkdir(dirname(target), {recursive: true});
+        await writeFile(target, new Uint8Array(await file.arrayBuffer()));
+        return {url: localUrl(rel)};
     },
-
     async delete(url) {
-        const key = basename(new URL(url).pathname);
-        await unlink(join(uploadDir, key)).catch(console.error);
+        console.log(url);
+        await rm(resolveUploadPath(relFromUrl(url)), {force: true}).catch(console.error);
+    },
+    async head(url) {
+        try {
+            const rel = relFromUrl(url);
+            const info = await stat(resolveUploadPath(rel));
+            return {size: info.size, contentType: lookup(rel) || undefined };
+        } 
+        catch {
+            return null;
+        }
     },
     owns(url) {
-        return url.startsWith(`${baseUrl}/api/download/`);
+        return pathnameOf(url)?.startsWith(DOWNLOAD_PREFIX) ?? false;
     }
-};
+}

@@ -4,6 +4,8 @@ import { Badge } from "@/components/ui/badge";
 import FileItemActions from "./file-item-actions";
 import { FileInput } from "@/lib/upload/use-file-input";
 import { FileItem } from "@/lib/upload/file-items";
+import { Button } from "@/components/ui/button";
+import { Progress } from "@/components/ui/progress";
 
 interface Props {
     input: FileInput;
@@ -34,6 +36,23 @@ export default function FileCard({input, item, index, className, disabled}: Prop
                 {item.kind !== "existing" && <Badge>New</Badge>}
                 {deleted && <Badge variant="destructive">Will be removed</Badge>}
             </div>
+            {item.kind === "direct" && item.status !== "done" && (
+                <div className="absolute inset-0 flex flex-col items-center justify-center gap-2 bg-background/70 p-3 text-center text-xs">
+                    {item.status === "uploading" ? (
+                        <>
+                            <Progress value={item.progress} className="h-1.5" />
+                            <span>{item.progress}%</span>
+                        </>
+                    ) : (
+                        <>
+                            <span className="line-clamp-2 text-destructive">{item.error}</span>
+                            <Button type="button" size="sm" variant="secondary" onClick={() => input.retry(item)}>
+                                Retry
+                            </Button>
+                        </>
+                    )}
+                </div>
+            )}
             <div className="absolute inset-x-0 bottom-0 bg-linear-to-t from-black/60 to-transparent p-2">
                 <FileItemActions input={input} item={item} index={index} disabled={disabled}/>
             </div>

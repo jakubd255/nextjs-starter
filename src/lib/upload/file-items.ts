@@ -1,10 +1,23 @@
 import { ManifestItem, StoredFile } from "./manifest";
 import { FilePolicy } from "./policy";
 
+export type DirectItem = {
+    id: string; 
+    kind: "direct"; 
+    file: File; 
+    name: string; 
+    preview: string;
+    status: "uploading" | "done" | "error"; 
+    progress: number;
+    url?: string; 
+    error?: string;
+};
+
 export type FileItem =
     | {id: string; kind: "existing"; url: string; name: string; preview: string; deleted: boolean}
     | {id: string; kind: "new"; file: File; name: string; preview: string}
-    | {id: string; kind: "url"; url: string; name: string; preview: string};
+    | {id: string; kind: "url"; url: string; name: string; preview: string}
+    | DirectItem;
 
 export const createExistingItem = (f: StoredFile): FileItem => ({
     id: crypto.randomUUID(),
@@ -31,6 +44,15 @@ export const createUrlItem = (url: string): FileItem => ({
     preview: url
 });
 
+export const createDirectItem = (file: File): DirectItem => ({
+    id: crypto.randomUUID(), kind: "direct", file, name: file.name,
+    preview: URL.createObjectURL(file), status: "uploading", progress: 0,
+});
+
+export const revokePreview = (item: FileItem) => {
+    if(item.kind === "new" || item.kind === "direct") URL.revokeObjectURL(item.preview);
+}
+
 export const isActive = (item: FileItem) => item.kind !== "existing" || !item.deleted;
 
 export const checkImageLoads = (url: string, timeoutMs = 10_000) => new Promise<boolean>((resolve) => {
@@ -42,10 +64,6 @@ export const checkImageLoads = (url: string, timeoutMs = 10_000) => new Promise<
     img.src = url;
 });
 
-export const revokePreview = (item: FileItem) => {
-    if(item.kind === "new") URL.revokeObjectURL(item.preview);
-};
-
 export const dropActive = (items: FileItem[]): FileItem[] => items.flatMap((i): FileItem[] => {
     if(!isActive(i)) return [i];
     if(i.kind === "existing") return [{...i, deleted: true}];
@@ -53,11 +71,12 @@ export const dropActive = (items: FileItem[]): FileItem[] => items.flatMap((i): 
     return [];
 });
 
-export const buildManifest = (items: FileItem[]): ManifestItem[] => items.filter(isActive).map((i): ManifestItem => {
-    switch(i.kind) {
-        case "existing": return {kind: "existing", url: i.url};
-        case "url": return {kind: "url", url: i.url};
-        case "new": return {kind: "new"};
+export const buildManifest = (items: FileItem[]): ManifestItem[] => items.filter(isActive).flatMap((i): ManifestItem[] => {
+    switch (i.kind) {
+        case "existing": return [{ kind: "existing", url: i.url }];
+        case "url": return [{kind: "url", url: i.url}];
+        case "new": return [{kind: "new"}];
+        case "direct": return i.status === "done" && i.url ? [{kind: "uploaded", url: i.url, name: i.name}] : [];
     }
 });
 
@@ -79,7 +98,7 @@ export const restoreItem = (items: FileItem[], item: FileItem): FileItem[] =>
     items.map((i) => (i.id === item.id && i.kind === "existing" ? {...i, deleted: false} : i));
 
 export const itemName = (item: FileItem): string => {
-    if(item.kind === "new") return item.file.name;
+    if(item.kind === "new" || item.kind === "direct") return item.file.name;
     try {
         return decodeURIComponent(new URL(item.url).pathname.split("/").pop() || item.url);
     } 
@@ -92,7 +111,7 @@ export type Media = FilePolicy["media"];
 
 export const resolveMedia = (item: FileItem, policy: FilePolicy): Media => {
     if(policy.media !== "file") return policy.media;
-    if(item.kind === "new") {
+    if("file" in item) {
         if(item.file.type.startsWith("image/")) return "image";
         if(item.file.type.startsWith("video/")) return "video";
         return "file";
