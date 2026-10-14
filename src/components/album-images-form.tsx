@@ -16,7 +16,7 @@ interface Props {
 export function AlbumImagesForm({files}: Props) {
     const {user} = useSession();
 
-    const policy = definePolicy(FILE_POLICIES.any, {transport: "action"});
+    const policy = definePolicy(FILE_POLICIES.any, {transport: "direct"});
     const input = useFileInput(files, policy, {scope: user.id});
 
     const [state, action, pending] = useFormAction(updateAlbumAction, {

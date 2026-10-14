@@ -30,5 +30,5 @@ export default async function updateAvatarAction(_: unknown, data: FormData) {
     if(!result.ok) return actionFailure().message(result.message).build();
 
     revalidatePath("/");
-    return actionSuccess().data({images: result}).build();
+    return actionSuccess().data({files: result.files}).build();
 }

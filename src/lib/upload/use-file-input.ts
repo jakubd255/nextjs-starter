@@ -4,18 +4,24 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { StoredFile } from "./manifest";
 import { FilePolicy, MB, validateFiles, validateUrl } from "./policy";
 import { 
-    buildManifest, checkUrlLoads, createDirectItem, createExistingItem, 
+    checkUrlLoads, createDirectItem, createExistingItem, 
     createNewItem, createUrlItem, DirectItem, dropActive, 
     FileItem, isActive, moveItem, 
     removeItem, restoreItem, revokePreview 
 } from "./file-items";
 import { uploadDirect } from "./direct-upload";
+import discardUploadAction from "./discard-upload";
 
 interface Options {
     scope?: string;
+    onDiscard?: (url: string) => Promise<unknown>;
 }
 
-export default function useFileInput(initialFiles: StoredFile[], policy: FilePolicy, {scope}: Options = {}, disabled = false) {
+export default function useFileInput(
+    initialFiles: StoredFile[], 
+    policy: FilePolicy, {scope, onDiscard = discardUploadAction}: Options = {}, 
+    disabled = false
+) {
     const [saved, setSaved] = useState(initialFiles);
     const [items, setItemsState] = useState<FileItem[]>(() => initialFiles.map(createExistingItem));
     const [error, setError] = useState<string | null>(null);
@@ -32,6 +38,10 @@ export default function useFileInput(initialFiles: StoredFile[], policy: FilePol
         uploads.current.get(i.id)?.abort();
         uploads.current.delete(i.id);
     });
+
+    const discard = (list: FileItem[]) => list.forEach((i) => {
+        if(i.kind === "direct" && i.status === "done" && i.url) void onDiscard(i.url);
+    });
     
     useEffect(() => () => {
         uploads.current.forEach((c) => c.abort());
@@ -44,7 +54,9 @@ export default function useFileInput(initialFiles: StoredFile[], policy: FilePol
 
     const replaceActive = () => {
         if(!single) return ref.current;
-        abort(ref.current.filter(isActive));
+        const active = ref.current.filter(isActive);
+        abort(active);
+        discard(active);
         return dropActive(ref.current);
     }
 
@@ -115,6 +127,7 @@ export default function useFileInput(initialFiles: StoredFile[], policy: FilePol
 
     const remove = (item: FileItem) => {
         abort([item]);
+        discard([item]);
         setError(null); 
         setItems(removeItem(ref.current, item));
     }
