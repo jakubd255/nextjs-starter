@@ -1,26 +1,35 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import MultiImageInput from "@/components/kit/image-input/multi-image-input";
-import { useImageItems } from "@/lib/storage/image-items";
 import { useFormAction } from "@/lib/hooks/use-form-action";
 import updateAlbumAction from "@/actions/albums/update-album";
+import { definePolicy, FILE_POLICIES } from "@/lib/upload/policy";
+import { StoredFile } from "@/lib/upload/manifest";
+import FileGallery from "./kit/file-input/file-gallery";
+import useFileInput from "@/lib/upload/use-file-input";
+import { useSession } from "./providers/session-provider";
 
 interface Props {
-    images: string[];
+    files: StoredFile[];
 }
 
-export function AlbumImagesForm({images}: Props) {
-    const {items, setItems, isDirty, reset} = useImageItems(images);
-    const [state, action, pending] = useFormAction(updateAlbumAction, {onSuccess: ({images}) => reset(images)});
+export function AlbumImagesForm({files}: Props) {
+    const {user} = useSession();
 
+    const policy = definePolicy(FILE_POLICIES.any, {transport: "direct"});
+    const input = useFileInput(files, policy, {scope: user.id});
+
+    const [state, action, pending] = useFormAction(updateAlbumAction, {
+        onSuccess: ({files}) => input.reset(files)
+    });
+    
     return(
         <form action={action} className="w-full max-w-250">
-            <MultiImageInput value={items} onChange={setItems} disabled={pending}/>
+            <FileGallery input={input}/>
 
             {state?.message && <p className="text-sm font-medium text-destructive">{state?.message}</p>}
 
-            <Button disabled={!isDirty || pending}>
+            <Button disabled={!input.isDirty || pending}>
                 {pending ? "Saving..." : "Save"}
             </Button>
         </form>

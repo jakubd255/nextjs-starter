@@ -1,24 +1,31 @@
-import { mkdir, unlink, writeFile } from "fs/promises";
-import { extname, join, basename } from "path";
-import { randomUUID } from "crypto";
+import { mkdir, rm, stat, writeFile } from "fs/promises";
+import { dirname } from "path";
 import type { StorageProvider } from "./types";
-
-const uploadDir = join(process.cwd(), "uploads");
-const baseUrl = process.env.NEXT_PUBLIC_SITE_URL!;
+import { lookup } from "mime-types";
+import { DOWNLOAD_PREFIX, localUrl, pathnameOf, relFromUrl, resolveUploadPath, UPLOAD_KEY_PREFIX } from "./local-paths";
 
 export const localStorageProvider: StorageProvider = {
-    async upload(file) {
-        await mkdir(uploadDir, {recursive: true});
-        const key = randomUUID() + extname(file.name);
-        await writeFile(join(uploadDir, key), new Uint8Array(await file.arrayBuffer()));
-        return {url: `${baseUrl}/api/download/${key}`};
+    async upload(file, key) {
+        const rel = key.slice(UPLOAD_KEY_PREFIX.length);
+        const target = resolveUploadPath(rel);
+        await mkdir(dirname(target), {recursive: true});
+        await writeFile(target, new Uint8Array(await file.arrayBuffer()));
+        return {url: localUrl(rel)};
     },
-
     async delete(url) {
-        const key = basename(new URL(url).pathname);
-        await unlink(join(uploadDir, key)).catch(console.error);
+        await rm(resolveUploadPath(relFromUrl(url)), {force: true}).catch(console.error);
+    },
+    async head(url) {
+        try {
+            const rel = relFromUrl(url);
+            const info = await stat(resolveUploadPath(rel));
+            return {size: info.size, contentType: lookup(rel) || undefined };
+        } 
+        catch {
+            return null;
+        }
     },
     owns(url) {
-        return url.startsWith(`${baseUrl}/api/download/`);
+        return pathnameOf(url)?.startsWith(DOWNLOAD_PREFIX) ?? false;
     }
-};
+}
