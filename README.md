@@ -8,7 +8,10 @@ Starter NextJS application providing login/registration system, account manageme
 - Account management
 - Profile image upload (local disk or Vercel Blob)
 - Admin dashboard with URL-state pagination, sorting and search params (deep linking)
-- Multi-image upload with reordering, URL import and undoable removal (ready to use, not linked in the app UI; available at `/album`)
+- File upload (images, videos and other files) with reordering, URL import and undoable removal
+  - Standard upload via server actions for small files
+  - Direct-to-storage upload with a progress bar for large files
+  - Ready to use, but not linked in the app UI; available at `/album`
 
 ## Tech Stack
 - NextJS
