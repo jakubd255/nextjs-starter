@@ -1,22 +1,23 @@
-export type StoredFile = {url: string; name: string};
+import { z } from "zod";
+import { MAX_URL_LENGTH } from "./policy";
 
-export type ManifestItem =
-    | {kind: "existing"; url: string}
-    | {kind: "url"; url: string}
-    | {kind: "new"}
-    | {kind: "uploaded"; url: string; name: string};
+const url = z.string().max(MAX_URL_LENGTH);
+ 
+const manifestSchema = z.array(z.discriminatedUnion("kind", [
+    z.object({kind: z.literal("existing"), url}),
+    z.object({kind: z.literal("url"), url}),
+    z.object({kind: z.literal("new")}),
+    z.object({kind: z.literal("uploaded"), url, name: z.string().max(1000)})
+]));
+
+export type ManifestItem = z.infer<typeof manifestSchema>[number];
+export type StoredFile = {url: string; name: string};
 
 export const parseManifest = (raw: FormDataEntryValue | null): ManifestItem[] | null => {
     try {
-        const parsed = JSON.parse(String(raw));
-        if(!Array.isArray(parsed)) return null;
-        const valid = parsed.every((i) =>
-            i?.kind === "new" ||
-            ((i?.kind === "existing" || i?.kind === "url") && typeof i.url === "string") ||
-            (i?.kind === "uploaded" && typeof i.url === "string" && typeof i.name === "string")
-        );
-        return valid ? parsed : null;
-    }
+        const result = manifestSchema.safeParse(JSON.parse(String(raw)));
+        return result.success ? result.data : null;
+    } 
     catch {
         return null;
     }

@@ -1,4 +1,4 @@
-import { buildManifest, FileItem } from "@/lib/upload/file-items";
+import { buildManifest, FileItem } from "@/lib/upload/items";
 
 interface Props {
     items: FileItem[];

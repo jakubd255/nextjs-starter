@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button";
-import { checkUrlLoads } from "@/lib/upload/file-items";
+import { checkUrlLoads } from "@/lib/upload/items";
 import { ManifestItem } from "@/lib/upload/manifest";
 import { FilePolicy, validateFiles, validateUrl } from "@/lib/upload/policy";
 import { Pencil, Trash2 } from "lucide-react";

@@ -5,9 +5,9 @@ import { Readable, Transform } from "stream";
 import { pipeline } from "stream/promises";
 import { NextResponse } from "next/server";
 import { validateRequest } from "@/lib/auth/session";
-import { resolveUploadPath } from "@/lib/storage/local";
 import { isValidDirectKey } from "@/lib/upload/names";
 import { matchesAccept, policyByKey } from "@/lib/upload/policy";
+import { resolveUploadPath } from "@/lib/storage/local-paths";
 
 export const runtime = "nodejs";
 

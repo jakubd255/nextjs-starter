@@ -1,164 +1,156 @@
 "use client";
 
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useReducer, useRef, useState } from "react";
 import { StoredFile } from "./manifest";
-import { FilePolicy, MB, validateFiles, validateUrl } from "./policy";
+import { FilePolicy, MB, shouldUploadDirect, validateFiles, validateUrl } from "./policy";
 import { 
-    checkUrlLoads, createDirectItem, createExistingItem, 
-    createNewItem, createUrlItem, DirectItem, dropActive, 
-    FileItem, isActive, moveItem, 
-    removeItem, restoreItem, revokePreview 
-} from "./file-items";
+    checkUrlLoads, createDirectItem, createExistingItem, createNewItem, 
+    createUrlItem, DirectItem, FileItem, isActive, reducer, revokePreview 
+} from "./items";
 import { uploadDirect } from "./direct-upload";
 import discardUploadAction from "./discard-upload";
 
 interface Options {
     scope?: string;
+    disabled?: boolean;
     onDiscard?: (url: string) => Promise<unknown>;
 }
 
 export default function useFileInput(
     initialFiles: StoredFile[], 
-    policy: FilePolicy, {scope, onDiscard = discardUploadAction}: Options = {}, 
-    disabled = false
+    policy: FilePolicy, 
+    {scope, disabled = false, onDiscard = discardUploadAction}: Options = {}
 ) {
     const [saved, setSaved] = useState(initialFiles);
-    const [items, setItemsState] = useState<FileItem[]>(() => initialFiles.map(createExistingItem));
+    const [items, dispatch] = useReducer(reducer, initialFiles, (f) => f.map(createExistingItem));
     const [error, setError] = useState<string | null>(null);
 
-    const ref = useRef(items);
+    const latest = useRef(items);
     const uploads = useRef(new Map<string, AbortController>());
 
-    const setItems = (next: FileItem[]) => {
-        ref.current = next;
-        setItemsState(next);
-    };
-
-    const abort = (list: FileItem[]) => list.forEach((i) => {
-        uploads.current.get(i.id)?.abort();
-        uploads.current.delete(i.id);
+    useEffect(() => {
+        latest.current = items;
     });
 
-    const discard = (list: FileItem[]) => list.forEach((i) => {
-        if(i.kind === "direct" && i.status === "done" && i.url) void onDiscard(i.url);
-    });
-    
-    useEffect(() => () => {
-        uploads.current.forEach((c) => c.abort());
-        ref.current.forEach(revokePreview);
+    useEffect(() => {
+        const map = uploads.current;
+        return () => {
+            map.forEach((c) => c.abort());
+            latest.current.forEach(revokePreview);
+        }
     }, []);
 
     const single = policy.maxFiles === 1;
-    const activeCount = items.filter(isActive).length;
-    const canAdd = !disabled && (single || activeCount < policy.maxFiles);
+    const active = items.filter(isActive);
+    const canAdd = !disabled && (single || active.length < policy.maxFiles);
+    const limitError = `You can add up to ${policy.maxFiles} files`;
 
-    const replaceActive = () => {
-        if(!single) return ref.current;
-        const active = ref.current.filter(isActive);
-        abort(active);
-        discard(active);
-        return dropActive(ref.current);
-    }
-
-    const viaDirect = (f: File) => policy.transport === "direct" || (policy.transport === "auto" && f.size > (policy.directThreshold ?? 4 * MB));
-
-    const patch = (id: string, change: Partial<DirectItem>) => setItems(ref.current.map((i) => (i.id === id && i.kind === "direct" ? {...i, ...change} : i)));
+    const release = (list: FileItem[]) => list.forEach((i) => {
+        uploads.current.get(i.id)?.abort();
+        uploads.current.delete(i.id);
+        revokePreview(i);
+        if(i.kind === "direct" && i.status === "done" && i.url) void onDiscard(i.url);
+    });
 
     const startUpload = (item: DirectItem) => {
-        if(!scope) {
-            return patch(item.id, {status: "error", error: "Missing upload scope"});
-        }
+        const patch = (change: Partial<DirectItem>) => dispatch({type: "patch", id: item.id, change});
+        if(!scope) return patch({status: "error", error: "Missing upload scope"});
+
         const controller = new AbortController();
         uploads.current.set(item.id, controller);
-        patch(item.id, {status: "uploading", progress: 0, error: undefined});
+        patch({status: "uploading", progress: 0, error: undefined});
 
+        let last = -1;
         uploadDirect({
             file: item.file, policy, scope, signal: controller.signal,
-            onProgress: (percent) => {
-                const current = ref.current.find((i) => i.id === item.id);
-                const rounded = Math.round(percent);
-                if(current?.kind === "direct" && current.progress !== rounded) patch(item.id, { progress: rounded });
+            onProgress: (p) => {
+                const rounded = Math.round(p);
+                if(rounded !== last) { 
+                    last = rounded; 
+                    patch({progress: rounded});
+                }
             }
         })
-            .then((url) => patch(item.id, {status: "done", progress: 100, url}))
-            .catch((e: Error) => {
-                if(e.name !== "AbortError") patch(item.id, {status: "error", error: e.message});
-            })
-            .finally(() => uploads.current.delete(item.id));
+        .then((url) => patch({
+            status: "done", 
+            progress: 100, 
+            url
+        }))
+        .catch((e: Error) => { 
+            if(e.name !== "AbortError") patch({status: "error", error: e.message});
+        })
+        .finally(() => uploads.current.delete(item.id));
     }
-
-    const base = () => (single ? dropActive(ref.current) : ref.current);
 
     const addFiles = (files: File[]) => {
         const incoming = single ? files.slice(0, 1) : files;
-        if(incoming.length === 0) return;
-        if(!single && ref.current.filter(isActive).length + incoming.length > policy.maxFiles) {
-            return setError(`You can add up to ${policy.maxFiles} files`);
-        }
+        if(!incoming.length) return;
+        if(!single && active.length + incoming.length > policy.maxFiles) return setError(limitError);
 
-        const queued = single ? [] : ref.current.flatMap((i) => (i.kind === "new" ? [i.file] : []));
+        const direct = incoming.filter((f) => shouldUploadDirect(policy, f));
+        const viaAction = incoming.filter((f) => !direct.includes(f));
+        const queued = single ? [] : items.flatMap((i) => (i.kind === "new" ? [i.file] : []));
         const message =
-            validateFiles([...queued, ...incoming.filter((f) => !viaDirect(f))], policy) ??
-            validateFiles(incoming.filter(viaDirect), {...policy, maxTotalSize: undefined});
+            validateFiles([...queued, ...viaAction], policy) ??
+            validateFiles(direct, {...policy, maxTotalSize: undefined});
         if(message) return setError(message);
 
         setError(null);
-        const created = incoming.map((f) => (viaDirect(f) ? createDirectItem(f) : createNewItem(f)));
-        setItems([...replaceActive(), ...created]);
-        created.forEach((i) => i.kind === "direct" && startUpload(i));
+        const created = incoming.map((f) => (direct.includes(f) ? createDirectItem(f) : createNewItem(f)));
+        if(single) release(active);
+        dispatch({type: "add", items: created, replace: single});
+        for(const i of created) if(i.kind === "direct") startUpload(i);
     }
 
     const addUrl = async (raw: string): Promise<string | null> => {
         const url = raw.trim();
-        const invalid = validateUrl(url);
-        if(invalid) return invalid;
-        if(!single && ref.current.filter(isActive).length >= policy.maxFiles) {
-            return `You can add up to ${policy.maxFiles} files`;
-        }
-        if(ref.current.some((i) => isActive(i) && i.kind !== "new" && i.url === url)) {
-            return "This file is already on the list";
-        }
-        if(!(await checkUrlLoads(url, policy.media))) return "Could not load a file from this URL";
+        const problem =
+            validateUrl(url) ??
+            (!single && active.length >= policy.maxFiles ? limitError : null) ??
+            (active.some((i) => i.kind !== "new" && i.url === url) ? "This file is already on the list" : null) ??
+            ((await checkUrlLoads(url, policy.media)) ? null : "Could not load a file from this URL");
+        if(problem) return problem;
 
         setError(null);
-        setItems([...base(), createUrlItem(url)]);
+        if(single) release(latest.current.filter(isActive));
+        dispatch({type: "add", items: [createUrlItem(url)], replace: single});
         return null;
     }
 
     const remove = (item: FileItem) => {
-        abort([item]);
-        discard([item]);
-        setError(null); 
-        setItems(removeItem(ref.current, item));
+        release([item]);
+        setError(null);
+        dispatch({type: "remove", id: item.id});
     }
 
-    const restore = (item: FileItem) => setItems(restoreItem(single ? dropActive(ref.current) : ref.current, item));
-    const move = (index: number, dir: -1 | 1) => setItems(moveItem(ref.current, index, dir));
-    const retry = (item: DirectItem) => startUpload(item);
+    const restore = (item: FileItem) => {
+        if(single) release(active);
+        dispatch({type: "restore", id: item.id, replace: single});
+    }
+
+    const move = (index: number, dir: -1 | 1) => dispatch({type: "move", index, dir});
 
     const reset = useCallback((files: StoredFile[]) => {
-        abort(ref.current);
-        ref.current.forEach(revokePreview);
+        uploads.current.forEach((c) => c.abort());
+        uploads.current.clear();
+        latest.current.forEach(revokePreview);
         setSaved(files);
-        const next = files.map(createExistingItem);
-        ref.current = next;
-        setItemsState(next);
         setError(null);
+        dispatch({ type: "reset", items: files.map(createExistingItem) });
     }, []);
 
-    const isDirty = useMemo(() => {
-        const active = items.filter(isActive);
-        return active.length !== saved.length || active.some((i, idx) => i.kind !== "existing" || i.url !== saved[idx]?.url);
-    }, [items, saved]);
-
-    const isBusy = items.some((i) => i.kind === "direct" && i.status === "uploading");
-    const hasErrors = items.some((i) => i.kind === "direct" && i.status === "error");
+    const directItems = items.filter((i): i is DirectItem => i.kind === "direct");
+    const isBusy = directItems.some((i) => i.status === "uploading");
+    const hasErrors = directItems.some((i) => i.status === "error");
+    const isDirty =
+        active.length !== saved.length ||
+        active.some((i, idx) => i.kind !== "existing" || i.url !== saved[idx]?.url);
 
     return {
-        policy, items, error, single, canAdd, activeCount, isDirty, isBusy, hasErrors,
+        policy, items, error, single, canAdd, activeCount: active.length, isDirty, isBusy, hasErrors,
         canSubmit: isDirty && !isBusy && !hasErrors,
-        addFiles, addUrl, remove, restore, move, retry, reset,
-        source: {policy, multiple: !single, onFiles: addFiles, onUrl: addUrl},
+        addFiles, addUrl, remove, restore, move, retry: startUpload, reset,
+        source: {policy, multiple: !single, onFiles: addFiles, onUrl: addUrl}
     }
 }
 

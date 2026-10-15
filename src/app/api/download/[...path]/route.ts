@@ -1,9 +1,9 @@
-import { resolveUploadPath } from "@/lib/storage/local";
 import { stat } from "fs/promises";
 import { NextRequest } from "next/server";
 import { lookup } from "mime-types";
 import { Readable } from "stream";
 import { createReadStream } from "fs";
+import { resolveUploadPath } from "@/lib/storage/local-paths";
 
 interface Props {
     params: Promise<{path: string[]}>;

@@ -2,7 +2,7 @@ import { ChevronLeft, ChevronRight, RotateCcw, Trash2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils/cn";
 import { FileInput } from "@/lib/upload/use-file-input";
-import { FileItem } from "@/lib/upload/file-items";
+import { FileItem } from "@/lib/upload/items";
 
 interface Props {
     input: FileInput;

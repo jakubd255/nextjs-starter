@@ -1,4 +1,15 @@
-export const sanitizeFileName = (raw: string) => raw.replace(/[\\/\u0000-\u001f]/g, "_").trim().slice(0, 200) || "file";
+const clean = (raw: string, max: number) => raw.replace(/[\\/\u0000-\u001f]/g, "_").trim().slice(0, max) || "file";
+
+export const sanitizeFileName = (raw: string) => clean(raw, 200);
+
+export const fileNameFromUrl = (url: string) => {
+    try {
+        return sanitizeFileName(decodeURIComponent(new URL(url).pathname.split("/").pop() || "file"));
+    } 
+    catch {
+        return "file";
+    }
+};
 
 const extOf = (name: string) => /\.[A-Za-z0-9]{1,10}$/.exec(name)?.[0].toLowerCase() ?? "";
 

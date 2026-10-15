@@ -1,4 +1,4 @@
-import { FileItem, itemName, resolveMedia } from "@/lib/upload/file-items";
+import { FileItem, itemName, resolveMedia } from "@/lib/upload/items";
 import { FilePolicy } from "@/lib/upload/policy";
 import { cn } from "@/lib/utils/cn";
 import { FileIcon } from "lucide-react";
@@ -28,7 +28,7 @@ export default function FilePreview({item, policy, className}: {item: FileItem; 
     }
     return(
         <div className={cn("flex size-full flex-col items-center justify-center gap-1 p-2 text-muted-foreground", className)}>
-            <FileIcon className="size-8 shrink-0" />
+            <FileIcon className="size-8 shrink-0"/>
             <span className="w-full truncate text-center text-xs">{itemName(item)}</span>
         </div>
     );

@@ -9,14 +9,14 @@ export const vercelBlobProvider: StorageProvider = {
             allowOverwrite: false,
             contentType: file.type,
         });
-        return { url: blob.url };
+        return {url: blob.url}
     },
-    async delete(key) {
-        await del(key).catch(console.error);
+    async delete(url) {
+        await del(url).catch(console.error);
     },
     async head(url) {
         const meta = await head(url).catch(() => null);
-        return meta ? { size: meta.size, contentType: meta.contentType } : null;
+        return meta ? {size: meta.size, contentType: meta.contentType} : null;
     },
     owns(url) {
         return url.includes(".public.blob.vercel-storage.com");

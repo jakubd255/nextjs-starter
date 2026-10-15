@@ -1,53 +1,56 @@
 export type FilePolicy = {
+    key: string;
     accept: readonly string[];
     block?: readonly string[];
     maxFiles: number;
     maxSize: number;
     maxTotalSize?: number;
     media: "image" | "video" | "file";
-    key?: string;
-    transport?: "action" | "direct" | "auto";
+    transport: "action" | "direct" | "auto";
     directThreshold?: number; 
 }
 
 const BLOCKED = [".html", ".htm", ".svg", ".js", ".exe", ".bat", ".sh", "text/html", "image/svg+xml"];
 
-export const MB = 1024 * 1024;
+export const MAX_URL_LENGTH = 2048;
+export const MB = 1024*1024;
 
 export const FILE_POLICIES = {
     images: {
         accept: ["image/png", "image/jpeg", "image/webp"], 
         maxFiles: 10, 
-        maxSize: 10 * MB, 
+        maxSize: 10*MB, 
         media: "image",
         key: "images",
-        transport: "action",
+        transport: "action"
     },
     videos: {
         accept: ["video/mp4", "video/webm"], 
         maxFiles: 3, 
-        maxSize: 1024 * MB, 
+        maxSize: 1024*MB, 
         media: "video",
         key: "videos",
-        transport: "direct",
+        transport: "direct"
     },
     any: {
         accept: ["*"], 
         block: BLOCKED, 
         maxFiles: 10, 
-        maxSize: 1024 * MB, 
+        maxSize: 1024*MB, 
         media: "file",
         key: "any", 
         transport: "auto", 
-        directThreshold: 4 * MB
+        directThreshold: 4*MB
     }
 } satisfies Record<string, FilePolicy>;
+
+type Meta = {name: string; type: string};
 
 export const policyByKey = (key: string | null): FilePolicy | undefined => Object.values<FilePolicy>(FILE_POLICIES).find((p) => p.key === key);
 export const acceptAttr = (policy: FilePolicy) => policy.accept.includes("*") ? undefined : policy.accept.join(",");
 export const definePolicy = (base: FilePolicy, override: Partial<FilePolicy> = {}): FilePolicy => ({...base, ...override});
 
-const matchesToken = (file: {name: string; type: string}, token: string) => {
+const matchesToken = (file: Meta, token: string) => {
     const t = token.toLowerCase();
     if(t === "*") return true;
     if(t.endsWith("/*")) return file.type.toLowerCase().startsWith(t.slice(0, -1));
@@ -55,7 +58,7 @@ const matchesToken = (file: {name: string; type: string}, token: string) => {
     return file.type.toLowerCase() === t;
 }
 
-export const matchesAccept = (file: {name: string; type: string}, policy: FilePolicy) => {
+export const matchesAccept = (file: Meta, policy: FilePolicy) => {
     if(policy.block?.some((t) => matchesToken(file, t))) return false;
     return policy.accept.some((t) => matchesToken(file, t));
 }
@@ -77,8 +80,6 @@ export const validateFiles = (files: File[], policy: FilePolicy): string | null 
     return null;
 }
 
-export const MAX_URL_LENGTH = 2048;
-
 export const validateUrl = (raw: string): string | null => {
     if(raw.length > MAX_URL_LENGTH) return "URL is too long";
     try {
@@ -89,3 +90,6 @@ export const validateUrl = (raw: string): string | null => {
     }
     return null;
 }
+
+export const shouldUploadDirect = (p: FilePolicy, f: File) =>
+    p.transport === "direct" || (p.transport === "auto" && f.size > (p.directThreshold ?? 4 * MB));

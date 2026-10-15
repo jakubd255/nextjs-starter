@@ -3,7 +3,7 @@ import FilePreview from "./file-preview";
 import { Badge } from "@/components/ui/badge";
 import FileItemActions from "./file-item-actions";
 import { FileInput } from "@/lib/upload/use-file-input";
-import { FileItem } from "@/lib/upload/file-items";
+import { FileItem } from "@/lib/upload/items";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 
